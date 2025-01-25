@@ -40,7 +40,7 @@ companyTitle =  await getSpriteComponent(
         
     gameSubTitle.position = ComponentUtils.centerComponent(
         gameRef.camDimension, gameSubTitle,
-        offsetX: 2, offsetY: 3.5);
+        offsetX: 2, offsetY: 2);
   }
   
   @override

@@ -16,6 +16,17 @@
       "language": "Language",
       "sound": "Sound",
       "music": "Music"
+    },
+    "loading": {
+      
+      "title": "EESTLAND Anno Domini 1343",
+      "context_intro":[ "In the Year of Darkness, 1343, Eestland",
+      "Rebane Mölder, sent by concerned merchants of the Hanseatic League",
+      "was sent to investigate missing caravans in the contested regions",
+      "follow the road into the hearth of Eestland", 
+      "Uncover whether the threat is mundane or supernatural"]
+ ,
+      "exit_button": "Exit"
     }
   }
   
