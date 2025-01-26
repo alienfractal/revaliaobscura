@@ -3,7 +3,7 @@ import 'package:coolorburn/gamefsm/fsm.dart';
 import 'package:coolorburn/gamefsm/istate.dart';
 
 class GameScore implements IState {
-  late CoolOrBurn mainGame;
+  late RevaliaObs mainGame;
   GameScore();
 
   @override

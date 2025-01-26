@@ -7,7 +7,7 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 enum ArrowDirection { left, right, up, down }
 
 class ArrowButtonTapHandler extends Behavior<GenericButton>
-    with TapCallbacks, HasGameRef<CoolOrBurn> {
+    with TapCallbacks, HasGameRef<RevaliaObs> {
   late ArrowDirection arrowDirection;
 
   ArrowButtonTapHandler({required this.arrowDirection}) : super();

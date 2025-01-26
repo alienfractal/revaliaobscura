@@ -1,7 +1,8 @@
 // Example Behavior class for Card
 
  
-import 'package:coolorburn/game/states/game/view/cardview.dart';
+ 
+import 'package:coolorburn/game/states/game/view/playerview.dart';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 
@@ -9,7 +10,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class ActorBehavior extends Behavior<ActorView>
+class PlayerBehavior extends Behavior<PlayerView>
     with TapCallbacks, HasGameRef<RevaliaObs> {
 
   static int tapCount = 0;
@@ -23,16 +24,12 @@ class ActorBehavior extends Behavior<ActorView>
     super.onTapDown(event);
     RevaliaObs.logger.d("TAP DOWN");
 
-    tapCount++;
-    if (tapCount < 3) {
+    
      
 
-      gameRef.ap.playSoundFx(Assets.resources.audio.blipSelect1);
+      gameRef.ap.playSoundFx(Assets.resources.audio.blipSelect2);
       //gameRef.ap.playSoundFx("flip.mp3");
-    }else{
-      tapCount = 0;
-      gameRef.gboard.isEnemyDefeated = true;
-    }
+     
   }
 
  

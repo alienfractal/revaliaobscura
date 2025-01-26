@@ -6,7 +6,7 @@ import 'package:flame/flame.dart';
 
 abstract class SpriteAnimatorCache {
    
-   Future<void> preloadAnimations(CoolOrBurn gameRef);
+   Future<void> preloadAnimations(RevaliaObs gameRef);
    String getSpritePath(int type);
    SpriteAnimation getAnimation(int modelValue);
 
@@ -25,5 +25,5 @@ abstract class SpriteAnimatorCache {
 
 abstract class SpriteCache {
    Future<SpriteComponent>  getSpriteComponent({required String path, required Vector2 imgSize});
-   Future<void> preloadSprites(CoolOrBurn gameRef); 
+   Future<void> preloadSprites(RevaliaObs gameRef); 
 }

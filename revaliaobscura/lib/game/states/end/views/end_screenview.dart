@@ -9,7 +9,7 @@ import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
 
 class GameEndView extends World
-    with HasGameRef<CoolOrBurn>
+    with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
   late SpriteComponent gameBackground;
   late BlinkingTextComponent textComponentEnd;

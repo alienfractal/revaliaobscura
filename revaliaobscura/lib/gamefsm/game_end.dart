@@ -3,7 +3,7 @@ import 'package:coolorburn/gamefsm/fsm.dart';
 import 'package:coolorburn/gamefsm/istate.dart';
 
 class GameEnd implements IState {
-  late CoolOrBurn mainGame;
+  late RevaliaObs mainGame;
   GameEnd();
   @override
   void enter(Fsm gameFsm) {

@@ -25,7 +25,7 @@ class TextUtils {
     return score.toString().padLeft(6, '0');
   }
 
-    static BlinkingTextComponent addTextToview(CoolOrBurn gameRef,String text, Vector2 position, double fontSize, bool isBlinking, Color color, double interval, bool shouldCenter)  {
+    static BlinkingTextComponent addTextToview(RevaliaObs gameRef,String text, Vector2 position, double fontSize, bool isBlinking, Color color, double interval, bool shouldCenter)  {
     BlinkingTextComponent textComponent = BlinkingTextComponent(
       text,
       position,

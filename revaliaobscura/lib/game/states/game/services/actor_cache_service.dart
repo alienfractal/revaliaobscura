@@ -25,6 +25,8 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation scoreIcon;
   late SpriteAnimation relicPowerTreasure;
 
+  late SpriteAnimation mainPlayer;
+
   late SpriteAnimation gemRelicRuby;
   late SpriteAnimation gemRelicPearl;
   late SpriteAnimation gemRelicEmerald;
@@ -33,7 +35,18 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
  
 
   @override
-  Future<void> preloadAnimations(CoolOrBurn gameRef) async {
+  Future<void> preloadAnimations(RevaliaObs gameRef) async {
+
+
+   mainPlayer = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.rebane50x849.path,
+      SpriteAnimationData.sequenced(
+        amount: 9,
+        stepTime: 0.1,
+        textureSize: Vector2(50, 84),
+        loop: false,
+      ),
+    ); 
 
    gameBackground = await getSpriteComponent(
         path: Assets.resources.images.gameBackground32x32.path,
@@ -338,7 +351,7 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
   }
 
   @override
-  Future<void> preloadSprites(CoolOrBurn gameRef) async{
+  Future<void> preloadSprites(RevaliaObs gameRef) async{
         gameBackground = await getSpriteComponent(
         path: Assets.resources.images.gameBackground32x32.path,
         imgSize: gameRef.camDimension);}

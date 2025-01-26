@@ -12,9 +12,16 @@ import 'package:flutter/widgets.dart';
 class $ResourcesGen {
   const $ResourcesGen();
 
+  /// Directory path: resources/audio
   $ResourcesAudioGen get audio => const $ResourcesAudioGen();
+
+  /// Directory path: resources/fonts
   $ResourcesFontsGen get fonts => const $ResourcesFontsGen();
+
+  /// Directory path: resources/images
   $ResourcesImagesGen get images => const $ResourcesImagesGen();
+
+  /// Directory path: resources/translations
   $ResourcesTranslationsGen get translations =>
       const $ResourcesTranslationsGen();
 }
@@ -267,13 +274,38 @@ class $ResourcesImagesGen {
   AssetGenImage get gameTitleExportAlpha =>
       const AssetGenImage('resources/images/GameTitle-export-alpha.png');
 
+  /// File path: resources/images/GameTitle.aseprite
+  String get gameTitleAseprite => 'resources/images/GameTitle.aseprite';
+
   /// File path: resources/images/GameTitle.png
-  AssetGenImage get gameTitle =>
+  AssetGenImage get gameTitlePng =>
       const AssetGenImage('resources/images/GameTitle.png');
 
+  /// File path: resources/images/GamesubTitle.aseprite
+  String get gamesubTitleAseprite => 'resources/images/GamesubTitle.aseprite';
+
   /// File path: resources/images/GamesubTitle.png
-  AssetGenImage get gamesubTitle =>
+  AssetGenImage get gamesubTitlePng =>
       const AssetGenImage('resources/images/GamesubTitle.png');
+
+  /// File path: resources/images/Rebane-50x84-9.png
+  AssetGenImage get rebane50x849 =>
+      const AssetGenImage('resources/images/Rebane-50x84-9.png');
+
+  /// File path: resources/images/Rebane-50x84-idle-16.png
+  AssetGenImage get rebane50x84Idle16 =>
+      const AssetGenImage('resources/images/Rebane-50x84-idle-16.png');
+
+  /// File path: resources/images/Rebane-50x84.aseprite
+  String get rebane50x84 => 'resources/images/Rebane-50x84.aseprite';
+
+  /// File path: resources/images/RevalGates128x91.png
+  AssetGenImage get revalGates128x91 =>
+      const AssetGenImage('resources/images/RevalGates128x91.png');
+
+  /// File path: resources/images/RevalTowncenter-128x91.png
+  AssetGenImage get revalTowncenter128x91 =>
+      const AssetGenImage('resources/images/RevalTowncenter-128x91.png');
 
   /// File path: resources/images/Sprite-0005-56x63-36x45.aseprite
   String get sprite000556x6336x45 =>
@@ -402,6 +434,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/dwarf2.aseprite
   String get dwarf2 => 'resources/images/dwarf2.aseprite';
 
+  /// File path: resources/images/eestlandriver128x91.png
+  AssetGenImage get eestlandriver128x91 =>
+      const AssetGenImage('resources/images/eestlandriver128x91.png');
+
   /// File path: resources/images/end.png
   AssetGenImage get end => const AssetGenImage('resources/images/end.png');
 
@@ -496,6 +532,14 @@ class $ResourcesImagesGen {
   /// File path: resources/images/oldking.aseprite
   String get oldking => 'resources/images/oldking.aseprite';
 
+  /// File path: resources/images/pattern-220x22.png
+  AssetGenImage get pattern220x22 =>
+      const AssetGenImage('resources/images/pattern-220x22.png');
+
+  /// File path: resources/images/pattern.png
+  AssetGenImage get pattern =>
+      const AssetGenImage('resources/images/pattern.png');
+
   /// File path: resources/images/potion-sheet.png
   AssetGenImage get potionSheet =>
       const AssetGenImage('resources/images/potion-sheet.png');
@@ -503,6 +547,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/render.png
   AssetGenImage get render =>
       const AssetGenImage('resources/images/render.png');
+
+  /// File path: resources/images/roadvillage128x91.png
+  AssetGenImage get roadvillage128x91 =>
+      const AssetGenImage('resources/images/roadvillage128x91.png');
 
   /// File path: resources/images/sandclock-sheet.png
   AssetGenImage get sandclockSheet =>
@@ -569,8 +617,15 @@ class $ResourcesImagesGen {
   List<dynamic> get values => [
         gameBackground32x32,
         gameTitleExportAlpha,
-        gameTitle,
-        gamesubTitle,
+        gameTitleAseprite,
+        gameTitlePng,
+        gamesubTitleAseprite,
+        gamesubTitlePng,
+        rebane50x849,
+        rebane50x84Idle16,
+        rebane50x84,
+        revalGates128x91,
+        revalTowncenter128x91,
         sprite000556x6336x45,
         arrowsCam1,
         arrowsCam2,
@@ -604,6 +659,7 @@ class $ResourcesImagesGen {
         dwarfWalk,
         dwarf,
         dwarf2,
+        eestlandriver128x91,
         end,
         flameiconAseprite,
         flameiconPng,
@@ -630,8 +686,11 @@ class $ResourcesImagesGen {
         monsters,
         musicfxVolume,
         oldking,
+        pattern220x22,
+        pattern,
         potionSheet,
         render,
+        roadvillage128x91,
         sandclockSheet,
         scoreiconSheet,
         scoreicon1,
@@ -674,9 +733,16 @@ class Assets {
 }
 
 class AssetGenImage {
-  const AssetGenImage(this._assetName);
+  const AssetGenImage(
+    this._assetName, {
+    this.size,
+    this.flavors = const {},
+  });
 
   final String _assetName;
+
+  final Size? size;
+  final Set<String> flavors;
 
   Image image({
     Key? key,
@@ -696,7 +762,7 @@ class AssetGenImage {
     ImageRepeat repeat = ImageRepeat.noRepeat,
     Rect? centerSlice,
     bool matchTextDirection = false,
-    bool gaplessPlayback = false,
+    bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
     FilterQuality filterQuality = FilterQuality.low,

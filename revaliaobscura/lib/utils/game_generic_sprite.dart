@@ -6,7 +6,7 @@ import 'package:flame/components.dart';
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class GenericSpriteAnimation extends PositionedEntity with HasGameRef<CoolOrBurn> {
+class GenericSpriteAnimation extends PositionedEntity with HasGameRef<RevaliaObs> {
   late SpriteAnimationComponent spriteAnimationComponent;
    // Path to the sprite sheet or animation image
   late Vector2 animationSize; // Size of the animation component

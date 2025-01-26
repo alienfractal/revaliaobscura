@@ -7,7 +7,7 @@ import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
 
 class LoadingView extends World
-    with HasGameRef<CoolOrBurn>
+    with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
  
   late BlinkingTextComponent textComponentLoading;

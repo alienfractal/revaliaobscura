@@ -16,7 +16,7 @@ class UiSpriteCacheService extends SpriteAnimatorCache{
   }
 
   @override
-  Future<void> preloadAnimations(CoolOrBurn gameRef) {
+  Future<void> preloadAnimations(RevaliaObs gameRef) {
     // TODO: implement preloadAnimations
     throw UnimplementedError();
   }

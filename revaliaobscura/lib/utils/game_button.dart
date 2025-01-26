@@ -9,7 +9,7 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 
 import '../game/states/main_menu/behaviours/start_button_taphandler.dart';
 
-class GameButton extends PositionedEntity with HasGameRef<CoolOrBurn> {
+class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late SpriteComponent spriteComponent;
 
   late String imagePath = "";

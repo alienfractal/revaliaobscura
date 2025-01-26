@@ -18,7 +18,7 @@ abstract class Fsm {
   late  StateType currentStateType = StateType.GameMenu;
   late IState currentState;
   String actions = "";
-  final CoolOrBurn mainGame;
+  final RevaliaObs mainGame;
  
 
   static GameLoading gload = GameLoading();

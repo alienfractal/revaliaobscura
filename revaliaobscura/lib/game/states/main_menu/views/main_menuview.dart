@@ -15,7 +15,7 @@ import 'package:flame/components.dart';
  
 
 class MainMenuView extends World
-    with HasGameRef<CoolOrBurn>
+    with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
       
 
@@ -60,7 +60,7 @@ class MainMenuView extends World
   @override
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
-    CoolOrBurn.logger.d("Screen resized to: $size");
+    RevaliaObs.logger.d("Screen resized to: $size");
   }
 
   void loadlLevel()  {

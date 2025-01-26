@@ -10,7 +10,7 @@ import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
 
-class ActorView extends PositionedEntity with HasGameRef<CoolOrBurn> {
+class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
   //late final SpriteComponent cardSprite;
  
   late ActorModel actorModel;

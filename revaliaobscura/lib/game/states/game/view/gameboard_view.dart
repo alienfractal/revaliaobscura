@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:coolorburn/game/states/game/model/player_model.dart';
+import 'package:coolorburn/game/states/game/view/playerview.dart';
 import 'package:coolorburn/revalia_obs.dart';
 
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
@@ -11,13 +13,14 @@ import 'package:coolorburn/utils/color_status_text_component.dart';
 import 'package:flame/components.dart';
 
 class GameboardView extends World
-    with HasGameRef<CoolOrBurn>
+    with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
   late GameBoardModel gBoardModel;
   int horizontalCells = 0;
   int verticalCells = 0;
   late List<ActorView> actors;
-  late ActorView playerView;
+  late ActorView actorView;
+  late PlayerView playerView;
 
   late int activeLevel = gBoardModel.currentLevel;
   late UIGameBoardComponents uiGameBoardComponents;
@@ -52,7 +55,8 @@ class GameboardView extends World
     //clearBoard();
     
     uiGameBoardComponents.loadUIComponents(gameRef);
-    addActor();
+   // addActor();
+    addPlayer();
     
     isBoardLoaded = true;
     isGameFinished = false;
@@ -137,11 +141,11 @@ class GameboardView extends World
 
 void focusCameraOnStartTile() {
   print("actors.length ${actors.length} ${actors.toString()}  ");
-  ActorView actorViewStart = actors
-      .firstWhere((actor) => actor.actorModel.status == ActorModel.PLAYER);
- print("actorViewStart ${actorViewStart.toString()} ${actorViewStart.actorModel.toString()} ");
+  //ActorView actorViewStart = actors
+  //    .firstWhere((actor) => actor.actorModel.status == ActorModel.PLAYER);
+ //print("actorViewStart ${actorViewStart.toString()} ${actorViewStart.actorModel.toString()} ");
 
-  Vector2 cardViewPosition = actorViewStart.position - Vector2(150, 100);
+  Vector2 cardViewPosition = playerView.position - Vector2(150, 100);
   gameRef.cam.moveTo(cardViewPosition, speed: 100.0);
 
   isGameStarted = true;
@@ -241,9 +245,17 @@ void updateTimerUI() {
   
   void addActor() { 
 
-    ActorModel graveModel = ActorModel(x: 0, y: 0, distance: 0, status:  ActorModel.PLAYER, prev: null);
-    playerView = ActorView(actorModel: graveModel, position:Vector2(32, 32));
-    actors.add(playerView);
+    ActorModel graveModel = ActorModel(x: 0, y: 0, distance: 0, status:  ActorModel.RELIC, prev: null);
+    actorView = ActorView(actorModel: graveModel, position:Vector2(0, 0));
+    actors.add(actorView);
+    add(actorView);
+  }
+
+    void addPlayer() { 
+
+    PlayerModel playerModel = PlayerModel(x: 0, y: 0, status:  PlayerModel.WALKING);
+    playerView = PlayerView(playerModel: playerModel, position:Vector2(32, 64));
+    
     add(playerView);
   }
 }

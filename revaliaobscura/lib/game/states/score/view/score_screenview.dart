@@ -12,7 +12,7 @@ import 'dart:math';
 enum ScoreViewType { levelWon, gameover }
 
 class GameScoreView extends World
-    with HasGameRef<CoolOrBurn>
+    with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
   late SpriteComponent gameBackground;
   late BlinkingTextComponent textComponentLoading;

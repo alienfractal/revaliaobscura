@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
 
 import 'package:coolorburn/game/states/game/services/actor_cache_service.dart';
+import 'package:coolorburn/game/states/game/services/player_cache_service.dart';
 import 'package:coolorburn/game/states/game/view/gameboard_view.dart';
 import 'package:coolorburn/game/states/end/views/end_screenview.dart';
 import 'package:coolorburn/game/states/loading/services/loading_cache_service.dart';
@@ -14,6 +16,7 @@ import 'package:coolorburn/game/states/score/view/score_screenview.dart';
 import 'package:coolorburn/gamefsm/fsm.dart';
 import 'package:coolorburn/gamefsm/game_fsm.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:coolorburn/utils/app_translations.dart';
 import 'package:coolorburn/utils/web_audio_player.dart';
 
 
@@ -22,6 +25,7 @@ import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
  
@@ -32,7 +36,7 @@ abstract class ViewTransitionInterface {
   void transitionToNextState();
 }
 
-class CoolOrBurn extends FlameGame {
+class RevaliaObs extends FlameGame {
   ui.FragmentShader? shader;
   ui.Image? texture;
   late final CameraComponent cam;
@@ -44,7 +48,7 @@ class CoolOrBurn extends FlameGame {
   final GameEndView endView = GameEndView();
   final GameScoreView scoreView = GameScoreView();
   static final Logger logger = Logger();
-  Vector2 camDimension = Vector2(320, 200);
+  Vector2 camDimension = Vector2(256, 182);
   late FixedResolutionViewport viewport;
   late bool isCrtShaderActive;
   late ui.FragmentProgram uiProgram;
@@ -53,15 +57,14 @@ class CoolOrBurn extends FlameGame {
   late CardCacheService cardCacheService;
   late MenuCacheSerivce menuCacheService;
   late LoadingCacheService loadingCacheService;
-  
- 
+  late PlayerCacheService enemyCacheService;
   late GameWidget gameWidget;
-  
-  Map<String, dynamic> translations;
-  String currentLocale = 'en'; // Default to English
+  AppTranslations appTranslations = AppTranslations();  
+
+  String currentLocale = 'en';
 
 
-  CoolOrBurn({required this.translations} ) {
+  RevaliaObs() {
      ap = WebAudioPlayer();
      isCrtShaderActive = false;
      
@@ -69,25 +72,12 @@ class CoolOrBurn extends FlameGame {
      cardCacheService = CardCacheService();
      menuCacheService = MenuCacheSerivce();
      loadingCacheService = LoadingCacheService();
+     enemyCacheService = PlayerCacheService();
      
      
   }
 
-
-   // Helper to fetch translations
-  String translate(String key) {
-    try {
-      final keys = key.split('.');
-      dynamic value = translations[currentLocale];
-      for (final k in keys) {
-        value = value[k];
-        if (value == null) break;
-      }
-      return value ?? key; // Return key if translation is missing
-    } catch (e) {
-      return key; // Return key on any error
-    }
-  }
+ 
   @override
   void onAttach() {
     // TODO: implement onAttach
@@ -98,17 +88,16 @@ class CoolOrBurn extends FlameGame {
 
   @override
   void onDispose() {
-    CoolOrBurn.logger.d("CoolOrBurn: onDispose");
+    RevaliaObs.logger.d("CoolOrBurn: onDispose");
     super.onDispose();
   }
 
   @override
   void onMount() {
     super.onMount();
-    CoolOrBurn.logger.d("CoolOrBurn: onMount");
-    print(" Translate : ${translate('game.start_message')}");
- 
-    //EasyLocalization.of(gameWidget.context!)!.locale = Locale('en', 'US');
+    RevaliaObs.logger.d("CoolOrBurn: onMount");
+    print(" Translate : ${AppTranslations.getTranslation('en', 'game.title')}");
+
     
    
   }
@@ -117,7 +106,7 @@ class CoolOrBurn extends FlameGame {
   void onGameResize(Vector2 size) {
     super.onGameResize(size);
 
-    CoolOrBurn.logger.d("Screen resized to: $size");
+    RevaliaObs.logger.d("Screen resized to: $size");
   }
 
   @override
@@ -153,7 +142,7 @@ class CoolOrBurn extends FlameGame {
   FutureOr<void> onLoad() async {
     super.onLoad();
 
-    CoolOrBurn.logger.d("CoolOrBurn: onLoad");
+    RevaliaObs.logger.d("CoolOrBurn: onLoad");
     // Load the shader
     uiProgram =
     await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
@@ -161,7 +150,8 @@ class CoolOrBurn extends FlameGame {
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);
-    //await FlutterI18n.ensureInitialized();
+    await enemyCacheService.preloadAnimations(this);
+     await appTranslations.loadTranslations();
     
     
 
@@ -171,7 +161,7 @@ class CoolOrBurn extends FlameGame {
     }
 
     PackageInfo.fromPlatform().then((packageInfo) async {
-      CoolOrBurn.logger.d(packageInfo.toString());
+      RevaliaObs.logger.d(packageInfo.toString());
       menuView.gameVersion = packageInfo.version;
       gameFsm = GameFsm(currentState: Fsm.gmenu, mainGame: this);
 
@@ -219,7 +209,7 @@ class CoolOrBurn extends FlameGame {
 
   void clearWorld(StateType nextStateType) {
     //print(gameFsm.currentState.toString());
-    CoolOrBurn.logger.d(gameFsm.currentState.toString());
+    RevaliaObs.logger.d(gameFsm.currentState.toString());
     switch (nextStateType) {
       case StateType.GameMenu:
         remove(menuView);
@@ -240,7 +230,46 @@ class CoolOrBurn extends FlameGame {
         break;
     }
   }
+  
+ 
+
 }
+
+class TransEntry<T> {
+  final T value;
+
+  TransEntry(this.value);
+
+  // Helper method to retrieve a string
+  String? asString() {
+    if (value is String) {
+      return value as String;
+    }
+    return null;
+  }
+
+  // Helper method to retrieve a map
+  Map<String, String>? asMap() {
+    if (value is Map<String, String>) {
+      return value as Map<String, String>;
+    }
+    return null;
+  }
+
+  // Helper method to retrieve a list
+  List<String>? asList() {
+    if (value is List<String>) {
+      return value as List<String>;
+    }
+    return null;
+  }
+
+  @override
+  String toString() {
+    return value.toString();
+  }
+}
+
 
 //Shader call
 class ShaderPainter extends CustomPainter {

@@ -19,7 +19,7 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 class UIGameBoardComponents {
-  late CoolOrBurn gameRef;
+  late RevaliaObs gameRef;
   late GameBoardModel gBoardModel;
 
   late GameboardView gameboardView;
@@ -61,8 +61,8 @@ class UIGameBoardComponents {
     buttonMscFXVolume.removeFromParent();
   }
 
-  void loadUIComponents(CoolOrBurn gameRef) {
-    gameboardView.add(gameRef.cardCacheService.gameBackground);
+  void loadUIComponents(RevaliaObs gameRef) {
+    gameboardView.add(gameRef.enemyCacheService.oldTownCenter);
 
     blinkTextComponentScore = TextUtils.addTextToview(
         gameRef,

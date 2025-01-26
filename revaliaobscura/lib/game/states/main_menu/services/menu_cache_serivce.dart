@@ -15,7 +15,7 @@ class MenuCacheSerivce extends SpriteCache {
 
 
   @override
-  Future<void> preloadSprites(CoolOrBurn gameRef) async {
+  Future<void> preloadSprites(RevaliaObs gameRef) async {
 companyTitle =  await getSpriteComponent(
         path: Assets.resources.images.gamelogo140x32.path,
         imgSize: Vector2(140, 32));
@@ -27,7 +27,7 @@ companyTitle =  await getSpriteComponent(
       
     // Game Tiele sprite
     gameTitle = await getSpriteComponent(
-        path: Assets.resources.images.gameTitle.path,
+        path: Assets.resources.images.gameTitlePng.path,
         imgSize: Vector2(160, 90));
 
     gameTitle.position = ComponentUtils.centerComponent(
@@ -35,7 +35,7 @@ companyTitle =  await getSpriteComponent(
         offsetX: 2, offsetY: -1);
 
     gameSubTitle = await getSpriteComponent(
-        path: Assets.resources.images.gamesubTitle.path,
+        path: Assets.resources.images.gamesubTitlePng.path,
         imgSize: Vector2(140, 32));
         
     gameSubTitle.position = ComponentUtils.centerComponent(

@@ -7,6 +7,7 @@ import 'package:vector_math/vector_math_64.dart';
 class LoadingCacheService extends SpriteCache{
 
   late SpriteComponent gameBackground;
+  late SpriteComponent ethnoPattern;
   
   @override
   Future<SpriteComponent> getSpriteComponent({required String path, required Vector2 imgSize})async {
@@ -15,7 +16,7 @@ class LoadingCacheService extends SpriteCache{
   }
 
   @override
-  Future<void> preloadSprites(CoolOrBurn gameRef) async{
+  Future<void> preloadSprites(RevaliaObs gameRef) async{
         gameBackground = await getSpriteComponent(
         path: Assets.resources.images.gameBackground32x32.path,
         imgSize: gameRef.camDimension);}

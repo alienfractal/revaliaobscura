@@ -11,7 +11,7 @@ class EndCacheService extends SpriteCache {
   }
 
   @override
-  Future<void> preloadSprites(CoolOrBurn gameRef) {
+  Future<void> preloadSprites(RevaliaObs gameRef) {
     // TODO: implement preloadSprites
     throw UnimplementedError();
   }

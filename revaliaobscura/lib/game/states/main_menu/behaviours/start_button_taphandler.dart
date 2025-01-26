@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class StartButtonTapHandler extends Behavior<GameButton>  with TapCallbacks, HasGameRef<CoolOrBurn>{
+class StartButtonTapHandler extends Behavior<GameButton>  with TapCallbacks, HasGameRef<RevaliaObs>{
 
   @override
   void onTapDown(TapDownEvent event) {

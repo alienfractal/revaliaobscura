@@ -4,7 +4,7 @@ import 'package:coolorburn/gamefsm/istate.dart';
 
 class GameStart implements IState {
 
-  late CoolOrBurn mainGame;
+  late RevaliaObs mainGame;
   GameStart();
   @override
   void enter(Fsm gameFsm) {

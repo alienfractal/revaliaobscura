@@ -51,7 +51,7 @@ class ComponentUtils {
     return Vector2(x, y);
   }
 
-  static Future<SpriteSheet> loadSpriteSheet(String imagePath, Vector2 imgSize, int col, int row, CoolOrBurn gameRef) async {
+  static Future<SpriteSheet> loadSpriteSheet(String imagePath, Vector2 imgSize, int col, int row, RevaliaObs gameRef) async {
 
     return SpriteSheet.fromColumnsAndRows(
       image: await gameRef.images.load(imagePath), // Load the spritesheet image

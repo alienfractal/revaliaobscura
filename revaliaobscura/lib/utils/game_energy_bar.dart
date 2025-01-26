@@ -5,7 +5,7 @@ import 'package:coolorburn/revalia_obs.dart';
 import 'package:flame/components.dart';
 
 
-class EnergyBar extends PositionComponent with HasGameRef<CoolOrBurn> {
+class EnergyBar extends PositionComponent with HasGameRef<RevaliaObs> {
   double maxEnergy;
   double currentEnergy;
   late RectangleComponent energyBar;

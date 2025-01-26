@@ -7,7 +7,7 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 class ActorAnimationHandler {
-  late CoolOrBurn gameRef;
+  late RevaliaObs gameRef;
   late SpriteAnimationComponent spriteAnimationComponent;
 
   late bool isAnimating = false;
@@ -68,7 +68,7 @@ class ActorAnimationHandler {
         // Once attack is finished, switch back to idle
        
       
-        gameRef.gboard.remove(gameRef.gboard.playerView);
+        gameRef.gboard.remove(gameRef.gboard.actorView);
 
         isAnimating = false;
       };
