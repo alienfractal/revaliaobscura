@@ -2,15 +2,16 @@
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/behaviours/actorflip_behavior.dart';
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/game/states/game/handlers/cardview_animation_handler.dart';
+import 'package:coolorburn/game/states/game/handlers/actorentity_animation_handler.dart';
 import 'package:coolorburn/game/states/game/services/card_logic_service.dart';
+import 'package:coolorburn/utils/actionable_entitty_component.dart';
 import 'package:flame/components.dart';
 
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
 
-class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
+class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implements ActionableEntityComponent {
   //late final SpriteComponent cardSprite;
  
   late ActorModel actorModel;
@@ -19,8 +20,8 @@ class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
   late ActorAnimationHandler animationHandler;
   late CardLogicService gameCardLogicService;
 
-  ActorView( {required this.actorModel, required super.position})
-      : super(anchor: Anchor.center, size: Vector2.all(32), behaviors: [
+  ActorPosEntity( {required this.actorModel, required super.position,required super.size})
+      : super(anchor: Anchor.center,  behaviors: [
           ActorBehavior(),
         ]) {
          
@@ -46,11 +47,17 @@ class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
     if (actorModel.status == ActorModel.DIRT) {
      
        animationHandler
-            .loadAnimation(gameRef.cardCacheService.dirtAnimation,Vector2.all(32),this); 
+            .init(gameRef.cardCacheService.dirtAnimation,Vector2.all(32),this); 
+      return;
+    }
+    else    if (actorModel.status == ActorModel.FLOOR) {
+     
+       animationHandler
+            .init(gameRef.cardCacheService.walkingArea,Vector2(300,32),this); 
       return;
     }
     print("cardModel.value ${actorModel.status}");
-    animationHandler.loadAnimation(gameRef.cardCacheService.getAnimation(actorModel.status),Vector2.all(32),this);
+    animationHandler.init(gameRef.cardCacheService.getAnimation(actorModel.status),Vector2.all(32),this);
   }
 
 /// Updates the state of the card view.
@@ -59,7 +66,7 @@ class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
     
     if(animationHandler.isBombCardDone(this)){
          animationHandler
-            .loadAnimation(gameRef.cardCacheService.rubbleAnimation,Vector2.all(32),this); 
+            .init(gameRef.cardCacheService.rubbleAnimation,Vector2.all(32),this); 
     }
 
    
@@ -71,6 +78,31 @@ class ActorView extends PositionedEntity with HasGameRef<RevaliaObs> {
     //print("CardView onRemove");
     animationHandler.cleanUpAnimations();
     removeFromParent();
+  }
+  
+  @override
+  void onLook() {
+    // TODO: implement onLook
+  }
+  
+  @override
+  void onMove(Vector2 position) {
+    // TODO: implement onMove
+  }
+  
+  @override
+  void onTalk() {
+    // TODO: implement onTalk
+  }
+  
+  @override
+  void onTouch() {
+    // TODO: implement onTouch
+  }
+  
+  @override
+  void onUse() {
+    // TODO: implement onUse
   }
 
   

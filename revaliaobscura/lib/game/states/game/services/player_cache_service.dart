@@ -18,6 +18,7 @@ class PlayerCacheService extends SpriteAnimatorCache implements SpriteCache {
 
   @override
   Future<void> preloadAnimations(RevaliaObs gameRef) async {
+
     walkingPlayer = await gameRef.loadSpriteAnimation(
       Assets.resources.images.rebane50x849.path,
       SpriteAnimationData.sequenced(
@@ -28,9 +29,18 @@ class PlayerCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
+    idlePlayer = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.rebane50x84Idle16.path,
+      SpriteAnimationData.sequenced(
+        amount: 15,
+        stepTime: 0.3,
+        textureSize: Vector2(50,84),
+        loop: true,
+      ),);
+
      oldTownCenter = await getSpriteComponent(
-        path: Assets.resources.images.revalTowncenter128x91 .path,
-        imgSize: Vector2(128 , 91 ) );
+        path: Assets.resources.images.revalTowncenter320x200.path,
+        imgSize: Vector2(320 ,200 ) );
 
     print("All player animations preloaded successfully.");
   }

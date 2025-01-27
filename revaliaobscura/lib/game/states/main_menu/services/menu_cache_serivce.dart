@@ -28,7 +28,7 @@ companyTitle =  await getSpriteComponent(
     // Game Tiele sprite
     gameTitle = await getSpriteComponent(
         path: Assets.resources.images.gameTitlePng.path,
-        imgSize: Vector2(160, 90));
+        imgSize: Vector2(104, 56));
 
     gameTitle.position = ComponentUtils.centerComponent(
         gameRef.camDimension, gameTitle,

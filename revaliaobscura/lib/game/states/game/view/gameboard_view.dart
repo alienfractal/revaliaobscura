@@ -1,14 +1,15 @@
 import 'dart:async';
 
 import 'package:coolorburn/game/states/game/model/player_model.dart';
-import 'package:coolorburn/game/states/game/view/playerview.dart';
+import 'package:coolorburn/game/states/game/view/playerentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
 
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/game/states/game/view/cardview.dart';
-import 'package:coolorburn/game/states/game/view/game_board_ui_component.dart';
+import 'package:coolorburn/game/states/game/view/actorentity.dart';
+import 'package:coolorburn/game/states/game/view/game_board_ui_comp_handler.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:coolorburn/utils/actionable_entitty_component.dart';
 import 'package:coolorburn/utils/color_status_text_component.dart';
 import 'package:flame/components.dart';
 
@@ -18,9 +19,10 @@ class GameboardView extends World
   late GameBoardModel gBoardModel;
   int horizontalCells = 0;
   int verticalCells = 0;
-  late List<ActorView> actors;
-  late ActorView actorView;
-  late PlayerView playerView;
+  late List<ActorPosEntity> actors;
+  late ActorPosEntity actorView;
+  late ActorPosEntity walkingAreaView;
+  late PlayerPosEntity playerEntity;
 
   late int activeLevel = gBoardModel.currentLevel;
   late UIGameBoardComponents uiGameBoardComponents;
@@ -32,7 +34,7 @@ class GameboardView extends World
   int clickCount = 0;
 
   double _emplasedTime = -1;
-
+  ActionableType actionType = ActionableType.move;
   GameboardView() {
     gBoardModel = GameBoardModel();
     uiGameBoardComponents = UIGameBoardComponents(gameboardView: this);
@@ -42,7 +44,7 @@ class GameboardView extends World
     super.onLoad();
     print("GameboardView onLoad");
     isBoardLoaded = false;
-    actors = <ActorView>[]; // Initialize the list of cards
+    actors = <ActorPosEntity>[]; // Initialize the list of cards
     uiGameBoardComponents.gameRef = gameRef;
   
   }
@@ -50,12 +52,14 @@ class GameboardView extends World
   @override
   void onMount() {
      super.onMount();
+       debugMode = true;
     print("GameboardView onMount");
 
     //clearBoard();
     
     uiGameBoardComponents.loadUIComponents(gameRef);
    // addActor();
+   addWalkingArea() ;
     addPlayer();
     
     isBoardLoaded = true;
@@ -71,7 +75,7 @@ class GameboardView extends World
     if (actors.isEmpty) {
       return;
     }
-    for (ActorView card in actors) {
+    for (ActorPosEntity card in actors) {
       card.animationHandler.cleanUpAnimations();
 
       if (card.parent != null) {
@@ -134,7 +138,7 @@ class GameboardView extends World
     return;
   }
 
-  updateCameraMovement();
+  //updateCameraMovement();
   updateGameStats(dt);
   updateUIComponents();
 }
@@ -145,8 +149,8 @@ void focusCameraOnStartTile() {
   //    .firstWhere((actor) => actor.actorModel.status == ActorModel.PLAYER);
  //print("actorViewStart ${actorViewStart.toString()} ${actorViewStart.actorModel.toString()} ");
 
-  Vector2 cardViewPosition = playerView.position - Vector2(150, 100);
-  gameRef.cam.moveTo(cardViewPosition, speed: 100.0);
+  //Vector2 cardViewPosition = playerEntity.position - Vector2(150, 100);
+ // gameRef.cam.moveTo(cardViewPosition, speed: 100.0);
 
   isGameStarted = true;
 }
@@ -166,9 +170,9 @@ void handleLevelConclusion(bool isWin) {
 
 void updateCameraMovement() {
   if (clickCount == 0) {
-    gameRef.cam.moveTo(Vector2(playerView.x - 100, playerView.y - 100));
+    gameRef.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
   } else if (clickCount == 1) {
-    gameRef.cam.moveTo(Vector2(playerView.x - 100, playerView.y - 100));
+    gameRef.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
 
   }
 }
@@ -246,7 +250,7 @@ void updateTimerUI() {
   void addActor() { 
 
     ActorModel graveModel = ActorModel(x: 0, y: 0, distance: 0, status:  ActorModel.RELIC, prev: null);
-    actorView = ActorView(actorModel: graveModel, position:Vector2(0, 0));
+    actorView = ActorPosEntity(actorModel: graveModel, position:Vector2(0, 0), size: Vector2(32, 32));
     actors.add(actorView);
     add(actorView);
   }
@@ -254,8 +258,17 @@ void updateTimerUI() {
     void addPlayer() { 
 
     PlayerModel playerModel = PlayerModel(x: 0, y: 0, status:  PlayerModel.WALKING);
-    playerView = PlayerView(playerModel: playerModel, position:Vector2(32, 64));
+    playerEntity = PlayerPosEntity(playerModel: playerModel, position:Vector2(160, 200), size: Vector2(50, 84));
     
-    add(playerView);
+    add(playerEntity);
+  }
+
+  void addWalkingArea() { 
+
+    ActorModel walkingAreaModel = ActorModel(x: 0, y: 0, distance: 0, status:  ActorModel.FLOOR, prev: null);
+    walkingAreaView = ActorPosEntity(actorModel: walkingAreaModel, position:Vector2(160, 200), size: Vector2(300, 32));
+    actors.add(walkingAreaView);
+
+    add(walkingAreaView);
   }
 }

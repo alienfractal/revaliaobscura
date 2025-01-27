@@ -25,7 +25,7 @@ import 'package:flame/camera.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+ 
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
  
@@ -48,7 +48,7 @@ class RevaliaObs extends FlameGame {
   final GameEndView endView = GameEndView();
   final GameScoreView scoreView = GameScoreView();
   static final Logger logger = Logger();
-  Vector2 camDimension = Vector2(256, 182);
+  Vector2 camDimension = Vector2(320, 200);
   late FixedResolutionViewport viewport;
   late bool isCrtShaderActive;
   late ui.FragmentProgram uiProgram;

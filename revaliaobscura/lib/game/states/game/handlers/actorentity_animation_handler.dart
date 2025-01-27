@@ -1,6 +1,6 @@
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/game/states/game/view/cardview.dart';
+import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
@@ -14,14 +14,14 @@ class ActorAnimationHandler {
   late bool isExplodingSFX = false;
   late TimerComponent _blinkTimer;
   late bool blink = false;
-  late ActorView cardViewParent;
+  late ActorPosEntity actorViewParent;
   late SpriteAnimationTicker? animationTicker;
 
   ActorAnimationHandler();
 
-  void loadAnimation(
-      SpriteAnimation spriteAnimation, Vector2 size, ActorView parent) {
-    this.cardViewParent = parent;
+  void init(
+      SpriteAnimation spriteAnimation, Vector2 size, ActorPosEntity parent) {
+    actorViewParent = parent;
     spriteAnimationComponent = SpriteAnimationComponent(
       animation: spriteAnimation,
       size: size,
@@ -32,10 +32,9 @@ class ActorAnimationHandler {
 
   void cleanUpAnimations() {
     spriteAnimationComponent.removeFromParent();
-   
   }
 
-  Future<void> updateCardStyle(ActorView card) async {
+  Future<void> updateCardStyle(ActorPosEntity card) async {
     //print("BLUR CARD VIEW");
 
     RectangleComponent component = RectangleComponent()
@@ -54,20 +53,18 @@ class ActorAnimationHandler {
     await card.add(component);
   }
 
-   void triggerEnemySpawn(){
-
- if (!isAnimating) {
+  void triggerEnemySpawn() {
+    if (!isAnimating) {
       isAnimating = true;
-      cardViewParent.actorModel.status = ActorModel.BROKEN_GRAVE;
+      actorViewParent.actorModel.status = ActorModel.BROKEN_GRAVE;
 
       spriteAnimationComponent.animation =
-           gameRef.cardCacheService.graveBrokenAnimation;
+          gameRef.cardCacheService.graveBrokenAnimation;
       animationTicker = spriteAnimationComponent.animationTicker;
       // Listen for when the attack animation finishes
       animationTicker?.onComplete = () {
         // Once attack is finished, switch back to idle
-       
-      
+
         gameRef.gboard.remove(gameRef.gboard.actorView);
 
         isAnimating = false;
@@ -75,9 +72,7 @@ class ActorAnimationHandler {
     }
   }
 
- 
-
-  bool isBombCardDone(ActorView cardView) {
+  bool isBombCardDone(ActorPosEntity cardView) {
     // Implement card validation logic
 
     if (cardView.actorModel.status == ActorModel.BOMB && isAnimating) {
@@ -95,7 +90,7 @@ class ActorAnimationHandler {
   }
 
   // Method to make the card blink once
-  void blinkCard(ActorView parent) {
+  void blinkCard(ActorPosEntity parent) {
     // Store the original color of the card
 
     final ColorFilter? originalColorFilter =

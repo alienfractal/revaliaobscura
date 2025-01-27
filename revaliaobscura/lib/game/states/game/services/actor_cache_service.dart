@@ -24,8 +24,9 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation coinPowerUp;
   late SpriteAnimation scoreIcon;
   late SpriteAnimation relicPowerTreasure;
+  late SpriteAnimation walkingArea;
 
-  late SpriteAnimation mainPlayer;
+  
 
   late SpriteAnimation gemRelicRuby;
   late SpriteAnimation gemRelicPearl;
@@ -37,13 +38,14 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
   @override
   Future<void> preloadAnimations(RevaliaObs gameRef) async {
 
+ 
 
-   mainPlayer = await gameRef.loadSpriteAnimation(
-      Assets.resources.images.rebane50x849.path,
+    walkingArea = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.walkingArea.path,
       SpriteAnimationData.sequenced(
-        amount: 9,
+        amount: 1,
         stepTime: 0.1,
-        textureSize: Vector2(50, 84),
+        textureSize: Vector2(32, 32),
         loop: false,
       ),
     ); 

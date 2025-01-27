@@ -1,6 +1,6 @@
  
 
-import 'package:coolorburn/game/states/game/view/cardview.dart';
+import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ class CardUIManager {
   }
 
 
-   Future<void> updateCardStyle(ActorView card) async{
+   Future<void> updateCardStyle(ActorPosEntity card) async{
    // print("BLUR CARD VIEW");
     
      RectangleComponent component = RectangleComponent()

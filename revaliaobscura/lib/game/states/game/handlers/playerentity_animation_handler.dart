@@ -4,7 +4,7 @@ import 'dart:ui';
  
 import 'package:coolorburn/game/states/game/model/player_model.dart';
  
-import 'package:coolorburn/game/states/game/view/playerview.dart';
+import 'package:coolorburn/game/states/game/view/playerentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
@@ -18,7 +18,7 @@ class PlayerAnimationHandler {
   late bool isAnimating = false;
   late bool isExplodingSFX = false;
   late bool isAlive = true;
-  late PlayerView enemyView;
+  late PlayerPosEntity playerEntity;
   late Vector2 playerSizeView;
 
   int bombFrameCount = 28;
@@ -26,16 +26,16 @@ class PlayerAnimationHandler {
   late TimerComponent _blinkTimer;
 
   PlayerAnimationHandler();
-  void init(PlayerView parent, RevaliaObs gameRef) {
+  void init(PlayerPosEntity parent, RevaliaObs gameRef) {
     this.gameRef = gameRef;
-    this.enemyView = parent;
+    this.playerEntity = parent;
 
-    playerSizeView = Vector2(50/2, 84/2);
+    playerSizeView =parent.size;
     spriteAnimationComponent = SpriteAnimationComponent(
-        animation: gameRef.enemyCacheService.walkingPlayer,
+        animation: gameRef.enemyCacheService.idlePlayer,
         size: playerSizeView);
 
-    this.enemyView.playerModel.status = PlayerModel.IDLE;
+    this.playerEntity.playerModel.status = PlayerModel.IDLE;
     animationTicker = spriteAnimationComponent.animationTicker;
     parent.add(spriteAnimationComponent);
   }
@@ -91,12 +91,88 @@ class PlayerAnimationHandler {
     
   }
 
+   void triggerWalk({required Vector2 cardPosition,required bool resetAnimation}) {
+    if(resetAnimation){
+      isAnimating = false;
+    }
+
+    if (!isAnimating ) {
+      isAnimating = true;
+      playerEntity.playerModel.status = PlayerModel.WALKING;
+
+      // Check if the card is to the left or right of the miner
+      if (cardPosition.x < playerEntity.position.x) {
+        // Card is to the left, flip the sprite
+        if (!spriteAnimationComponent.isFlippedHorizontally) {
+          spriteAnimationComponent.flipHorizontallyAroundCenter();
+        }
+      } else {
+        // Card is to the right, make sure the sprite is not flipped
+        if (spriteAnimationComponent.isFlippedHorizontally) {
+          spriteAnimationComponent.flipHorizontallyAroundCenter();
+        }
+      }
+      // Play the attack animation
+
+      spriteAnimationComponent.animation =
+          gameRef.enemyCacheService.walkingPlayer;
+      animationTicker = spriteAnimationComponent.animationTicker;
+      // Listen for when the attack animation finishes
+      animationTicker?.onComplete = () {
+        // Once attack is finished, switch back to idle
+        playerEntity.playerModel.status = PlayerModel.IDLE;
+        spriteAnimationComponent.animation =
+            gameRef.enemyCacheService.idlePlayer;
+        animationTicker = spriteAnimationComponent.animationTicker;
+
+        isAnimating = false;
+      };
+    }
+    
+  }
+
+   void triggerIdle({required Vector2 cardPosition,required bool resetAnimation}) {
+    print("triggerIdle");
+      if(resetAnimation){
+      isAnimating = false;
+    }
+    if (!isAnimating) {
+      isAnimating = true;
+      playerEntity.playerModel.status = PlayerModel.IDLE;
+     
+      // Check if the card is to the left or right of the miner
+      if (cardPosition.x < playerEntity.position.x) {
+        print("cardPosition.x < playerEntity.position.x ${cardPosition.x} ${playerEntity.position.x}");
+        // Card is to the left, flip the sprite
+        if (!spriteAnimationComponent.isFlippedHorizontally) {
+          spriteAnimationComponent.flipHorizontallyAroundCenter();
+        }
+      } else {
+        // Card is to the right, make sure the sprite is not flipped
+        if (spriteAnimationComponent.isFlippedHorizontally) {
+          spriteAnimationComponent.flipHorizontallyAroundCenter();
+        }
+      }
+      // Play the attack animation
+
+      spriteAnimationComponent.animation =
+          gameRef.enemyCacheService.idlePlayer;
+      animationTicker = spriteAnimationComponent.animationTicker;
+      // Listen for when the attack animation finishes
+      animationTicker?.onComplete = () {
+        // Once attack is finished, switch back to idle
+     // isAnimating = false;
+      };
+    }
+    
+  }
+
 
 
 
 
   // Method to make the card blink once
-  void blinkSprite(PlayerView parent, {Color color = Colors.red}) {
+  void blinkSprite(PlayerPosEntity parent, {Color color = Colors.red}) {
     // Store the original color of the card
 
     final ColorFilter? originalColorFilter =
@@ -122,10 +198,10 @@ class PlayerAnimationHandler {
   void triggerDie(Vector2 cardPosition) {
     if (!isAnimating) {
       isAnimating = true;
-      enemyView.playerModel.status = PlayerModel.DIE;
+      playerEntity.playerModel.status = PlayerModel.DIE;
 
       // Check if the card is to the left or right of the miner
-      if (cardPosition.x < enemyView.position.x) {
+      if (cardPosition.x < playerEntity.position.x) {
         // Card is to the left, flip the sprite
         if (!spriteAnimationComponent.isFlippedHorizontally) {
           spriteAnimationComponent.flipHorizontallyAroundCenter();
@@ -144,7 +220,7 @@ class PlayerAnimationHandler {
       // Listen for when the attack animation finishes
       animationTicker?.onComplete = () {
         // Once attack is finished, switch back to idle
-        enemyView.playerModel.status = PlayerModel.DIE;
+        playerEntity.playerModel.status = PlayerModel.DIE;
         isAnimating = false;
       };
     }

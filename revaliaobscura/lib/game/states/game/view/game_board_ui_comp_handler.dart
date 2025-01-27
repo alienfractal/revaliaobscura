@@ -5,12 +5,12 @@ import 'package:coolorburn/game/states/game/view/gameboard_view.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/audio_player_wrapper.dart';
+ 
 import 'package:coolorburn/utils/game_button.dart';
 import 'package:coolorburn/utils/game_energy_bar.dart';
 import 'package:coolorburn/utils/game_generic_button.dart';
 import 'package:coolorburn/utils/game_generic_sprite.dart';
-import 'package:coolorburn/utils/image_utils.dart';
+ 
 
 import 'package:coolorburn/utils/color_status_text_component.dart';
 import 'package:coolorburn/utils/text_component.dart';
@@ -28,10 +28,10 @@ class UIGameBoardComponents {
   late ColorStatusTextComponent textComponentTime;
   late BlinkingTextComponent blinkTextComponentEnergy;
 
-  late GenericButton leftArrowButtons;
-  late GenericButton rightArrowButtons;
-  late GenericButton upArrowButtons;
-  late GenericButton downftArrowButtons;
+  late GenericButton touchButton;
+  late GenericButton talkButton;
+  late GenericButton lookButton;
+  late GenericButton wallkButton;
   late GenericButton flameIcon;
   late GenericButton timeIcon;
   late GenericButton bombIcon;
@@ -48,10 +48,10 @@ class UIGameBoardComponents {
 
   void removeGameUIComponents() {
     // Add the game UI components here
-    leftArrowButtons.removeFromParent();
-    rightArrowButtons.removeFromParent();
-    upArrowButtons.removeFromParent();
-    downftArrowButtons.removeFromParent();
+    touchButton.removeFromParent();
+    talkButton.removeFromParent();
+    lookButton.removeFromParent();
+    wallkButton.removeFromParent();
     timeIcon.removeFromParent();
     scoreIcon.removeFromParent();
     energyBar.removeFromParent();
@@ -96,7 +96,8 @@ class UIGameBoardComponents {
 
     Vector2 horizontalArrowButtonSize = Vector2(28, 14);
     Vector2 verticalArrowButtonSize = Vector2(14, 28);
-    downftArrowButtons = GenericButton(
+
+    wallkButton = GenericButton(
         position:
             Vector2(gameRef.camDimension.x / 2, gameRef.camDimension.y - 16),
         buttonIconPath: Assets.resources.images.arrowsCam2.path,
@@ -105,7 +106,7 @@ class UIGameBoardComponents {
         isTiled: true);
     //gameRef.cam.viewport.add(downftArrowButtons);
 
-    upArrowButtons = GenericButton(
+    lookButton = GenericButton(
         position: Vector2(gameRef.camDimension.x / 2, 16),
         buttonIconPath: Assets.resources.images.arrowsCam1.path,
         behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.up),
@@ -113,7 +114,7 @@ class UIGameBoardComponents {
         isTiled: true);
     //gameRef.cam.viewport.add(upArrowButtons);
 
-    leftArrowButtons = GenericButton(
+    touchButton = GenericButton(
         position: Vector2(16, gameRef.camDimension.y / 2),
         buttonIconPath: Assets.resources.images.arrowsCam4.path,
         behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.left),
@@ -121,7 +122,7 @@ class UIGameBoardComponents {
         isTiled: true);
     //gameRef.cam.viewport.add(leftArrowButtons);
 
-    rightArrowButtons = GenericButton(
+    talkButton = GenericButton(
         position:
             Vector2(gameRef.camDimension.x - 16, gameRef.camDimension.y / 2),
         buttonIconPath: Assets.resources.images.arrowsCam3.path,

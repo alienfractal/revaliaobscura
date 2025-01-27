@@ -1,11 +1,11 @@
 {
   "game": {
-    "title": "Cool or Burn",
+    "title": "Revalia Obscura",
     "subtitles": {
       "sub_title1": "Cool",
       "sub_title2": "Burn"
     },
-    "start_message": "Welcome to Cool or Burn!",
+    "start_message": "Welcome to Revalia Obscura!",
     "pause_message": "Game paused. Tap to continue.",
     "over_message": "Game over! Try again?"
   },

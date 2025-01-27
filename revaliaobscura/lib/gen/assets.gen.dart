@@ -288,6 +288,20 @@ class $ResourcesImagesGen {
   AssetGenImage get gamesubTitlePng =>
       const AssetGenImage('resources/images/GamesubTitle.png');
 
+  /// File path: resources/images/Rebane-36x61-16-idlesheet.png
+  AssetGenImage get rebane36x6116Idlesheet =>
+      const AssetGenImage('resources/images/Rebane-36x61-16-idlesheet.png');
+
+  /// File path: resources/images/Rebane-36x61-9-walksheet.png
+  AssetGenImage get rebane36x619Walksheet =>
+      const AssetGenImage('resources/images/Rebane-36x61-9-walksheet.png');
+
+  /// File path: resources/images/Rebane-36x61.aseprite
+  String get rebane36x61 => 'resources/images/Rebane-36x61.aseprite';
+
+  /// File path: resources/images/Rebane-46x77.aseprite
+  String get rebane46x77 => 'resources/images/Rebane-46x77.aseprite';
+
   /// File path: resources/images/Rebane-50x84-9.png
   AssetGenImage get rebane50x849 =>
       const AssetGenImage('resources/images/Rebane-50x84-9.png');
@@ -306,6 +320,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/RevalTowncenter-128x91.png
   AssetGenImage get revalTowncenter128x91 =>
       const AssetGenImage('resources/images/RevalTowncenter-128x91.png');
+
+  /// File path: resources/images/RevalTowncenter-320x200.png
+  AssetGenImage get revalTowncenter320x200 =>
+      const AssetGenImage('resources/images/RevalTowncenter-320x200.png');
 
   /// File path: resources/images/Sprite-0005-56x63-36x45.aseprite
   String get sprite000556x6336x45 =>
@@ -613,6 +631,10 @@ class $ResourcesImagesGen {
   AssetGenImage get tutorial =>
       const AssetGenImage('resources/images/tutorial.png');
 
+  /// File path: resources/images/walking_area.png
+  AssetGenImage get walkingArea =>
+      const AssetGenImage('resources/images/walking_area.png');
+
   /// List of all assets
   List<dynamic> get values => [
         gameBackground32x32,
@@ -621,11 +643,16 @@ class $ResourcesImagesGen {
         gameTitlePng,
         gamesubTitleAseprite,
         gamesubTitlePng,
+        rebane36x6116Idlesheet,
+        rebane36x619Walksheet,
+        rebane36x61,
+        rebane46x77,
         rebane50x849,
         rebane50x84Idle16,
         rebane50x84,
         revalGates128x91,
         revalTowncenter128x91,
+        revalTowncenter320x200,
         sprite000556x6336x45,
         arrowsCam1,
         arrowsCam2,
@@ -706,7 +733,8 @@ class $ResourcesImagesGen {
         soundiconsPng,
         start,
         timeicon1,
-        tutorial
+        tutorial,
+        walkingArea
       ];
 }
 

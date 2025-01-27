@@ -2,7 +2,7 @@
 
  
  
-import 'package:coolorburn/game/states/game/view/playerview.dart';
+import 'package:coolorburn/game/states/game/view/playerentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 
@@ -10,7 +10,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class PlayerBehavior extends Behavior<PlayerView>
+class PlayerBehavior extends Behavior<PlayerPosEntity>
     with TapCallbacks, HasGameRef<RevaliaObs> {
 
   static int tapCount = 0;
