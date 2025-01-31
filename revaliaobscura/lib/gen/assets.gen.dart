@@ -146,23 +146,29 @@ class $ResourcesAudioGen {
   /// File path: resources/audio/mfxLevelWin.mp3
   String get mfxLevelWin => 'resources/audio/mfxLevelWin.mp3';
 
-  /// File path: resources/audio/mfxSuspense1.mp3
-  String get mfxSuspense1 => 'resources/audio/mfxSuspense1.mp3';
+  /// File path: resources/audio/mfxchoralintro1.mp3
+  String get mfxchoralintro1 => 'resources/audio/mfxchoralintro1.mp3';
 
-  /// File path: resources/audio/mfxSuspense2.mp3
-  String get mfxSuspense2 => 'resources/audio/mfxSuspense2.mp3';
+  /// File path: resources/audio/mfxcitygates.mp3
+  String get mfxcitygates => 'resources/audio/mfxcitygates.mp3';
+
+  /// File path: resources/audio/mfxcityouterwalls.mp3
+  String get mfxcityouterwalls => 'resources/audio/mfxcityouterwalls.mp3';
 
   /// File path: resources/audio/mfxgamestart.mp3
   String get mfxgamestart => 'resources/audio/mfxgamestart.mp3';
-
-  /// File path: resources/audio/mfxintromenu.mp3
-  String get mfxintromenu => 'resources/audio/mfxintromenu.mp3';
 
   /// File path: resources/audio/mfxintromenu2.mp3
   String get mfxintromenu2 => 'resources/audio/mfxintromenu2.mp3';
 
   /// File path: resources/audio/mfxlore.mp3
   String get mfxlore => 'resources/audio/mfxlore.mp3';
+
+  /// File path: resources/audio/mfxoldroad.mp3
+  String get mfxoldroad => 'resources/audio/mfxoldroad.mp3';
+
+  /// File path: resources/audio/mfxshortintro.mp3
+  String get mfxshortintro => 'resources/audio/mfxshortintro.mp3';
 
   /// File path: resources/audio/ocuhhit.mp3
   String get ocuhhit => 'resources/audio/ocuhhit.mp3';
@@ -232,12 +238,14 @@ class $ResourcesAudioGen {
         mfxGameOver,
         mfxGameOver2,
         mfxLevelWin,
-        mfxSuspense1,
-        mfxSuspense2,
+        mfxchoralintro1,
+        mfxcitygates,
+        mfxcityouterwalls,
         mfxgamestart,
-        mfxintromenu,
         mfxintromenu2,
         mfxlore,
+        mfxoldroad,
+        mfxshortintro,
         ocuhhit,
         pickupCoin,
         powerup,
@@ -317,6 +325,14 @@ class $ResourcesImagesGen {
   AssetGenImage get revalGates128x91 =>
       const AssetGenImage('resources/images/RevalGates128x91.png');
 
+  /// File path: resources/images/RevalGates320x200.aseprite
+  String get revalGates320x200Aseprite =>
+      'resources/images/RevalGates320x200.aseprite';
+
+  /// File path: resources/images/RevalGates320x200.png
+  AssetGenImage get revalGates320x200Png =>
+      const AssetGenImage('resources/images/RevalGates320x200.png');
+
   /// File path: resources/images/RevalTowncenter-128x91.png
   AssetGenImage get revalTowncenter128x91 =>
       const AssetGenImage('resources/images/RevalTowncenter-128x91.png');
@@ -325,9 +341,33 @@ class $ResourcesImagesGen {
   AssetGenImage get revalTowncenter320x200 =>
       const AssetGenImage('resources/images/RevalTowncenter-320x200.png');
 
+  /// File path: resources/images/RevalTowncenter-market-animation-320x200.png
+  AssetGenImage get revalTowncenterMarketAnimation320x200 =>
+      const AssetGenImage(
+          'resources/images/RevalTowncenter-market-animation-320x200.png');
+
   /// File path: resources/images/Sprite-0005-56x63-36x45.aseprite
   String get sprite000556x6336x45 =>
       'resources/images/Sprite-0005-56x63-36x45.aseprite';
+
+  /// File path: resources/images/action-icon-look-24x24.png
+  AssetGenImage get actionIconLook24x24 =>
+      const AssetGenImage('resources/images/action-icon-look-24x24.png');
+
+  /// File path: resources/images/action-icon-talk-24x24.png
+  AssetGenImage get actionIconTalk24x24 =>
+      const AssetGenImage('resources/images/action-icon-talk-24x24.png');
+
+  /// File path: resources/images/action-icon-touch-24x24.png
+  AssetGenImage get actionIconTouch24x24 =>
+      const AssetGenImage('resources/images/action-icon-touch-24x24.png');
+
+  /// File path: resources/images/action-icon-walk-24x24.png
+  AssetGenImage get actionIconWalk24x24 =>
+      const AssetGenImage('resources/images/action-icon-walk-24x24.png');
+
+  /// File path: resources/images/action-icons.aseprite
+  String get actionIcons => 'resources/images/action-icons.aseprite';
 
   /// File path: resources/images/arrows-cam1.png
   AssetGenImage get arrowsCam1 =>
@@ -360,6 +400,9 @@ class $ResourcesImagesGen {
   /// File path: resources/images/bombIcon1.png
   AssetGenImage get bombIcon1 =>
       const AssetGenImage('resources/images/bombIcon1.png');
+
+  /// File path: resources/images/books.aseprite
+  String get books => 'resources/images/books.aseprite';
 
   /// File path: resources/images/buttonstart.png
   AssetGenImage get buttonstart =>
@@ -452,6 +495,22 @@ class $ResourcesImagesGen {
   /// File path: resources/images/dwarf2.aseprite
   String get dwarf2 => 'resources/images/dwarf2.aseprite';
 
+  /// File path: resources/images/eesti-embrodery-25x23.aseprite
+  String get eestiEmbrodery25x23 =>
+      'resources/images/eesti-embrodery-25x23.aseprite';
+
+  /// File path: resources/images/eestipattern-23x23.aseprite
+  String get eestipattern23x23 =>
+      'resources/images/eestipattern-23x23.aseprite';
+
+  /// File path: resources/images/eestipattern-85x23.aseprite
+  String get eestipattern85x23 =>
+      'resources/images/eestipattern-85x23.aseprite';
+
+  /// File path: resources/images/eestipattern2-85x23.aseprite
+  String get eestipattern285x23 =>
+      'resources/images/eestipattern2-85x23.aseprite';
+
   /// File path: resources/images/eestlandriver128x91.png
   AssetGenImage get eestlandriver128x91 =>
       const AssetGenImage('resources/images/eestlandriver128x91.png');
@@ -523,6 +582,10 @@ class $ResourcesImagesGen {
   AssetGenImage get greenZombie =>
       const AssetGenImage('resources/images/green-zombie.png');
 
+  /// File path: resources/images/guard-distance1-52x74.aseprite
+  String get guardDistance152x74 =>
+      'resources/images/guard-distance1-52x74.aseprite';
+
   /// File path: resources/images/miner-attack-sheet-48x48-9.png
   AssetGenImage get minerAttackSheet48x489 =>
       const AssetGenImage('resources/images/miner-attack-sheet-48x48-9.png');
@@ -554,8 +617,11 @@ class $ResourcesImagesGen {
   AssetGenImage get pattern220x22 =>
       const AssetGenImage('resources/images/pattern-220x22.png');
 
+  /// File path: resources/images/pattern.aseprite
+  String get patternAseprite => 'resources/images/pattern.aseprite';
+
   /// File path: resources/images/pattern.png
-  AssetGenImage get pattern =>
+  AssetGenImage get patternPng =>
       const AssetGenImage('resources/images/pattern.png');
 
   /// File path: resources/images/potion-sheet.png
@@ -651,9 +717,17 @@ class $ResourcesImagesGen {
         rebane50x84Idle16,
         rebane50x84,
         revalGates128x91,
+        revalGates320x200Aseprite,
+        revalGates320x200Png,
         revalTowncenter128x91,
         revalTowncenter320x200,
+        revalTowncenterMarketAnimation320x200,
         sprite000556x6336x45,
+        actionIconLook24x24,
+        actionIconTalk24x24,
+        actionIconTouch24x24,
+        actionIconWalk24x24,
+        actionIcons,
         arrowsCam1,
         arrowsCam2,
         arrowsCam3,
@@ -662,6 +736,7 @@ class $ResourcesImagesGen {
         blacksquare48x48,
         bombIconAnim,
         bombIcon1,
+        books,
         buttonstart,
         cellTombAseprite,
         cellTombPng,
@@ -686,6 +761,10 @@ class $ResourcesImagesGen {
         dwarfWalk,
         dwarf,
         dwarf2,
+        eestiEmbrodery25x23,
+        eestipattern23x23,
+        eestipattern85x23,
+        eestipattern285x23,
         eestlandriver128x91,
         end,
         flameiconAseprite,
@@ -706,6 +785,7 @@ class $ResourcesImagesGen {
         graveStill32x321,
         gravelTombBreak32x328,
         greenZombie,
+        guardDistance152x74,
         minerAttackSheet48x489,
         minerBlockSheet48x487,
         minerHurt1Sheet48x485Sheet,
@@ -714,7 +794,8 @@ class $ResourcesImagesGen {
         musicfxVolume,
         oldking,
         pattern220x22,
-        pattern,
+        patternAseprite,
+        patternPng,
         potionSheet,
         render,
         roadvillage128x91,

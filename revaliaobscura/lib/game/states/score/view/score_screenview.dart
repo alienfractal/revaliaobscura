@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
-import 'package:coolorburn/utils/text_component.dart';
+import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
@@ -58,7 +58,7 @@ class GameScoreView extends World
 
   // Initialization of components
   void init() {
-    gameBackground = gameRef.cardCacheService.gameBackground;
+    gameBackground = gameRef.actorCacheService.gameBackground;
 
     textComponentLoading = TextUtils.addTextToview(
         gameRef,

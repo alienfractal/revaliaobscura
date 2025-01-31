@@ -1,3 +1,6 @@
+import 'package:coolorburn/game/states/game/behaviours/action_type_behaviour.dart';
+import 'package:coolorburn/game/states/game/model/actor_model.dart';
+import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/behaviours/arrow_button_bevaviour.dart';
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
@@ -5,15 +8,17 @@ import 'package:coolorburn/game/states/game/view/gameboard_view.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:coolorburn/utils/actionable_entitty_component.dart';
  
-import 'package:coolorburn/utils/game_button.dart';
-import 'package:coolorburn/utils/game_energy_bar.dart';
-import 'package:coolorburn/utils/game_generic_button.dart';
-import 'package:coolorburn/utils/game_generic_sprite.dart';
+import 'package:coolorburn/utils/ui/game_button.dart';
+import 'package:coolorburn/utils/ui/game_energy_bar.dart';
+import 'package:coolorburn/utils/ui/game_generic_button.dart';
+import 'package:coolorburn/utils/ui/game_generic_sprite.dart';
  
 
-import 'package:coolorburn/utils/color_status_text_component.dart';
-import 'package:coolorburn/utils/text_component.dart';
+import 'package:coolorburn/utils/ui/color_status_text_component.dart';
+import 'package:coolorburn/utils/ui/generic_button_manager.dart';
+import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +37,7 @@ class UIGameBoardComponents {
   late GenericButton talkButton;
   late GenericButton lookButton;
   late GenericButton wallkButton;
+  late GenericButtonManager gameActionGroup = GenericButtonManager();
   late GenericButton flameIcon;
   late GenericButton timeIcon;
   late GenericButton bombIcon;
@@ -64,6 +70,8 @@ class UIGameBoardComponents {
   void loadUIComponents(RevaliaObs gameRef) {
     gameboardView.add(gameRef.enemyCacheService.oldTownCenter);
 
+    addAnimatedBackground();
+
     blinkTextComponentScore = TextUtils.addTextToview(
         gameRef,
         'SCORE : ${gBoardModel.totalScore.toString().padLeft(6, '0')}',
@@ -94,42 +102,49 @@ class UIGameBoardComponents {
         false);*/
     gameRef.cam.viewport.add(textComponentTime);
 
-    Vector2 horizontalArrowButtonSize = Vector2(28, 14);
-    Vector2 verticalArrowButtonSize = Vector2(14, 28);
+    Vector2 horizontalArrowButtonSize = Vector2(24, 24);
+    //Vector2 verticalArrowButtonSize = Vector2(14, 28);
 
+     
+    int actoionBarXposition = horizontalArrowButtonSize.x.toInt()+2;
+    int gapx =32;
+    double gapy =12;
     wallkButton = GenericButton(
         position:
-            Vector2(gameRef.camDimension.x / 2, gameRef.camDimension.y - 16),
-        buttonIconPath: Assets.resources.images.arrowsCam2.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.down),
+            Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition,  gapy),
+        buttonIconPath: Assets.resources.images.actionIconWalk24x24.path,
+        behavior: EntityActionTapHandler(actionType: ActionableType.move,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
-        isTiled: true);
-    //gameRef.cam.viewport.add(downftArrowButtons);
+        isTiled: false);
+     gameRef.cam.viewport.add(wallkButton);
+     gameActionGroup.buttons.add(wallkButton);
 
     lookButton = GenericButton(
-        position: Vector2(gameRef.camDimension.x / 2, 16),
-        buttonIconPath: Assets.resources.images.arrowsCam1.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.up),
+        position: Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition*2, gapy),
+        buttonIconPath: Assets.resources.images.actionIconLook24x24.path,
+        behavior: EntityActionTapHandler(actionType: ActionableType.look,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
-        isTiled: true);
-    //gameRef.cam.viewport.add(upArrowButtons);
-
+        isTiled: false);
+    gameRef.cam.viewport.add(lookButton);
+    gameActionGroup.buttons.add(lookButton);
     touchButton = GenericButton(
-        position: Vector2(16, gameRef.camDimension.y / 2),
-        buttonIconPath: Assets.resources.images.arrowsCam4.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.left),
-        buttonSize: verticalArrowButtonSize,
-        isTiled: true);
-    //gameRef.cam.viewport.add(leftArrowButtons);
+        position: Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition*3, gapy ),
+        buttonIconPath: Assets.resources.images.actionIconTouch24x24.path,
+        behavior: EntityActionTapHandler(actionType: ActionableType.touch,buttonManager: gameActionGroup),
+        buttonSize: horizontalArrowButtonSize,
+        isTiled: false);
+   gameRef.cam.viewport.add(touchButton);
+   gameActionGroup.buttons.add(touchButton);
 
     talkButton = GenericButton(
         position:
-            Vector2(gameRef.camDimension.x - 16, gameRef.camDimension.y / 2),
-        buttonIconPath: Assets.resources.images.arrowsCam3.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.right),
-        buttonSize: verticalArrowButtonSize,
-        isTiled: true);
-    //gameRef.cam.viewport.add(rightArrowButtons);
+            Vector2(gapx +gameRef.camDimension.x / 2 -actoionBarXposition*4,gapy),
+        buttonIconPath: Assets.resources.images.actionIconTalk24x24.path,
+        behavior: EntityActionTapHandler(actionType: ActionableType.talk,buttonManager: gameActionGroup),
+        buttonSize: horizontalArrowButtonSize,
+        isTiled: false);
+    gameRef.cam.viewport.add(talkButton);
+    gameActionGroup.buttons.add(talkButton);
     //=====================================
     /*flameIcon = GenericButton(
         position: Vector2(248, 8),
@@ -164,7 +179,7 @@ class UIGameBoardComponents {
         buttonSize: Vector2(14, 14));*/
 
     scoreIcon = GenericSpriteAnimation(
-        spriteAnimation: gameRef.cardCacheService.scoreIcon,
+        spriteAnimation: gameRef.actorCacheService.scoreIcon,
         animationSize: Vector2(32, 32),
         position: Vector2(18, 8),
         behaviors: []);
@@ -192,5 +207,11 @@ class UIGameBoardComponents {
     //Volume for sound Music
     //buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
     gameRef.cam.viewport.add(buttonMscFXVolume);
+  }
+
+  void addAnimatedBackground() {
+       ActorModel backAnimationModel = ActorModel(x: 0, y: 0, distance: 0, status: ActorModel.BACK_ANIM);
+    ActorPosEntity backAnimationEntity = ActorPosEntity(actorModel: backAnimationModel, position: Vector2(160,100), size: Vector2(320, 200));
+    gameboardView.add(backAnimationEntity);
   }
 }

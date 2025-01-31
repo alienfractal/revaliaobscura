@@ -59,7 +59,7 @@ class ActorAnimationHandler {
       actorViewParent.actorModel.status = ActorModel.BROKEN_GRAVE;
 
       spriteAnimationComponent.animation =
-          gameRef.cardCacheService.graveBrokenAnimation;
+          gameRef.actorCacheService.graveBrokenAnimation;
       animationTicker = spriteAnimationComponent.animationTicker;
       // Listen for when the attack animation finishes
       animationTicker?.onComplete = () {

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image_utils.dart';
-import 'package:coolorburn/utils/text_component.dart';
+import 'package:coolorburn/utils/image/image_utils.dart';
+import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
 
@@ -47,7 +47,7 @@ class GameEndView extends World
         offsetX: 2, offsetY: 2);
         textComponentEnd.toggleBlinking();
 
-    gameBackground = gameRef.cardCacheService.gameBackground;
+    gameBackground = gameRef.actorCacheService.gameBackground;
 
     
     textComponentMessage =  TextUtils.addTextToview(

@@ -14,6 +14,7 @@ class ActorModel {
   static const int RELIC = 12;
   static const int GRAVE = 13;
   static const int BROKEN_GRAVE = 14;
+  static const int BACK_ANIM = 15;
 
   /// Constructor with required fields
   ActorModel({

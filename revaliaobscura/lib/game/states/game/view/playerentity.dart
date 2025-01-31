@@ -97,10 +97,10 @@ class PlayerPosEntity extends PositionedEntity
   }
 
   @override
-  void onMove(Vector2 position) {
+  void onMove(Vector2 newLocation) {
     // TODO: implement onMove
     isWalking = true;
-    this.destination = destination;
+    this.destination = newLocation;
     playerAnimationHandler.triggerWalk(
         cardPosition: destination, resetAnimation: true);
   }

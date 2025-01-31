@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:coolorburn/game/states/game/behaviours/actorflip_behavior.dart';
 import 'package:coolorburn/game/states/game/model/player_model.dart';
 import 'package:coolorburn/game/states/game/view/playerentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
@@ -10,7 +11,7 @@ import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/game/states/game/view/game_board_ui_comp_handler.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 import 'package:coolorburn/utils/actionable_entitty_component.dart';
-import 'package:coolorburn/utils/color_status_text_component.dart';
+import 'package:coolorburn/utils/ui/color_status_text_component.dart';
 import 'package:flame/components.dart';
 
 class GameboardView extends World
@@ -59,14 +60,15 @@ class GameboardView extends World
     
     uiGameBoardComponents.loadUIComponents(gameRef);
    // addActor();
-   addWalkingArea() ;
+   
+    addWalkingArea() ;
     addPlayer();
     
     isBoardLoaded = true;
     isGameFinished = false;
     clickCount = 0;
     gameRef.ap.stopMusic();
-    gameRef.ap.playMusic(Assets.resources.audio.mfxFear);
+    gameRef.ap.playMusic(Assets.resources.audio.mfxcitygates);
  
    
   }
@@ -266,9 +268,9 @@ void updateTimerUI() {
   void addWalkingArea() { 
 
     ActorModel walkingAreaModel = ActorModel(x: 0, y: 0, distance: 0, status:  ActorModel.FLOOR, prev: null);
-    walkingAreaView = ActorPosEntity(actorModel: walkingAreaModel, position:Vector2(160, 200), size: Vector2(300, 32));
+    walkingAreaView = ActorPosEntity(actorModel: walkingAreaModel, position:Vector2(160, 200), size: Vector2(200, 32));
     actors.add(walkingAreaView);
-
+    walkingAreaView.add(ActorBehavior());
     add(walkingAreaView);
   }
 }

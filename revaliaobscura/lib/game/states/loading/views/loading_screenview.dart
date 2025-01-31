@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/text_component.dart';
+import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
 
@@ -45,7 +45,7 @@ class LoadingView extends World
 
  void loadLevel()  {
     
-    gameRef.ap.playMusic(Assets.resources.audio.mfxintromenu2);
+    gameRef.ap.playMusic(Assets.resources.audio.mfxchoralintro1);
     textComponentLevel.text = "Level ${gameRef.gboard.gBoardModel.currentLevel}";
     Future.delayed(const Duration(milliseconds: 3500), () {
     

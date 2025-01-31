@@ -1,6 +1,6 @@
 
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/game_button.dart';
+import 'package:coolorburn/utils/ui/game_button.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';

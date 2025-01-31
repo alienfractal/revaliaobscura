@@ -1,13 +1,13 @@
 import 'package:coolorburn/revalia_obs.dart';
 
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image_utils.dart';
+import 'package:coolorburn/utils/image/image_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-import '../game/states/main_menu/behaviours/start_button_taphandler.dart';
+import '../../game/states/main_menu/behaviours/start_button_taphandler.dart';
 
 class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late SpriteComponent spriteComponent;

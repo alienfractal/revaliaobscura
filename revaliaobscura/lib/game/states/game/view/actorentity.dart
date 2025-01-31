@@ -22,7 +22,7 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
 
   ActorPosEntity( {required this.actorModel, required super.position,required super.size})
       : super(anchor: Anchor.center,  behaviors: [
-          ActorBehavior(),
+         
         ]) {
          
     // Initialize the card with default behaviors or properties
@@ -47,17 +47,24 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
     if (actorModel.status == ActorModel.DIRT) {
      
        animationHandler
-            .init(gameRef.cardCacheService.dirtAnimation,Vector2.all(32),this); 
+            .init(gameRef.actorCacheService.dirtAnimation,Vector2.all(32),this); 
       return;
     }
     else    if (actorModel.status == ActorModel.FLOOR) {
      
        animationHandler
-            .init(gameRef.cardCacheService.walkingArea,Vector2(300,32),this); 
+            .init(gameRef.actorCacheService.walkingArea,Vector2(256,32),this); 
+      return;
+    }
+
+       else    if (actorModel.status == ActorModel.BACK_ANIM) {
+     
+       animationHandler
+            .init(gameRef.actorCacheService.gameTownAnimationBackground,Vector2(320,200),this); 
       return;
     }
     print("cardModel.value ${actorModel.status}");
-    animationHandler.init(gameRef.cardCacheService.getAnimation(actorModel.status),Vector2.all(32),this);
+    animationHandler.init(gameRef.actorCacheService.getAnimation(actorModel.status),Vector2.all(32),this);
   }
 
 /// Updates the state of the card view.
@@ -66,7 +73,7 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
     
     if(animationHandler.isBombCardDone(this)){
          animationHandler
-            .init(gameRef.cardCacheService.rubbleAnimation,Vector2.all(32),this); 
+            .init(gameRef.actorCacheService.rubbleAnimation,Vector2.all(32),this); 
     }
 
    

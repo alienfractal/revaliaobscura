@@ -6,7 +6,7 @@ import 'package:flame/sprite.dart';
 import 'package:flame/extensions.dart';
 import 'package:flame/src/components/sprite_component.dart';
 
-class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
+class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
   // Individual animations for card types
   late SpriteAnimation fireAnimation;
   late SpriteAnimation iceAnimation;
@@ -26,19 +26,28 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation relicPowerTreasure;
   late SpriteAnimation walkingArea;
 
-  
+  late SpriteAnimation gameTownAnimationBackground;
 
   late SpriteAnimation gemRelicRuby;
   late SpriteAnimation gemRelicPearl;
   late SpriteAnimation gemRelicEmerald;
   late SpriteAnimation graveAnimation;
   late SpriteAnimation graveBrokenAnimation;
+
  
 
   @override
   Future<void> preloadAnimations(RevaliaObs gameRef) async {
 
- 
+    gameTownAnimationBackground = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.revalTowncenterMarketAnimation320x200.path,
+      SpriteAnimationData.sequenced(
+        amount: 5,
+        stepTime: 0.35,
+        textureSize: Vector2(320, 200),
+        loop: true,
+      ),
+    );  
 
     walkingArea = await gameRef.loadSpriteAnimation(
       Assets.resources.images.walkingArea.path,
@@ -340,7 +349,9 @@ class CardCacheService extends SpriteAnimatorCache implements SpriteCache {
       case ActorModel.BROKEN_GRAVE:
         return graveBrokenAnimation; 
       case ActorModel.GRAVE:
-        return graveAnimation;   
+        return graveAnimation;
+      case ActorModel.BACK_ANIM:
+        return gameTownAnimationBackground; 
       default:
         throw Exception('Unknown CardType: $modelValue');
     }

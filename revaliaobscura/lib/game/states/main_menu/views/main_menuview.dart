@@ -5,11 +5,11 @@ import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphand
 import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/start_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/game_background_taphandler.dart';
-import 'package:coolorburn/utils/audio_player_wrapper.dart';
-import 'package:coolorburn/utils/game_button.dart';
-import 'package:coolorburn/utils/text_component.dart';
+import 'package:coolorburn/utils/sound/audio_player_wrapper.dart';
+import 'package:coolorburn/utils/ui/game_button.dart';
+import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image_utils.dart';
+import 'package:coolorburn/utils/image/image_utils.dart';
 import 'package:coolorburn/utils/text_utils.dart';
 import 'package:flame/components.dart';
  
@@ -53,7 +53,7 @@ class MainMenuView extends World
     textComponent.toggleBlinking();
     gameRef.ap.stopMusic();
 
-     gameRef.ap.playMusic(Assets.resources.audio.mfxintromenu);
+     gameRef.ap.playMusic(Assets.resources.audio.mfxshortintro);
     
   }
 

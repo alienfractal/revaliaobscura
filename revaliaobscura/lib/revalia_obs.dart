@@ -16,8 +16,8 @@ import 'package:coolorburn/game/states/score/view/score_screenview.dart';
 import 'package:coolorburn/gamefsm/fsm.dart';
 import 'package:coolorburn/gamefsm/game_fsm.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/app_translations.dart';
-import 'package:coolorburn/utils/web_audio_player.dart';
+import 'package:coolorburn/utils/translation/app_translations.dart';
+import 'package:coolorburn/utils/sound/web_audio_player.dart';
 
 
 import 'package:flame/camera.dart';
@@ -54,7 +54,7 @@ class RevaliaObs extends FlameGame {
   late ui.FragmentProgram uiProgram;
 
 
-  late CardCacheService cardCacheService;
+  late ActorCacheService actorCacheService;
   late MenuCacheSerivce menuCacheService;
   late LoadingCacheService loadingCacheService;
   late PlayerCacheService enemyCacheService;
@@ -69,7 +69,7 @@ class RevaliaObs extends FlameGame {
      isCrtShaderActive = false;
      
 
-     cardCacheService = CardCacheService();
+     actorCacheService = ActorCacheService();
      menuCacheService = MenuCacheSerivce();
      loadingCacheService = LoadingCacheService();
      enemyCacheService = PlayerCacheService();
@@ -146,7 +146,7 @@ class RevaliaObs extends FlameGame {
     // Load the shader
     uiProgram =
     await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
-    await cardCacheService.preloadAnimations(this);
+    await actorCacheService.preloadAnimations(this);
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);

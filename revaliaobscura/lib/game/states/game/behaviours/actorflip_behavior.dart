@@ -4,6 +4,7 @@
 import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:coolorburn/utils/actionable_entitty_component.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -32,28 +33,27 @@ class ActorBehavior extends Behavior<ActorPosEntity>
   void onTapDown(TapDownEvent event)  {
     super.onTapDown(event);
     RevaliaObs.logger.d("TAP DOWN");
-
     tapCount++;
-    if (tapCount < 223) {
-     parseTapLocation(event);
-      gameRef.ap.playSoundFx(Assets.resources.audio.blipSelect1);
-      //gameRef.ap.playSoundFx("flip.mp3");
-    }else{
-      tapCount = 0;
-      gameRef.gboard.isEnemyDefeated = true;
-    }
+    parseTapLocation(event);
+   
+
+   
   }
 
   void parseTapLocation(TapDownEvent event) {    
     var absPos = parent.absolutePositionOf(event.localPosition);
-    print('TAP DOWN');
+     
     print("event.localPosition ${event.localPosition.x} ${event.localPosition.y}");
     
     print("parent.absolutePositionOf(event.localPosition)  ${absPos.x} ${absPos.y}");
+   
     
     //gameRef.gboard.playerView.position =absPos;
+    if(gameRef.gboard.actionType == ActionableType.move){
+      gameRef.gboard.playerEntity.onMove(absPos);
+      gameRef.ap.playSoundFx(Assets.resources.audio.select);
+    }
     
-    gameRef.gboard.playerEntity.onMove(absPos);
    
     
 
