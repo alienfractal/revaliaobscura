@@ -31,5 +31,30 @@
       "Uncover whether the threat is mundane or supernatural"
     ],
     "exit_button": "Exit"
+  },
+  "dialogues": {
+    "npc_intro": {
+      "text": "Hello, traveler! Welcome to Reval.",
+      "responses": [
+        {
+          "text": "Who are you?",
+          "next": "npc_identity"
+        },
+        {
+          "text": "Goodbye.",
+          "next": "end"
+        }
+      ],
+      "event": "npc_intro_event"
+    },
+    "npc_identity": {
+      "text": "I am a smith looking for work. have nothing better to do.",
+      "responses": [
+        {
+          "text": "Thanks for the info.",
+          "next": "end"
+        }
+      ]
+    }
   }
 }

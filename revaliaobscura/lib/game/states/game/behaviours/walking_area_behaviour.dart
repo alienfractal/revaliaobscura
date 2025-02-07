@@ -10,7 +10,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class ActorBehavior extends Behavior<ActorEntity>
+class WalkingAreaBehaviour extends Behavior<ActorEntity>
     with TapCallbacks, HasGameRef<RevaliaObs> {
 
   static int tapCount = 0;
@@ -50,12 +50,10 @@ class ActorBehavior extends Behavior<ActorEntity>
     
     //gameRef.gboard.playerView.position =absPos;
     if(gameRef.gboard.actionType == ActionableType.move){
-      print("move");
       gameRef.gboard.playerEntity.onMove(absPos);
       gameRef.ap.playSoundFx(Assets.resources.audio.select);
     } else if(gameRef.gboard.actionType == ActionableType.talk){
-        print("move");
-      parent.onTalk();
+      print("floors don't talk");
     }
     
    

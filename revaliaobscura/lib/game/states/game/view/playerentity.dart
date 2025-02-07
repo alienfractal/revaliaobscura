@@ -1,15 +1,12 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:coolorburn/game/states/game/handlers/playerentity_animation_handler.dart';
 import 'package:coolorburn/game/states/game/model/player_model.dart';
 import 'package:coolorburn/game/states/game/services/player_logic_service.dart';
 
-import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/actionable_entitty_component.dart';
+import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
 class PlayerPosEntity extends PositionedEntity

@@ -1,6 +1,5 @@
-import 'package:coolorburn/game/states/game/view/entity_ui_manager.dart';
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/actionable_entitty_component.dart';
+import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
 import 'package:coolorburn/utils/ui/game_generic_button.dart';
 import 'package:coolorburn/utils/ui/generic_button_manager.dart';
 import 'package:flame/components.dart';
@@ -23,10 +22,11 @@ class EntityActionTapHandler extends Behavior<GenericButton>
   @override
   void onTapDown(TapDownEvent event) {
     // Example: Scale the button as an animation effect
+    super.onTapDown(event);
     gameRef.gboard.actionType = actionType;
     print("GLobal actionType  set to $actionType");
     //EntityUIManager.blinkEntity(parent);
     buttonManager.onButtonTapped(parent);
-    super.onTapDown(event);
+    
   }
 }

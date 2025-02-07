@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
@@ -147,11 +146,12 @@ class RevaliaObs extends FlameGame {
     uiProgram =
     await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
     await actorCacheService.preloadAnimations(this);
+    await actorCacheService.preloadSprites(this );
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);
     await enemyCacheService.preloadAnimations(this);
-     await appTranslations.loadTranslations();
+    await appTranslations.loadTranslations();
     
     
 

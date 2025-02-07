@@ -1,7 +1,7 @@
 import 'package:coolorburn/game/states/game/model/player_model.dart';
 import 'package:coolorburn/revalia_obs.dart';
  
-import 'package:coolorburn/utils/sprite_animator_cache_service.dart';
+import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/extensions.dart';

@@ -1,17 +1,18 @@
 
+
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/game/behaviours/actorflip_behavior.dart';
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
 import 'package:coolorburn/game/states/game/handlers/actorentity_animation_handler.dart';
 import 'package:coolorburn/game/states/game/services/card_logic_service.dart';
-import 'package:coolorburn/utils/actionable_entitty_component.dart';
+import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
+import 'package:coolorburn/utils/dialogsystem/dialog_renderer.dart';
 import 'package:flame/components.dart';
 
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
 
-class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implements ActionableEntityComponent {
+class ActorEntity extends PositionedEntity with HasGameRef<RevaliaObs> implements ActionableEntityComponent {
   //late final SpriteComponent cardSprite;
  
   late ActorModel actorModel;
@@ -19,8 +20,9 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
   static int actorCount = 0;
   late ActorAnimationHandler animationHandler;
   late CardLogicService gameCardLogicService;
+  late String actorDialogueId ="";
 
-  ActorPosEntity( {required this.actorModel, required super.position,required super.size})
+  ActorEntity( {required this.actorModel, required super.position,required super.size})
       : super(anchor: Anchor.center,  behaviors: [
          
         ]) {
@@ -63,6 +65,14 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
             .init(gameRef.actorCacheService.gameTownAnimationBackground,Vector2(320,200),this); 
       return;
     }
+     else    if (actorModel.status == ActorModel.OLD_SAILOR) {
+     
+       animationHandler
+            .init(gameRef.actorCacheService.npcOldSailor,Vector2(50,85),this); 
+      return;
+    }
+
+    
     print("cardModel.value ${actorModel.status}");
     animationHandler.init(gameRef.actorCacheService.getAnimation(actorModel.status),Vector2.all(32),this);
   }
@@ -100,6 +110,11 @@ class ActorPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> implem
   @override
   void onTalk() {
     // TODO: implement onTalk
+    print("HEllo?");
+    gameRef.gboard.callRenderDialogue(actorDialogueId);
+
+
+
   }
   
   @override

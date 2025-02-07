@@ -1,5 +1,5 @@
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/sprite_animator_cache_service.dart';
+import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/src/sprite_animation.dart';
 
 class UiSpriteCacheService extends SpriteAnimatorCache{

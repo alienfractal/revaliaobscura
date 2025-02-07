@@ -6,35 +6,43 @@ import 'package:flutter/services.dart';
 class AppTranslations {
   static  Map<String, Map<String, String>> allTranslations = {};
 
-  Map<String, String> flattenJson(Map<String, dynamic> json,
-      [String prefix = '']) {
-    final Map<String, String> result = {};
+  Map<String, String> flattenJson(Map<String, dynamic> json, [String prefix = '']) {
+  final Map<String, String> result = {};
 
-    json.forEach((key, value) {
-      final fullKey = prefix.isEmpty ? key : '$prefix.$key';
+  json.forEach((key, value) {
+    final fullKey = prefix.isEmpty ? key : '$prefix.$key';
+    print("Processing key: $fullKey");
 
-      if (value is String) {
-        result[fullKey] = value;
-      } else if (value is Map<String, dynamic>) {
-        // Recursively flatten nested maps
-        result.addAll(flattenJson(value, fullKey));
-      } else if (value is List<dynamic>) {
-        // Flatten lists with indexed keys
-        for (var i = 0; i < value.length; i++) {
-          final item = value[i];
-          if (item is String) {
-            result['$fullKey[$i]'] = item;
-          }
+    if (value is String) {
+      //print("value is String: $value");
+      result[fullKey] = value;
+    } else if (value is Map<String, dynamic>) {
+     // print("value is Map<String, dynamic>: $value");
+      result.addAll(flattenJson(value, fullKey));
+    } else if (value is List<dynamic>) {
+      //print("value is List<dynamic>: $fullKey -> $value");
+      // Flatten lists with indexed keys
+      for (var i = 0; i < value.length; i++) {
+        final item = value[i];
+        if (item is String) {
+          result['$fullKey[$i]'] = item;
+        } else if (item is Map<String, dynamic>) {
+          // Recursively flatten each map in the list.
+          result.addAll(flattenJson(item, '$fullKey[$i]'));
+        } else {
+          throw ArgumentError('Unsupported list item type for key: $fullKey[$i]');
         }
-      } else {
-        throw ArgumentError('Unsupported type for key: $fullKey');
       }
-    });
+    } else {
+      throw ArgumentError('Unsupported type for key: $fullKey');
+    }
+  });
 
-    return result;
-  }
+  return result;
+}
 
   Future<void> loadTranslations() async {
+    
     // Load English translations
     String enJson =
         await rootBundle.loadString(Assets.resources.translations.en);

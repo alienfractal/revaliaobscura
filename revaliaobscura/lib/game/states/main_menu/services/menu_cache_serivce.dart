@@ -1,6 +1,6 @@
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/sprite_animator_cache_service.dart';
+import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
 import 'package:coolorburn/utils/image/image_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flame/src/components/sprite_component.dart';

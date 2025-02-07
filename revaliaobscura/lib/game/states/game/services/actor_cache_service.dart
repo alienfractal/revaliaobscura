@@ -1,6 +1,6 @@
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/utils/sprite_animator_cache_service.dart';
+import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
 import 'package:flame/sprite.dart';
 import 'package:flame/extensions.dart';
@@ -34,6 +34,13 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation graveAnimation;
   late SpriteAnimation graveBrokenAnimation;
 
+  late SpriteComponent walkButtonSprite;
+  late SpriteComponent lookAtButtonSprite;
+  late SpriteComponent talkToButtonSprite;
+  late SpriteComponent touchButtonSprite;
+
+
+  late SpriteAnimation npcOldSailor;
  
 
   @override
@@ -58,6 +65,16 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         loop: false,
       ),
     ); 
+
+    npcOldSailor = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.mecharchtSailorSheet50x85.path,
+      SpriteAnimationData.sequenced(
+        amount: 11,
+        stepTime: 0.5,
+        textureSize: Vector2(50, 85),
+        loop: true,
+      ),
+    );  
 
    gameBackground = await getSpriteComponent(
         path: Assets.resources.images.gameBackground32x32.path,
@@ -138,10 +155,10 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
     scoreIcon = await gameRef.loadSpriteAnimation(
       Assets.resources.images.scoreiconSheet.path,
       SpriteAnimationData.sequenced(
-        amount: 4,
+        amount: 8,
         stepTime: 0.55,
         textureSize: Vector2(32, 32),
-        loop: false,
+        loop: true,
       ),
     );
 
@@ -287,6 +304,8 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
+   
+
     print("All card animations preloaded successfully.");
   }
 
@@ -316,7 +335,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
        case ActorModel.RELIC:
         return Assets.resources.images.celldarkDirtRelicSheet.path;  
       default:
-        throw Exception('Unknown CardType: $type');
+        throw Exception('actor cache Unknown actorType: $type');
     }
   }
   
@@ -350,10 +369,9 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         return graveBrokenAnimation; 
       case ActorModel.GRAVE:
         return graveAnimation;
-      case ActorModel.BACK_ANIM:
-        return gameTownAnimationBackground; 
+  
       default:
-        throw Exception('Unknown CardType: $modelValue');
+        throw Exception('Unknown ActorType: $modelValue');
     }
   }
   
@@ -367,7 +385,15 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
   Future<void> preloadSprites(RevaliaObs gameRef) async{
         gameBackground = await getSpriteComponent(
         path: Assets.resources.images.gameBackground32x32.path,
-        imgSize: gameRef.camDimension);}
+        imgSize: gameRef.camDimension);
+         
+        walkButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconWalk24x24.path, imgSize: Vector2(24,24));
+        lookAtButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconLook24x24.path, imgSize: Vector2(24,24));
+        talkToButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconTalk24x24.path, imgSize: Vector2(24,24));
+        touchButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconTouch24x24.path, imgSize: Vector2(24,24));
+        
+        
+        }
 
 
 

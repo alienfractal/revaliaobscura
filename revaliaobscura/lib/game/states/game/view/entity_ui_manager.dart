@@ -1,6 +1,5 @@
  
 
-import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/utils/ui/game_generic_button.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';

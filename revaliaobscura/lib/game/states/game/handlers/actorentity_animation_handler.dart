@@ -14,13 +14,13 @@ class ActorAnimationHandler {
   late bool isExplodingSFX = false;
   late TimerComponent _blinkTimer;
   late bool blink = false;
-  late ActorPosEntity actorViewParent;
+  late ActorEntity actorViewParent;
   late SpriteAnimationTicker? animationTicker;
 
   ActorAnimationHandler();
 
   void init(
-      SpriteAnimation spriteAnimation, Vector2 size, ActorPosEntity parent) {
+      SpriteAnimation spriteAnimation, Vector2 size, ActorEntity parent) {
     actorViewParent = parent;
     spriteAnimationComponent = SpriteAnimationComponent(
       animation: spriteAnimation,
@@ -34,7 +34,7 @@ class ActorAnimationHandler {
     spriteAnimationComponent.removeFromParent();
   }
 
-  Future<void> updateCardStyle(ActorPosEntity card) async {
+  Future<void> updateCardStyle(ActorEntity card) async {
     //print("BLUR CARD VIEW");
 
     RectangleComponent component = RectangleComponent()
@@ -72,7 +72,7 @@ class ActorAnimationHandler {
     }
   }
 
-  bool isBombCardDone(ActorPosEntity cardView) {
+  bool isBombCardDone(ActorEntity cardView) {
     // Implement card validation logic
 
     if (cardView.actorModel.status == ActorModel.BOMB && isAnimating) {
@@ -90,7 +90,7 @@ class ActorAnimationHandler {
   }
 
   // Method to make the card blink once
-  void blinkCard(ActorPosEntity parent) {
+  void blinkCard(ActorEntity parent) {
     // Store the original color of the card
 
     final ColorFilter? originalColorFilter =

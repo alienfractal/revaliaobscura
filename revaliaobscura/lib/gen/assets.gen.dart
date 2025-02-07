@@ -529,6 +529,14 @@ class $ResourcesImagesGen {
   AssetGenImage get flameicon1 =>
       const AssetGenImage('resources/images/flameicon1.png');
 
+  /// File path: resources/images/gamecover-template.aseprite
+  String get gamecoverTemplateAseprite =>
+      'resources/images/gamecover-template.aseprite';
+
+  /// File path: resources/images/gamecover-template.png
+  AssetGenImage get gamecoverTemplatePng =>
+      const AssetGenImage('resources/images/gamecover-template.png');
+
   /// File path: resources/images/gamelogo-140x32.png
   AssetGenImage get gamelogo140x32 =>
       const AssetGenImage('resources/images/gamelogo-140x32.png');
@@ -585,6 +593,13 @@ class $ResourcesImagesGen {
   /// File path: resources/images/guard-distance1-52x74.aseprite
   String get guardDistance152x74 =>
       'resources/images/guard-distance1-52x74.aseprite';
+
+  /// File path: resources/images/mecharcht-sailor-sheet-50x85.png
+  AssetGenImage get mecharchtSailorSheet50x85 =>
+      const AssetGenImage('resources/images/mecharcht-sailor-sheet-50x85.png');
+
+  /// File path: resources/images/mecharcht-sailor.aseprite
+  String get mecharchtSailor => 'resources/images/mecharcht-sailor.aseprite';
 
   /// File path: resources/images/miner-attack-sheet-48x48-9.png
   AssetGenImage get minerAttackSheet48x489 =>
@@ -770,6 +785,8 @@ class $ResourcesImagesGen {
         flameiconAseprite,
         flameiconPng,
         flameicon1,
+        gamecoverTemplateAseprite,
+        gamecoverTemplatePng,
         gamelogo140x32,
         gem1GlowingSheet32x324,
         gem1Aseprite,
@@ -786,6 +803,8 @@ class $ResourcesImagesGen {
         gravelTombBreak32x328,
         greenZombie,
         guardDistance152x74,
+        mecharchtSailorSheet50x85,
+        mecharchtSailor,
         minerAttackSheet48x489,
         minerBlockSheet48x487,
         minerHurt1Sheet48x485Sheet,

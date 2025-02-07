@@ -15,6 +15,8 @@ class ActorModel {
   static const int GRAVE = 13;
   static const int BROKEN_GRAVE = 14;
   static const int BACK_ANIM = 15;
+  static const int OLD_SAILOR = 16;
+
 
   /// Constructor with required fields
   ActorModel({

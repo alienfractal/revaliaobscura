@@ -2,13 +2,12 @@ import 'package:coolorburn/game/states/game/behaviours/action_type_behaviour.dar
 import 'package:coolorburn/game/states/game/model/actor_model.dart';
 import 'package:coolorburn/game/states/game/view/actorentity.dart';
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/game/behaviours/arrow_button_bevaviour.dart';
 import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
 import 'package:coolorburn/game/states/game/view/gameboard_view.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/actionable_entitty_component.dart';
+import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
  
 import 'package:coolorburn/utils/ui/game_button.dart';
 import 'package:coolorburn/utils/ui/game_energy_bar.dart';
@@ -85,7 +84,7 @@ class UIGameBoardComponents {
     blinkTextComponentScore.toggleBlinking();
     textComponentTime = ColorStatusTextComponent(
         'TIME : ${gBoardModel.levelPlayTime.toString().padLeft(3, '0')}',
-        Vector2(180, 4),
+       
         fontSize: 10,
         isBlinking: false,
         tcolor: Colors.white,
@@ -112,7 +111,7 @@ class UIGameBoardComponents {
     wallkButton = GenericButton(
         position:
             Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition,  gapy),
-        buttonIconPath: Assets.resources.images.actionIconWalk24x24.path,
+        spriteComponent: gameRef.actorCacheService.walkButtonSprite,
         behavior: EntityActionTapHandler(actionType: ActionableType.move,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
         isTiled: false);
@@ -121,7 +120,7 @@ class UIGameBoardComponents {
 
     lookButton = GenericButton(
         position: Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition*2, gapy),
-        buttonIconPath: Assets.resources.images.actionIconLook24x24.path,
+        spriteComponent: gameRef.actorCacheService.lookAtButtonSprite,
         behavior: EntityActionTapHandler(actionType: ActionableType.look,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
         isTiled: false);
@@ -129,7 +128,7 @@ class UIGameBoardComponents {
     gameActionGroup.buttons.add(lookButton);
     touchButton = GenericButton(
         position: Vector2(gapx +gameRef.camDimension.x / 2-actoionBarXposition*3, gapy ),
-        buttonIconPath: Assets.resources.images.actionIconTouch24x24.path,
+        spriteComponent: gameRef.actorCacheService.touchButtonSprite,
         behavior: EntityActionTapHandler(actionType: ActionableType.touch,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
         isTiled: false);
@@ -139,12 +138,14 @@ class UIGameBoardComponents {
     talkButton = GenericButton(
         position:
             Vector2(gapx +gameRef.camDimension.x / 2 -actoionBarXposition*4,gapy),
-        buttonIconPath: Assets.resources.images.actionIconTalk24x24.path,
+        spriteComponent: gameRef.actorCacheService.talkToButtonSprite,
         behavior: EntityActionTapHandler(actionType: ActionableType.talk,buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
         isTiled: false);
     gameRef.cam.viewport.add(talkButton);
     gameActionGroup.buttons.add(talkButton);
+    
+    
     //=====================================
     /*flameIcon = GenericButton(
         position: Vector2(248, 8),
@@ -159,24 +160,7 @@ class UIGameBoardComponents {
         maxEnergy: 50,
         size: Vector2(50, 14));
     gameRef.cam.viewport.add(energyBar);
-    timeIcon = GenericButton(
-        position: Vector2(205, 8),
-        buttonIconPath: Assets.resources.images.timeicon1.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.right),
-        buttonSize: Vector2(14, 14));
-    //gameRef.cam.viewport.add(timeIcon);
-
-    bombIcon = GenericButton(
-        position: Vector2(290, 8),
-        buttonIconPath: Assets.resources.images.bombIcon1.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.right),
-        buttonSize: Vector2(14, 14));
-    //gameRef.cam.viewport.add(bombIcon);
-    /*scoreIcon = GenericButton(
-        position: Vector2(52, 8),
-        buttonIconPath: Assets.resources.images.scoreicon1.path,
-        behavior: ArrowButtonTapHandler(arrowDirection: ArrowDirection.right),
-        buttonSize: Vector2(14, 14));*/
+  
 
     scoreIcon = GenericSpriteAnimation(
         spriteAnimation: gameRef.actorCacheService.scoreIcon,
@@ -211,7 +195,7 @@ class UIGameBoardComponents {
 
   void addAnimatedBackground() {
        ActorModel backAnimationModel = ActorModel(x: 0, y: 0, distance: 0, status: ActorModel.BACK_ANIM);
-    ActorPosEntity backAnimationEntity = ActorPosEntity(actorModel: backAnimationModel, position: Vector2(160,100), size: Vector2(320, 200));
+    ActorEntity backAnimationEntity = ActorEntity(actorModel: backAnimationModel, position: Vector2(160,100), size: Vector2(320, 200));
     gameboardView.add(backAnimationEntity);
   }
 }

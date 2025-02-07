@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 
 class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late SpriteComponent spriteComponent;
-  late String buttonIconPath;
   late Behavior behavior;
   late Vector2 buttonPoistion;
   late Vector2 buttonSize;
@@ -22,7 +21,7 @@ class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
 
   GenericButton(
       {required super.position,
-      required this.buttonIconPath,
+      required this.spriteComponent,
       required this.behavior,
       required this.buttonSize,
       this.isTiled = false})
@@ -35,8 +34,7 @@ class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
     originalcolorFilter = 
         const ColorFilter.mode(Colors.white, BlendMode.src);
 
-    spriteComponent = await ComponentUtils.createSpriteComponent(
-        path: buttonIconPath, imgSize: buttonSize);
+ 
    
     add(spriteComponent);
     add(behavior);

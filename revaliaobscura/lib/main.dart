@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 
 
-Future<void> main() async {
+ void main()  {
   Flame.images.prefix = "";
   FlameAudio.audioCache.prefix = "";
   Flame.assets.prefix = "";

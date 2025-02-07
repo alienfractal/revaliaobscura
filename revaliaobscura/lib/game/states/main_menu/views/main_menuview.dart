@@ -1,11 +1,9 @@
-import 'dart:async';
 
 import 'package:coolorburn/revalia_obs.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/start_button_taphandler.dart';
 import 'package:coolorburn/game/states/main_menu/behaviours/game_background_taphandler.dart';
-import 'package:coolorburn/utils/sound/audio_player_wrapper.dart';
 import 'package:coolorburn/utils/ui/game_button.dart';
 import 'package:coolorburn/utils/ui/text_component.dart';
 import 'package:coolorburn/gen/assets.gen.dart';

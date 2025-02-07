@@ -1,7 +1,6 @@
 import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/sprite_animator_cache_service.dart';
+import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/components.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/image_composition.dart';
 import 'package:flame/sprite.dart';
 
@@ -51,6 +50,7 @@ class ComponentUtils {
     return Vector2(x, y);
   }
 
+  
   static Future<SpriteSheet> loadSpriteSheet(String imagePath, Vector2 imgSize, int col, int row, RevaliaObs gameRef) async {
 
     return SpriteSheet.fromColumnsAndRows(
