@@ -40,7 +40,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   void render(Canvas canvas) {
     super.render(canvas);
     // Draw the background color
-    final paint = Paint()..color = Color.from(alpha: 0.25, red: 1.0, green: 1.0, blue: 1.0);
+    final paint = Paint()..color = Color.from(alpha: 0.15, red: 41.0/255.0, green: 41.0/255.0, blue: 103.0/255.0);
     canvas.drawRect(size.toRect(), paint);
    
 }
@@ -68,12 +68,8 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     if(current == null){return;}
   
     print(current.text);
-    
-    ColorStatusTextComponent textGreet = ColorStatusTextComponent(current.text,  fontSize: 8, isBlinking: false, interval: 0, tcolor:Color(0xFFFF9000), position: Vector2(16,size.y/3));
-    textGreet.updateUI(ColorStatusTextComponent.CRITICAL);
-    textGreet.add(ColorStatusTextBehaviour(textId:0));
-    textLinesList.add(textGreet);
-    add(textGreet);
+
+    setTittleResponse(current);
 
     for (int i =0; i < current.responses.length;  i++ ) {
     DialogueResponse response = current.responses[i];  
@@ -88,6 +84,21 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
 
     addAll(textLinesList); 
 
+  }
+
+  void setTittleResponse(Dialogue current) {
+    List<String> texts = current.text.split('.');
+
+    for (int i =0; i < texts.length;  i++ ) {
+        ColorStatusTextComponent textGreet = ColorStatusTextComponent(texts[i],  fontSize: 8, isBlinking: false, interval: 0, tcolor:Color(0xFFFF9000), position: Vector2(16,12*i+(size.y/3)-16));
+    
+    textGreet.updateUI(ColorStatusTextComponent.CRITICAL);
+    textGreet.add(ColorStatusTextBehaviour(textId:0));
+    textLinesList.add(textGreet);
+    add(textGreet);
+      
+    }
+  
   }
 
   void clearDialog() {

@@ -26,7 +26,7 @@ class ColorStatusTextBehaviour extends Behavior<ColorStatusTextComponent>
     String nextDialogueEvent = DialogueManager.chooseResponse( textId);
     
     print("ColorStatusTextBehaviour nextDialogueEvent ${nextDialogueEvent}");
-    gameRef.gboard.clearDialog();
+    gameRef.gboard.removeDialogFrame();
     gameRef.gboard.callRenderDialogue(nextDialogueEvent);
     
       

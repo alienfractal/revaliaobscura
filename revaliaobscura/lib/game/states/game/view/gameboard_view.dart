@@ -299,24 +299,16 @@ class GameboardView extends World
     // If df exists, remove it first
    
   if( actorDialogueId =="" || actorDialogueId =="end"){
-    clearDialog();
-   
-    
-   
+    removeDialogFrame();
   }
-  else{print("actorDialogueId is empty a la vrg");
+  else{
     df = DialogFrameEntity(position: Vector2(160, 80), size: Vector2(256, 120));
     add(df);
     df.initDialog(actorDialogueId);
   }
- 
-
-      
-      
-    
   }
 
-  void clearDialog() {
+  void removeDialogFrame() {
      df.clearDialog();
      df.removeFromParent();
   }
