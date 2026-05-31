@@ -39,23 +39,19 @@
       "text": "Hello, traveler! Welcome to Reval.",
       "responses": [
         {
-          "text": "Who are you?",
-          "next": "npc_identity"
+          "text": "Who are you?"
         },
         {
-          "text": "Goodbye.",
-          "next": "end"
+          "text": "Goodbye."
         }
-      ],
-      "event": "npc_intro_event"
+      ]
     },
     "npc_identity": {
       "player_text": "Who are you really?",
       "text": "I am a navigator looking for work. have nothing better to do.",
       "responses": [
         {
-          "text": "Thanks for the info.",
-          "next": "end"
+          "text": "Thanks for the info."
         }
       ]
     }

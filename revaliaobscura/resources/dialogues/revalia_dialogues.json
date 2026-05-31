@@ -1,0 +1,22 @@
+{
+  "dialogues": {
+    "npc_intro": {
+      "event": "npc_intro_event",
+      "responses": [
+        {
+          "next": "npc_identity"
+        },
+        {
+          "next": "end"
+        }
+      ]
+    },
+    "npc_identity": {
+      "responses": [
+        {
+          "next": "end"
+        }
+      ]
+    }
+  }
+}

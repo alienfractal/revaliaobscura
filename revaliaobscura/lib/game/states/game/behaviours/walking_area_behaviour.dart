@@ -54,7 +54,6 @@ class WalkingAreaBehaviour extends Behavior<ActorEntity>
     } else if (gameRef.gboard.playerEntity.requestActorAction(
       actionType: gameRef.gboard.actionType,
       target: parent,
-      interactionPosition: absPos,
     )) {
       gameRef.ap.playSoundFx(Assets.resources.audio.select);
     }

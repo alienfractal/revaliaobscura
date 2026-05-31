@@ -137,9 +137,11 @@ class ActorEntity extends PositionedEntity
   }
 
   bool isPlayerWithinInteractionRange() {
-    return gameRef.gboard.playerEntity.position.distanceTo(position) <=
+    return gameRef.gboard.playerEntity.position.distanceTo(interactionPoint) <=
         interactionRange;
   }
+
+  Vector2 get interactionPoint => Vector2(position.x, position.y + size.y / 2);
 
   void performAction(ActionableType actionType) {
     switch (actionType) {

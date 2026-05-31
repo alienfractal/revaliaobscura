@@ -305,6 +305,20 @@ class GameboardView extends World
     add(npc);
   }
 
+  Vector2 constrainToWalkingArea(Vector2 requestedPosition) {
+    final halfWidth = walkingAreaView.size.x / 2;
+    final minX = walkingAreaView.position.x - halfWidth;
+    final maxX = walkingAreaView.position.x + halfWidth;
+    return Vector2(
+      requestedPosition.x.clamp(minX, maxX).toDouble(),
+      walkingAreaView.position.y,
+    );
+  }
+
+  Vector2 interactionDestinationFor(ActorEntity actor) {
+    return constrainToWalkingArea(actor.interactionPoint);
+  }
+
   void callRenderDialogue(ActorEntity actorEntity) {
     activeActor = actorEntity;
     // If df exists, remove it first

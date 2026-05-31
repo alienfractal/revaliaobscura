@@ -106,7 +106,11 @@ class PlayerAnimationHandler {
   }
 
   void _applyFacing(Vector2 target) {
-    if (target.x < playerEntity.position.x) {
+    final horizontalDelta = target.x - playerEntity.position.x;
+    if (horizontalDelta.abs() < 0.001) {
+      return;
+    }
+    if (horizontalDelta < 0) {
       if (!spriteAnimationComponent.isFlippedHorizontally) {
         spriteAnimationComponent.flipHorizontallyAroundCenter();
       }

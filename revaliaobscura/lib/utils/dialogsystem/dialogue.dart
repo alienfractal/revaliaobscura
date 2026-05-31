@@ -1,43 +1,44 @@
 class Dialogue {
   final String id;
   final String text;
-  final String player_text;
+  final String playerText;
   final List<DialogueResponse> responses;
   final String? event;
 
   Dialogue({
     required this.id,
     required this.text,
-    required this.player_text,
+    required this.playerText,
     required this.responses,
     this.event,
   });
 
-  factory Dialogue.fromJson(String id, Map<String, String> flatJson) {
-    String text = flatJson["dialogues.$id.text"] ?? "[Missing Text]";
-    String player_text = flatJson["dialogues.$id.player_text"] ?? "[Missing Player Text]";
-    List<DialogueResponse> responses = [];
-    int index = 0;
-    while (true) {
-      String responseTextKey = "dialogues.$id.responses[$index].text";
-      String responseNextKey = "dialogues.$id.responses[$index].next";
-      if (!flatJson.containsKey(responseTextKey)) break;
-
-      responses.add(DialogueResponse(
-        text: flatJson[responseTextKey] ?? "[Missing Response]",
-        next: flatJson[responseNextKey] ?? "end",
-      ));
-      index++;
+  factory Dialogue.fromGraph({
+    required String id,
+    required Map<String, dynamic> graphNode,
+    required Map<String, String> translations,
+  }) {
+    final responses = <DialogueResponse>[];
+    final graphResponses = graphNode['responses'] as List<dynamic>? ?? [];
+    for (var index = 0; index < graphResponses.length; index++) {
+      final graphResponse = graphResponses[index] as Map<String, dynamic>;
+      responses.add(
+        DialogueResponse(
+          text: translations['dialogues.$id.responses[$index].text'] ??
+              '[Missing Response: $id[$index]]',
+          next: graphResponse['next'] as String? ?? 'end',
+          event: graphResponse['event'] as String?,
+        ),
+      );
     }
-
-    String? event = flatJson["dialogues.$id.event"];
 
     return Dialogue(
       id: id,
-      text: text,
-      player_text: player_text,
+      text: translations['dialogues.$id.text'] ?? '[Missing Text: $id]',
+      playerText: translations['dialogues.$id.player_text'] ??
+          '[Missing Player Text: $id]',
       responses: responses,
-      event: event,
+      event: graphNode['event'] as String?,
     );
   }
 }

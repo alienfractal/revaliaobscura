@@ -13,6 +13,7 @@ import 'package:revalia/game/states/score/view/score_screenview.dart';
 import 'package:revalia/gamefsm/fsm.dart';
 import 'package:revalia/gamefsm/game_fsm.dart';
 import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/sound/web_audio_player.dart';
 
@@ -128,6 +129,10 @@ class RevaliaObs extends FlameGame {
     await ap.initSfxPool(Assets.resources.audio.values);
     await enemyCacheService.preloadAnimations(this);
     await appTranslations.loadTranslations();
+    await DialogueManager.loadDialogueGraph(
+      assetPath: 'resources/dialogues/revalia_dialogues.json',
+      translations: AppTranslations.translationsFor(currentLocale),
+    );
 
     if (isCrtShaderActive) {
       shader = uiProgram.fragmentShader();

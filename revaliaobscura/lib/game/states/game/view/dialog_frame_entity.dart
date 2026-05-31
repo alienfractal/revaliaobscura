@@ -79,8 +79,8 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   void initDialog(String actorDialogueId) {
     print("talk?");
     print(" initDialog actorDialogueId ${actorDialogueId}");
-    DialogueManager.loadDialogues(
-        AppTranslations.allTranslations[gameRef.currentLocale]!);
+    DialogueManager.setTranslations(
+        AppTranslations.translationsFor(gameRef.currentLocale));
 
     loadDialogueTextToFrame(actorDialogueId);
   }
@@ -101,7 +101,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
 
     Dialogue current = DialogueManager.startDialogue(actorDialogueId);
     print("current.text ${current.text}");
-    print("current.player_text ${current.player_text}");
+    print("current.playerText ${current.playerText}");
     if (current.id == "error") {
       DialogEventManager.notifycation(event: current.text);
       return;
@@ -180,7 +180,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
 
   void setPlayerInquiry(Dialogue current) {
     DialogueTextComponent textGreet = DialogueTextComponent(
-        text: current.player_text,
+        text: current.playerText,
         position: Vector2(16, 0),
         textColor: Color.fromARGB(255, 72, 145, 0));
     add(textGreet);

@@ -57,6 +57,7 @@ flutter:
     - resources/images/
     - resources/fonts/
     - resources/audio/
+    - resources/dialogues/
     - resources/translations/
     
     

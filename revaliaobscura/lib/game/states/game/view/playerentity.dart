@@ -118,7 +118,7 @@ class PlayerPosEntity extends PositionedEntity
     if (!keepPendingInteraction) {
       _clearPendingInteraction();
     }
-    destination = newLocation.clone();
+    destination = gameRef.gboard.constrainToWalkingArea(newLocation);
     actionState = PlayerActionState.walking;
     playerAnimationHandler.showWalk(destination);
     return true;
@@ -127,7 +127,6 @@ class PlayerPosEntity extends PositionedEntity
   bool requestActorAction({
     required ActionableType actionType,
     required ActorEntity target,
-    required Vector2 interactionPosition,
   }) {
     if (actionState == PlayerActionState.disabled ||
         actionState == PlayerActionState.talking ||
@@ -139,10 +138,14 @@ class PlayerPosEntity extends PositionedEntity
         !target.isPlayerWithinInteractionRange()) {
       _pendingInteractionTarget = target;
       _pendingInteractionType = actionType;
-      return requestMove(interactionPosition, keepPendingInteraction: true);
+      return requestMove(
+        gameRef.gboard.interactionDestinationFor(target),
+        keepPendingInteraction: true,
+      );
     }
 
     _clearPendingInteraction();
+    playerAnimationHandler.showIdle(target.interactionPoint);
     target.performAction(actionType);
     return true;
   }
@@ -179,6 +182,7 @@ class PlayerPosEntity extends PositionedEntity
     if (target == null || actionType == null || !target.isMounted) {
       return;
     }
+    playerAnimationHandler.showIdle(target.interactionPoint);
     target.performAction(actionType);
   }
 
