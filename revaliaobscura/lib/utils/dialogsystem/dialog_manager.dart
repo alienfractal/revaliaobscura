@@ -1,14 +1,12 @@
-import 'package:coolorburn/utils/dialogsystem/dialog_event_manager.dart';
-import 'package:coolorburn/utils/dialogsystem/dialog_renderer.dart';
-import 'package:coolorburn/utils/dialogsystem/dialogue.dart';
- 
+import 'package:revalia/utils/dialogsystem/dialog_event_manager.dart';
+import 'package:revalia/utils/dialogsystem/dialog_renderer.dart';
+import 'package:revalia/utils/dialogsystem/dialogue.dart';
 
-enum DialogState { inactive, start, active, end }
+enum DialogState { inactive, active, end }
 
 class DialogueManager {
   static DialogState dialogState = DialogState.inactive;
-  static Map<String, Dialogue> dialogues = {};
-  static Dialogue? activeDialogue;
+  static final Map<String, Dialogue> dialogues = {};
 
   /// Loads dialogues from a flattened JSON structure.
   static void loadDialogues(Map<String, String> flatJson) {
@@ -21,29 +19,27 @@ class DialogueManager {
     }
   }
 
-  /// Starts a new dialogue.
-  static void startDialogue(String dialogueId) {
-    print("🗣️ Starting dialogue: $dialogueId");
-
+  /// Starts a new dialogue and returns it.
+  static Dialogue startDialogue(String dialogueId) {
     if (!dialogues.containsKey(dialogueId)) {
       print("❌ Dialogue not found: $dialogueId");
       dialogState = DialogState.inactive;
-      return;
+      return Dialogue(id: "error",player_text: "Dialogue Player_text not found", text: "Dialogue not found: $dialogueId", responses: []);
     }
 
-    dialogState = DialogState.start;
+    dialogState = DialogState.active;
     DialogEventManager.notifycation(event: "start");
 
-    activeDialogue = dialogues[dialogueId];
-    processDialogue(activeDialogue!);
+    Dialogue dialogue = dialogues[dialogueId]!;
+    processDialogue(dialogue);
+
+    return dialogue;
   }
 
   /// Processes and displays the current dialogue.
   static void processDialogue(Dialogue dialogue) {
     print("🎭 Processing dialogue: ${dialogue.text}");
-    
     DialogueRenderer.showDialogueConsole(dialogue);
-    dialogState = DialogState.active; // ✅ Set state to active
 
     if (dialogue.event != null) {
       DialogEventManager.notifycation(event: dialogue.event!);
@@ -51,61 +47,31 @@ class DialogueManager {
   }
 
   /// Handles player choosing a response.
-  static String chooseResponse(int index) {
-    if (dialogState == DialogState.inactive || activeDialogue == null) {
+  static String chooseResponse(Dialogue dialogue, int index) {
+    if (dialogState == DialogState.inactive) {
       print("❌ No active dialogue.");
-      return "";  // ✅ More consistent than "end"
+      return DialogState.inactive.toString();
     }
 
-    if (index < 0 || index >= activeDialogue!.responses.length) {
+    if (index < 0 || index >= dialogue.responses.length) {
       print("❌ Invalid response index: $index");
-      return "";
+      return "Invalid";
     }
 
+    DialogueResponse response = dialogue.responses[index];
     DialogEventManager.notifycation(event: "chooseResponse $index");
-    DialogueResponse response = activeDialogue!.responses[index];
 
     if (response.event != null) {
       DialogEventManager.notifycation(event: response.event!);
     }
 
-    if (response.next == "end") {
-      endDialogue();
-      return "end";
-    } else {
-      startDialogue(response.next);
-      return response.next;
-    }
+    return response.next;
   }
 
   /// Ends the current dialogue.
   static void endDialogue() {
     print("🏁 Dialogue ended.");
     DialogEventManager.notifycation(event: "end");
-    activeDialogue = null;
-    dialogState = DialogState.end;
-
-    // Optionally reset to `inactive` after a delay
-    Future.delayed(Duration(seconds: 1), () {
-      dialogState = DialogState.inactive;
-    });
-  }
-
-  /// Prints available responses in the console (for debugging).
-  static void listResponses() {
-    if (activeDialogue == null) {
-      print("❌ No active dialogue.");
-      return;
-    }
-
-    print("🗣️ Dialogue: ${activeDialogue?.id}");
-    print("💬 Text: ${activeDialogue?.text}");
-    print("🔽 Available Responses:");
-
-    for (var i = 0; i < activeDialogue!.responses.length; i++) {
-      DialogueResponse response = activeDialogue!.responses[i];
-      print("  $i: ${response.text} → ${response.next} (event: ${response.event})");
-    }
+    dialogState = DialogState.inactive;
   }
 }
-

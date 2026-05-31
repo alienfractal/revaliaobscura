@@ -1,18 +1,31 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
-import 'package:flame/src/components/sprite_component.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
+import 'package:flame/components.dart';
 
-class EndCacheService extends SpriteCache {
+class EndCacheService extends SpriteAnimatorCache {
   @override
-  Future<SpriteComponent> getSpriteComponent({required String path, required Vector2 imgSize}) {
-    // TODO: implement getSpriteComponent
+  SpriteAnimation getAnimation(int modelValue) {
+    throw UnimplementedError();
+  }
+
+  @override
+  SpriteComponent getSpriteComponent(
+      {required Sprite sprite, required Vector2 imgSize}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  String getSpritePath(int type) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> preloadAnimations(RevaliaObs gameRef) {
     throw UnimplementedError();
   }
 
   @override
   Future<void> preloadSprites(RevaliaObs gameRef) {
-    // TODO: implement preloadSprites
     throw UnimplementedError();
   }
 }

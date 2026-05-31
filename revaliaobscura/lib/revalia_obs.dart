@@ -1,35 +1,29 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
-
-import 'package:coolorburn/game/states/game/services/actor_cache_service.dart';
-import 'package:coolorburn/game/states/game/services/player_cache_service.dart';
-import 'package:coolorburn/game/states/game/view/gameboard_view.dart';
-import 'package:coolorburn/game/states/end/views/end_screenview.dart';
-import 'package:coolorburn/game/states/loading/services/loading_cache_service.dart';
-import 'package:coolorburn/game/states/loading/views/loading_screenview.dart';
-import 'package:coolorburn/game/states/main_menu/services/menu_cache_serivce.dart';
-import 'package:coolorburn/game/states/main_menu/views/main_menuview.dart';
-import 'package:coolorburn/game/states/score/view/score_screenview.dart';
-import 'package:coolorburn/gamefsm/fsm.dart';
-import 'package:coolorburn/gamefsm/game_fsm.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/translation/app_translations.dart';
-import 'package:coolorburn/utils/sound/web_audio_player.dart';
-
+import 'package:revalia/game/states/game/services/actor_cache_service.dart';
+import 'package:revalia/game/states/game/services/player_cache_service.dart';
+import 'package:revalia/game/states/game/view/gameboard_view.dart';
+import 'package:revalia/game/states/end/views/end_screenview.dart';
+import 'package:revalia/game/states/loading/services/loading_cache_service.dart';
+import 'package:revalia/game/states/loading/views/loading_screenview.dart';
+import 'package:revalia/game/states/main_menu/services/menu_cache_serivce.dart';
+import 'package:revalia/game/states/main_menu/views/main_menuview.dart';
+import 'package:revalia/game/states/score/view/score_screenview.dart';
+import 'package:revalia/gamefsm/fsm.dart';
+import 'package:revalia/gamefsm/game_fsm.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/translation/app_translations.dart';
+import 'package:revalia/utils/sound/web_audio_player.dart';
 
 import 'package:flame/camera.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
- 
+
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
- 
-
- 
 
 abstract class ViewTransitionInterface {
   void transitionToNextState();
@@ -52,42 +46,37 @@ class RevaliaObs extends FlameGame {
   late bool isCrtShaderActive;
   late ui.FragmentProgram uiProgram;
 
-
   late ActorCacheService actorCacheService;
   late MenuCacheSerivce menuCacheService;
   late LoadingCacheService loadingCacheService;
   late PlayerCacheService enemyCacheService;
   late GameWidget gameWidget;
-  AppTranslations appTranslations = AppTranslations();  
+  AppTranslations appTranslations = AppTranslations();
 
   String currentLocale = 'en';
 
-
   RevaliaObs() {
-     ap = WebAudioPlayer();
-     isCrtShaderActive = false;
-     
+    ap = WebAudioPlayer();
+    isCrtShaderActive = false;
+    debugMode = true;
 
-     actorCacheService = ActorCacheService();
-     menuCacheService = MenuCacheSerivce();
-     loadingCacheService = LoadingCacheService();
-     enemyCacheService = PlayerCacheService();
-     
-     
+    actorCacheService = ActorCacheService();
+    menuCacheService = MenuCacheSerivce();
+    loadingCacheService = LoadingCacheService();
+    enemyCacheService = PlayerCacheService();
   }
 
- 
   @override
   void onAttach() {
     // TODO: implement onAttach
     super.onAttach();
-   
-  
   }
 
   @override
   void onDispose() {
     RevaliaObs.logger.d("CoolOrBurn: onDispose");
+    texture?.dispose();
+    texture = null;
     super.onDispose();
   }
 
@@ -96,9 +85,6 @@ class RevaliaObs extends FlameGame {
     super.onMount();
     RevaliaObs.logger.d("CoolOrBurn: onMount");
     print(" Translate : ${AppTranslations.getTranslation('en', 'game.title')}");
-
-    
-   
   }
 
   @override
@@ -110,31 +96,21 @@ class RevaliaObs extends FlameGame {
 
   @override
   void render(Canvas canvas) {
-    // Render all components first to the game canvas
-    super.render(canvas);
     if (!isCrtShaderActive) {
+      super.render(canvas);
       return;
     }
-    // Capture the game texture after rendering components
-    print("rendering shader captureGameTexture()");
+
+    texture?.dispose();
     texture = captureGameTexture();
 
-    // Apply the shader using the CustomPainter
     if (shader != null && texture != null) {
       final shaderPainter = ShaderPainter(shader: shader, texture: texture);
-      final pictureRecorder = ui.PictureRecorder();
-      final canvasForPainter = Canvas(pictureRecorder);
-
-      // Use the painter to draw on the canvas
-      shaderPainter.paint(canvasForPainter, size.toSize());
-
-      // Convert to an image and draw on the main canvas
-      final picture = pictureRecorder.endRecording();
-      final uiImage = picture.toImageSync(size.x.toInt(), size.y.toInt());
-
-      // Draw the final result on the main canvas
-      canvas.drawImage(uiImage, Offset.zero, Paint());
+      shaderPainter.paint(canvas, size.toSize());
+      return;
     }
+
+    super.render(canvas);
   }
 
   @override
@@ -144,16 +120,14 @@ class RevaliaObs extends FlameGame {
     RevaliaObs.logger.d("CoolOrBurn: onLoad");
     // Load the shader
     uiProgram =
-    await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
+        await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
     await actorCacheService.preloadAnimations(this);
-    await actorCacheService.preloadSprites(this );
+    await actorCacheService.preloadSprites(this);
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);
     await enemyCacheService.preloadAnimations(this);
     await appTranslations.loadTranslations();
-    
-    
 
     if (isCrtShaderActive) {
       shader = uiProgram.fragmentShader();
@@ -184,6 +158,24 @@ class RevaliaObs extends FlameGame {
     super.render(canvas);
     final picture = recorder.endRecording();
     return picture.toImageSync(size.x.toInt(), size.y.toInt());
+  }
+
+  void toggleCrtShader() {
+    setCrtShaderActive(!isCrtShaderActive);
+  }
+
+  void setCrtShaderActive(bool active) {
+    isCrtShaderActive = active;
+    if (isCrtShaderActive) {
+      shader = uiProgram.fragmentShader();
+      texture = captureGameTexture();
+      RevaliaObs.logger.d("RevaliaObs: CRT Shader is active");
+    } else {
+      shader = null;
+      texture?.dispose();
+      texture = null;
+      RevaliaObs.logger.d("RevaliaObs: CRT Shader is inactive");
+    }
   }
 
   // Method to switch worlds
@@ -230,9 +222,6 @@ class RevaliaObs extends FlameGame {
         break;
     }
   }
-  
- 
-
 }
 
 class TransEntry<T> {
@@ -269,7 +258,6 @@ class TransEntry<T> {
     return value.toString();
   }
 }
-
 
 //Shader call
 class ShaderPainter extends CustomPainter {

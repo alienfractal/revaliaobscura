@@ -1,13 +1,16 @@
 import 'dart:math';
 
-import 'package:coolorburn/game/states/game/handlers/playerentity_animation_handler.dart';
-import 'package:coolorburn/game/states/game/model/player_model.dart';
-import 'package:coolorburn/game/states/game/services/player_logic_service.dart';
+import 'package:revalia/game/states/game/handlers/playerentity_animation_handler.dart';
+import 'package:revalia/game/states/game/model/player_model.dart';
+import 'package:revalia/game/states/game/services/player_logic_service.dart';
+import 'package:revalia/game/states/game/view/actorentity.dart';
 
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/utils/components/actionable_entitty_component.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
+
+enum PlayerActionState { idle, walking, talking, dialogueLocked, disabled }
 
 class PlayerPosEntity extends PositionedEntity
     with HasGameRef<RevaliaObs>
@@ -22,7 +25,10 @@ class PlayerPosEntity extends PositionedEntity
   Vector2 originalPosition = Vector2(0, 0);
   Vector2 destination = Vector2(-1, -1);
 
-  bool isWalking = false;
+  PlayerActionState actionState = PlayerActionState.idle;
+  double _actionSecondsRemaining = 0;
+  ActorEntity? _pendingInteractionTarget;
+  ActionableType? _pendingInteractionType;
 
   PlayerPosEntity(
       {required this.playerModel, required super.position, required super.size})
@@ -41,7 +47,7 @@ class PlayerPosEntity extends PositionedEntity
   @override
   void onLoad() {
     super.onLoad();
-    debugMode = true;
+    //debugMode = true;
     print("EnemyView onLoad");
     playerAnimationHandler.init(this, gameRef);
     playerStartPoint = position.toPoint();
@@ -52,18 +58,26 @@ class PlayerPosEntity extends PositionedEntity
   @override
   void update(double dt) {
     super.update(dt);
-    if (isWalking) {
-      moveComponent(destination, dt);
+    switch (actionState) {
+      case PlayerActionState.walking:
+        _updateWalking(dt);
+        break;
+      case PlayerActionState.talking:
+        _actionSecondsRemaining -= dt;
+        if (_actionSecondsRemaining <= 0) {
+          _enterIdle();
+        }
+        break;
+      case PlayerActionState.idle:
+      case PlayerActionState.dialogueLocked:
+      case PlayerActionState.disabled:
+        break;
     }
   }
 
   void makeVisible(bool visible) {}
 
-  void moveComponent(Vector2 destination, double dt) {
-    if (!isWalking) {
-      return;
-    }
-
+  void _updateWalking(double dt) {
     // Calculate the direction to the destination
     final direction = (destination - position).normalized();
 
@@ -75,12 +89,9 @@ class PlayerPosEntity extends PositionedEntity
 
     // If we're close enough to the destination, stop moving
     if (distanceRemaining <= distanceToMove) {
-      print("distanceRemaining <= distanceToMove");
-      //position = destination; // Snap to the destination
-      isWalking = false;
-
-      playerAnimationHandler.triggerIdle(
-          cardPosition: destination, resetAnimation: true);
+      position.setFrom(destination);
+      _enterIdle();
+      _resolvePendingInteraction();
       return;
     }
 
@@ -95,11 +106,85 @@ class PlayerPosEntity extends PositionedEntity
 
   @override
   void onMove(Vector2 newLocation) {
-    // TODO: implement onMove
-    isWalking = true;
-    this.destination = newLocation;
-    playerAnimationHandler.triggerWalk(
-        cardPosition: destination, resetAnimation: true);
+    requestMove(newLocation);
+  }
+
+  bool requestMove(Vector2 newLocation, {bool keepPendingInteraction = false}) {
+    if (actionState == PlayerActionState.disabled ||
+        actionState == PlayerActionState.talking ||
+        actionState == PlayerActionState.dialogueLocked) {
+      return false;
+    }
+    if (!keepPendingInteraction) {
+      _clearPendingInteraction();
+    }
+    destination = newLocation.clone();
+    actionState = PlayerActionState.walking;
+    playerAnimationHandler.showWalk(destination);
+    return true;
+  }
+
+  bool requestActorAction({
+    required ActionableType actionType,
+    required ActorEntity target,
+    required Vector2 interactionPosition,
+  }) {
+    if (actionState == PlayerActionState.disabled ||
+        actionState == PlayerActionState.talking ||
+        actionState == PlayerActionState.dialogueLocked) {
+      return false;
+    }
+
+    if (actionType == ActionableType.talk &&
+        !target.isPlayerWithinInteractionRange()) {
+      _pendingInteractionTarget = target;
+      _pendingInteractionType = actionType;
+      return requestMove(interactionPosition, keepPendingInteraction: true);
+    }
+
+    _clearPendingInteraction();
+    target.performAction(actionType);
+    return true;
+  }
+
+  bool requestTalk({required double durationSeconds}) {
+    if (actionState == PlayerActionState.disabled) {
+      return false;
+    }
+    _actionSecondsRemaining = durationSeconds;
+    actionState = PlayerActionState.talking;
+    playerAnimationHandler.showTalk();
+    return true;
+  }
+
+  void disableActions() {
+    actionState = PlayerActionState.disabled;
+    playerAnimationHandler.showIdle(position);
+  }
+
+  void lockForDialogue() {
+    actionState = PlayerActionState.dialogueLocked;
+    playerAnimationHandler.showIdle(position);
+  }
+
+  void _enterIdle() {
+    actionState = PlayerActionState.idle;
+    playerAnimationHandler.showIdle(destination);
+  }
+
+  void _resolvePendingInteraction() {
+    final target = _pendingInteractionTarget;
+    final actionType = _pendingInteractionType;
+    _clearPendingInteraction();
+    if (target == null || actionType == null || !target.isMounted) {
+      return;
+    }
+    target.performAction(actionType);
+  }
+
+  void _clearPendingInteraction() {
+    _pendingInteractionTarget = null;
+    _pendingInteractionType = null;
   }
 
   @override

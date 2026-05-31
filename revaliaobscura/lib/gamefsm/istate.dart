@@ -1,5 +1,5 @@
 // Abstract class to act as an interface for game states
-import 'package:coolorburn/gamefsm/fsm.dart';
+import 'package:revalia/gamefsm/fsm.dart';
 
 abstract class IState {
   void enter(Fsm gameFsm);

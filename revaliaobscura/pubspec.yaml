@@ -1,5 +1,5 @@
-name: coolorburn
-description: "A new Flutter project."
+name: revalia
+description: "A flutter game."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -49,6 +49,10 @@ flutter:
     - family: scumm        
       fonts:  
         - asset: resources/fonts/SCUMM-Font.ttf
+    - family: press2p        
+      fonts:  
+        - asset: resources/fonts/PressStart2P-Regular.ttf   
+
   assets:
     - resources/images/
     - resources/fonts/

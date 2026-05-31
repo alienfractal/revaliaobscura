@@ -1,6 +1,6 @@
 import 'dart:collection';
 
-import 'package:coolorburn/game/states/game/model/actor_model.dart';
+import 'package:revalia/game/states/game/model/actor_model.dart';
 
 //for rock (0), hot (1), cold (2), start point (3), and exit point (4).
 

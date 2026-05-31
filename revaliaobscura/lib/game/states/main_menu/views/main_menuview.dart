@@ -1,33 +1,32 @@
-
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/main_menu/behaviours/music_button_taphandler.dart';
-import 'package:coolorburn/game/states/main_menu/behaviours/sound_button_taphandler.dart';
-import 'package:coolorburn/game/states/main_menu/behaviours/start_button_taphandler.dart';
-import 'package:coolorburn/game/states/main_menu/behaviours/game_background_taphandler.dart';
-import 'package:coolorburn/utils/ui/game_button.dart';
-import 'package:coolorburn/utils/ui/text_component.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image/image_utils.dart';
-import 'package:coolorburn/utils/text_utils.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/game/states/main_menu/behaviours/crt_shader_button_taphandler.dart';
+import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler.dart';
+import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
+import 'package:revalia/game/states/main_menu/behaviours/start_button_taphandler.dart';
+import 'package:revalia/game/states/main_menu/behaviours/game_background_taphandler.dart';
+import 'package:revalia/utils/translation/app_translations.dart';
+import 'package:revalia/utils/ui/game_button.dart';
+import 'package:revalia/utils/ui/game_generic_button.dart';
+import 'package:revalia/utils/ui/text_component.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/image/image_utils.dart';
+import 'package:revalia/utils/text_utils.dart';
 import 'package:flame/components.dart';
- 
 
 class MainMenuView extends World
     with HasGameRef<RevaliaObs>
     implements ViewTransitionInterface {
-      
-
   late BlinkingTextComponent textComponent;
   late BlinkingTextComponent textComponentGameVersion;
   late GameButton buttonStart;
   late GameButton buttonSndFXVolume;
   late GameButton buttonMscFXVolume;
+  late GenericButton buttonCrtShader;
 
   late String gameVersion = "v.0.0.0";
-  
+
   double emplasedTime = -1.0;
   int count = 0;
-
 
   MainMenuView();
 
@@ -40,19 +39,15 @@ class MainMenuView extends World
   }
 
   @override
-   void  onMount()  {
+  void onMount() {
     super.onMount();
     print("MainMenuView: onMount");
-   
-    
-      
-   
+
     count = 0;
     textComponent.toggleBlinking();
     gameRef.ap.stopMusic();
 
-     gameRef.ap.playMusic(Assets.resources.audio.mfxshortintro);
-    
+    gameRef.ap.playMusic(Assets.resources.audio.mfxshortintro);
   }
 
   @override
@@ -61,15 +56,15 @@ class MainMenuView extends World
     RevaliaObs.logger.d("Screen resized to: $size");
   }
 
-  void loadlLevel()  {
- 
+  void loadlLevel() {
     //String buttonText = gameRef.i18nDelegate.currentLocale.t
-    textComponent = BlinkingTextComponent('PUSH BUTTON', Vector2(0, 75),
+    textComponent = BlinkingTextComponent(
+        AppTranslations.getTranslation('en', 'menu.push_button'),
+        Vector2(0, 75),
         fontSize: 6,
         isBlinking: true,
         tcolor: TextUtils.yellowText,
         interval: 0.4);
-    
 
     textComponent.position = ComponentUtils.centerComponent(
         gameRef.camDimension, textComponent,
@@ -103,7 +98,7 @@ class MainMenuView extends World
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
-        //buttonSndFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.soundfxVolume);
+    //buttonSndFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.soundfxVolume);
     buttonMscFXVolume = GameButton(
         position: Vector2(40, 175),
         imagePath: Assets.resources.images.musicfxVolume.path,
@@ -112,37 +107,60 @@ class MainMenuView extends World
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
-       // buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
-        
+    buttonCrtShader = GenericButton(
+      position: Vector2(60, 175),
+      buttonIconPath: 'resources/images/crton-32x32-8.png',
+      behavior: CrtShaderButtonTapHandler(),
+      buttonSize: Vector2(17, 17),
+      isAnimated: true,
+      animationFrames: 8,
+      animationStepTime: 0.12,
+      animationFrameSize: Vector2(32, 32),
+    );
+    // buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
+
     // Game Tiele sprite
-    
-    
-    gameRef.menuCacheService.companyTitle.position = Vector2((gameRef.camDimension.x / 2) - 70, 160);
+
+    final gameTitle = gameRef.menuCacheService.gameTitle.getSpriteComponent();
+    final companyTitle =
+        gameRef.menuCacheService.companyTitle.getSpriteComponent();
+    final gameSubTitle =
+        gameRef.menuCacheService.gameSubTitle.getSpriteComponent();
+    companyTitle.position = Vector2((gameRef.camDimension.x / 2) - 70, 160);
+    gameTitle.position = ComponentUtils.centerComponent(
+        gameRef.camDimension, gameTitle,
+        offsetX: 2, offsetY: -1);
+    gameSubTitle.position = ComponentUtils.centerComponent(
+        gameRef.camDimension, gameSubTitle,
+        offsetX: 2, offsetY: 2);
     addAll([
-      GameBackgroundTapComponent( gameRef.menuCacheService.gameBackground),
+      GameBackgroundTapComponent(
+          gameRef.menuCacheService.gameBackground.getSpriteComponent()),
       buttonStart,
       textComponent,
-      gameRef.menuCacheService.gameTitle,
-      gameRef.menuCacheService.companyTitle,
+      gameTitle,
+      companyTitle,
       textComponentGameVersion,
-      gameRef.menuCacheService.gameSubTitle,
+      gameSubTitle,
       buttonSndFXVolume,
       buttonMscFXVolume,
+      buttonCrtShader,
     ]);
   }
 
   @override
   void update(double dt) {
-       super.update(dt);
+    super.update(dt);
   }
+
   @override
   void transitionToNextState() {
-   // print("transitionToNextState");
+    // print("transitionToNextState");
     gameRef.gameFsm.gameLoading();
   }
 
   @override
   void onRemove() {
-      super.onRemove();
+    super.onRemove();
   }
 }

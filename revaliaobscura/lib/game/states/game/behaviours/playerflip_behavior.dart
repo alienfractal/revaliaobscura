@@ -2,9 +2,9 @@
 
  
  
-import 'package:coolorburn/game/states/game/view/playerentity.dart';
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:revalia/game/states/game/view/playerentity.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gen/assets.gen.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';

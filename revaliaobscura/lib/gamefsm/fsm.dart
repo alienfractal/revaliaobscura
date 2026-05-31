@@ -1,10 +1,10 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/gamefsm/game_end.dart';
-import 'package:coolorburn/gamefsm/game_loading.dart';
-import 'package:coolorburn/gamefsm/game_menu.dart';
-import 'package:coolorburn/gamefsm/game_score.dart';
-import 'package:coolorburn/gamefsm/game_start.dart';
-import 'package:coolorburn/gamefsm/istate.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gamefsm/game_end.dart';
+import 'package:revalia/gamefsm/game_loading.dart';
+import 'package:revalia/gamefsm/game_menu.dart';
+import 'package:revalia/gamefsm/game_score.dart';
+import 'package:revalia/gamefsm/game_start.dart';
+import 'package:revalia/gamefsm/istate.dart';
 
 enum StateType {
   GameMenu,

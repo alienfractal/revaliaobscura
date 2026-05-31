@@ -1,4 +1,4 @@
-import 'package:coolorburn/utils/ui/game_generic_button.dart';
+import 'package:revalia/utils/ui/game_generic_button.dart';
 
 class GenericButtonManager {
   final List<GenericButton> buttons = [];

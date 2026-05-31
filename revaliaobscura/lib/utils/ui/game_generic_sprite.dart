@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:coolorburn/revalia_obs.dart';
+import 'package:revalia/revalia_obs.dart';
 
 import 'package:flame/components.dart';
 

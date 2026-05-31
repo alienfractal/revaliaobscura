@@ -1,7 +1,7 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
-import 'package:coolorburn/utils/ui/game_generic_button.dart';
-import 'package:coolorburn/utils/ui/generic_button_manager.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/utils/components/actionable_entitty_component.dart';
+import 'package:revalia/utils/ui/game_generic_button.dart';
+import 'package:revalia/utils/ui/generic_button_manager.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';

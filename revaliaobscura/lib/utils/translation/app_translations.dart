@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:revalia/gen/assets.gen.dart';
 import 'package:flutter/services.dart';
 
 class AppTranslations {

@@ -1,52 +1,52 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
-import 'package:coolorburn/utils/image/image_utils.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/components.dart';
-import 'package:flame/src/components/sprite_component.dart';
-import 'package:flame/src/sprite_animation.dart';
 
-class MenuCacheSerivce extends SpriteCache {
-  late SpriteComponent gameBackground;
-  late SpriteComponent gameTitle;
-  late SpriteComponent gameSubTitle;
-  late SpriteComponent companyTitle;
-
-
+class MenuCacheSerivce extends SpriteAnimatorCache {
+  late SpriteSpec gameBackground;
+  late SpriteSpec gameTitle;
+  late SpriteSpec gameSubTitle;
+  late SpriteSpec companyTitle;
 
   @override
   Future<void> preloadSprites(RevaliaObs gameRef) async {
-companyTitle =  await getSpriteComponent(
-        path: Assets.resources.images.gamelogo140x32.path,
-        imgSize: Vector2(140, 32));
-    
-    
-       gameBackground = await getSpriteComponent(
-        path: Assets.resources.images.gameBackground32x32.path,
-        imgSize: gameRef.camDimension);
-      
-    // Game Tiele sprite
-    gameTitle = await getSpriteComponent(
-        path: Assets.resources.images.gameTitlePng.path,
-        imgSize: Vector2(104, 56));
-
-    gameTitle.position = ComponentUtils.centerComponent(
-        gameRef.camDimension, gameTitle,
-        offsetX: 2, offsetY: -1);
-
-    gameSubTitle = await getSpriteComponent(
-        path: Assets.resources.images.gamesubTitlePng.path,
-        imgSize: Vector2(140, 32));
-        
-    gameSubTitle.position = ComponentUtils.centerComponent(
-        gameRef.camDimension, gameSubTitle,
-        offsetX: 2, offsetY: 2);
+    companyTitle = SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(
+            path: Assets.resources.images.gamelogo140x32.path),
+        Vector2(140, 32));
+    gameBackground = SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(
+            path: Assets.resources.images.gameBackground32x32.path),
+        gameRef.camDimension);
+    gameTitle = SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(
+            path: Assets.resources.images.gameTitlePng.path),
+        Vector2(104, 56));
+    gameSubTitle = SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(
+            path: Assets.resources.images.gamesubTitlePng.path),
+        Vector2(140, 32));
   }
-  
+
   @override
-  Future<SpriteComponent> getSpriteComponent({required String path, required Vector2 imgSize})async {
-    Sprite sprite = await SpriteAnimatorCache.loadSprite(path);
-    return SpriteComponent(sprite: sprite, size: imgSize);
+  SpriteAnimation getAnimation(int modelValue) {
+    throw UnimplementedError();
   }
 
+  @override
+  SpriteComponent getSpriteComponent(
+      {required Sprite sprite, required Vector2 imgSize}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  String getSpritePath(int type) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> preloadAnimations(RevaliaObs gameRef) {
+    throw UnimplementedError();
+  }
 }

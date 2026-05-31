@@ -1,12 +1,10 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:flame/sprite.dart';
-import 'package:flame/extensions.dart';
-import 'package:flame/src/components/sprite_component.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/game/states/game/model/actor_model.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:flame/components.dart';
 
-class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
+class ActorCacheService extends SpriteAnimatorCache {
   // Individual animations for card types
   late SpriteAnimation fireAnimation;
   late SpriteAnimation iceAnimation;
@@ -18,7 +16,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation floorAnimation;
   late SpriteAnimation rubbleAnimation;
   late SpriteAnimation emptyEnemyAnimation;
-  late SpriteComponent gameBackground;
+  late SpriteSpec gameBackground;
   late SpriteAnimation sandClockPowerUp;
   late SpriteAnimation potionEnergyPowerUp;
   late SpriteAnimation coinPowerUp;
@@ -34,18 +32,16 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
   late SpriteAnimation graveAnimation;
   late SpriteAnimation graveBrokenAnimation;
 
-  late SpriteComponent walkButtonSprite;
-  late SpriteComponent lookAtButtonSprite;
-  late SpriteComponent talkToButtonSprite;
-  late SpriteComponent touchButtonSprite;
+  late SpriteSpec walkButtonSprite;
+  late SpriteSpec lookAtButtonSprite;
+  late SpriteSpec talkToButtonSprite;
+  late SpriteSpec touchButtonSprite;
 
-
-  late SpriteAnimation npcOldSailor;
- 
+  late SpriteAnimation npcOldSailorIdle;
+  late SpriteAnimation npcOldSailorTalk;
 
   @override
   Future<void> preloadAnimations(RevaliaObs gameRef) async {
-
     gameTownAnimationBackground = await gameRef.loadSpriteAnimation(
       Assets.resources.images.revalTowncenterMarketAnimation320x200.path,
       SpriteAnimationData.sequenced(
@@ -54,7 +50,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         textureSize: Vector2(320, 200),
         loop: true,
       ),
-    );  
+    );
 
     walkingArea = await gameRef.loadSpriteAnimation(
       Assets.resources.images.walkingArea.path,
@@ -64,21 +60,27 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         textureSize: Vector2(32, 32),
         loop: false,
       ),
-    ); 
+    );
 
-    npcOldSailor = await gameRef.loadSpriteAnimation(
-      Assets.resources.images.mecharchtSailorSheet50x85.path,
+    npcOldSailorIdle = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.mecharchtSailorSheet750x85.path,
       SpriteAnimationData.sequenced(
-        amount: 11,
+        amount: 7,
         stepTime: 0.5,
         textureSize: Vector2(50, 85),
         loop: true,
       ),
-    );  
+    );
 
-   gameBackground = await getSpriteComponent(
-        path: Assets.resources.images.gameBackground32x32.path,
-        imgSize: gameRef.camDimension * 4);
+    npcOldSailorTalk = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.mecharchtSailorTalk50x859Sheet.path,
+      SpriteAnimationData.sequenced(
+        amount: 9,
+        stepTime: 0.12,
+        textureSize: Vector2(50, 85),
+        loop: true,
+      ),
+    );
 
     fireAnimation = await gameRef.loadSpriteAnimation(
       getSpritePath(ActorModel.FIRE),
@@ -109,7 +111,6 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         loop: false,
       ),
     );
-    
 
     gemRelicEmerald = await gameRef.loadSpriteAnimation(
       Assets.resources.images.gem3GlowingSheet32x325.path,
@@ -121,7 +122,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-     gemRelicPearl = await gameRef.loadSpriteAnimation(
+    gemRelicPearl = await gameRef.loadSpriteAnimation(
       Assets.resources.images.gem2GlowingSheet32x323.path,
       SpriteAnimationData.sequenced(
         amount: 3,
@@ -131,7 +132,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-     gemRelicRuby = await gameRef.loadSpriteAnimation(
+    gemRelicRuby = await gameRef.loadSpriteAnimation(
       Assets.resources.images.gem1GlowingSheet32x324.path,
       SpriteAnimationData.sequenced(
         amount: 4,
@@ -151,7 +152,6 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-    
     scoreIcon = await gameRef.loadSpriteAnimation(
       Assets.resources.images.scoreiconSheet.path,
       SpriteAnimationData.sequenced(
@@ -162,9 +162,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-
-
-     sandClockPowerUp = await gameRef.loadSpriteAnimation(
+    sandClockPowerUp = await gameRef.loadSpriteAnimation(
       Assets.resources.images.sandclockSheet.path,
       SpriteAnimationData.sequenced(
         amount: 7,
@@ -174,7 +172,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-        potionEnergyPowerUp = await gameRef.loadSpriteAnimation(
+    potionEnergyPowerUp = await gameRef.loadSpriteAnimation(
       Assets.resources.images.potionSheet.path,
       SpriteAnimationData.sequenced(
         amount: 4,
@@ -184,7 +182,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-         coinPowerUp = await gameRef.loadSpriteAnimation(
+    coinPowerUp = await gameRef.loadSpriteAnimation(
       Assets.resources.images.scoreiconSheet.path,
       SpriteAnimationData.sequenced(
         amount: 4,
@@ -194,7 +192,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-     fireAnimation = await gameRef.loadSpriteAnimation(
+    fireAnimation = await gameRef.loadSpriteAnimation(
       getSpritePath(ActorModel.FIRE),
       SpriteAnimationData.sequenced(
         amount: 1,
@@ -204,7 +202,7 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-     fireAnimation = await gameRef.loadSpriteAnimation(
+    fireAnimation = await gameRef.loadSpriteAnimation(
       getSpritePath(ActorModel.FIRE),
       SpriteAnimationData.sequenced(
         amount: 1,
@@ -304,8 +302,6 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       ),
     );
 
-   
-
     print("All card animations preloaded successfully.");
   }
 
@@ -332,13 +328,13 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
         return Assets.resources.images.celldarkDirt.path;
       case ActorModel.EMPTY_ENEMY:
         return Assets.resources.images.blacksquare48x48.path;
-       case ActorModel.RELIC:
-        return Assets.resources.images.celldarkDirtRelicSheet.path;  
+      case ActorModel.RELIC:
+        return Assets.resources.images.celldarkDirtRelicSheet.path;
       default:
         throw Exception('actor cache Unknown actorType: $type');
     }
   }
-  
+
   @override
   SpriteAnimation getAnimation(int modelValue) {
     print("getAnimation modelValue $modelValue");
@@ -366,35 +362,37 @@ class ActorCacheService extends SpriteAnimatorCache implements SpriteCache {
       case ActorModel.RELIC:
         return relicPowerTreasure;
       case ActorModel.BROKEN_GRAVE:
-        return graveBrokenAnimation; 
+        return graveBrokenAnimation;
       case ActorModel.GRAVE:
         return graveAnimation;
-  
+
       default:
         throw Exception('Unknown ActorType: $modelValue');
     }
   }
-  
-@override
-  Future<SpriteComponent> getSpriteComponent({required String path, required Vector2 imgSize})async {
-    Sprite sprite = await SpriteAnimatorCache.loadSprite(path);
+
+  @override
+  SpriteComponent getSpriteComponent(
+      {required Sprite sprite, required Vector2 imgSize}) {
     return SpriteComponent(sprite: sprite, size: imgSize);
   }
 
   @override
-  Future<void> preloadSprites(RevaliaObs gameRef) async{
-        gameBackground = await getSpriteComponent(
-        path: Assets.resources.images.gameBackground32x32.path,
-        imgSize: gameRef.camDimension);
-         
-        walkButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconWalk24x24.path, imgSize: Vector2(24,24));
-        lookAtButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconLook24x24.path, imgSize: Vector2(24,24));
-        talkToButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconTalk24x24.path, imgSize: Vector2(24,24));
-        touchButtonSprite = await getSpriteComponent( path: Assets.resources.images.actionIconTouch24x24.path, imgSize: Vector2(24,24));
-        
-        
-        }
+  Future<void> preloadSprites(RevaliaObs gameRef) async {
+    gameBackground = await _loadSpriteSpec(
+        Assets.resources.images.gameBackground32x32.path, gameRef.camDimension);
+    walkButtonSprite = await _loadSpriteSpec(
+        Assets.resources.images.actionIconWalk24x24.path, Vector2(24, 24));
+    lookAtButtonSprite = await _loadSpriteSpec(
+        Assets.resources.images.actionIconLook24x24.path, Vector2(24, 24));
+    talkToButtonSprite = await _loadSpriteSpec(
+        Assets.resources.images.actionIconTalk24x24.path, Vector2(24, 24));
+    touchButtonSprite = await _loadSpriteSpec(
+        Assets.resources.images.actionIconTouch24x24.path, Vector2(24, 24));
+  }
 
-
-
+  Future<SpriteSpec> _loadSpriteSpec(String path, Vector2 imgSize) async {
+    return SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(path: path), imgSize);
+  }
 }

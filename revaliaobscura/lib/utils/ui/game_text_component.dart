@@ -1,4 +1,4 @@
-import 'package:coolorburn/revalia_obs.dart';
+import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 
 
 
-class ColorStatusTextComponent extends PositionedEntity {
+class GameTextComponent extends PositionedEntity {
   bool switchColor = false;
   static int CRITICAL = 0;
   static int NORMAL = 1;
@@ -23,8 +23,9 @@ class ColorStatusTextComponent extends PositionedEntity {
   late TextComponent textComponent; // Holds the actual text
   Color tcolor;
   double fontSize;
+  String fontName = "scumm";
 
-  ColorStatusTextComponent(String text, 
+  GameTextComponent(String text, 
       {required this.fontSize,
       required bool isBlinking,
       required double interval,
@@ -35,7 +36,7 @@ class ColorStatusTextComponent extends PositionedEntity {
       text: text,
       textRenderer: TextPaint(
           style: TextStyle(
-              fontSize: fontSize, color: tcolor, fontFamily: "scumm")),
+              fontSize: fontSize, color: tcolor, fontFamily: fontName)),
       position: Vector2.zero(), // Centered inside parent
     );
 
@@ -43,7 +44,7 @@ class ColorStatusTextComponent extends PositionedEntity {
       style: TextStyle(
         color: const Color.fromARGB(255, 161, 61, 59),
         fontSize: fontSize,
-        fontFamily: "scumm",
+        fontFamily: fontName,
         backgroundColor: Color.fromARGB(255, 255, 136, 0),
       ),
     );
@@ -52,7 +53,7 @@ class ColorStatusTextComponent extends PositionedEntity {
       style: TextStyle(
         color: const Color.fromARGB(255, 238, 255, 0),
         fontSize: fontSize,
-        fontFamily: "scumm",
+        fontFamily: fontName,
         backgroundColor: Color.fromARGB(255, 0, 119, 255),
       ),
     );
@@ -61,7 +62,7 @@ class ColorStatusTextComponent extends PositionedEntity {
       style: TextStyle(
         color: const Color.fromARGB(255, 227, 210, 67),
         fontSize: fontSize,
-        fontFamily: "scumm",
+        fontFamily: fontName,
       ),
     );
 
@@ -69,7 +70,7 @@ class ColorStatusTextComponent extends PositionedEntity {
       style: TextStyle(
         color: tcolor,
         fontSize: fontSize,
-        fontFamily: "scumm",
+        fontFamily: fontName,
       ),
     );
 

@@ -13,6 +13,9 @@ class FontFamily {
   /// Font family: arcade
   static const String arcade = 'arcade';
 
+  /// Font family: press2p
+  static const String press2p = 'press2p';
+
   /// Font family: scumm
   static const String scumm = 'scumm';
 }

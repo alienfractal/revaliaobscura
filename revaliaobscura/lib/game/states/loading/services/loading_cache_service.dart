@@ -1,23 +1,35 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/image/sprite_animator_cache_service.dart';
-import 'package:flame/src/components/sprite_component.dart';
-import 'package:vector_math/vector_math_64.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
+import 'package:flame/components.dart';
 
-class LoadingCacheService extends SpriteCache{
+class LoadingCacheService extends SpriteAnimatorCache {
+  late SpriteSpec gameBackground;
 
-  late SpriteComponent gameBackground;
-  late SpriteComponent ethnoPattern;
-  
   @override
-  Future<SpriteComponent> getSpriteComponent({required String path, required Vector2 imgSize})async {
-    Sprite sprite = await SpriteAnimatorCache.loadSprite(path);
-    return SpriteComponent(sprite: sprite, size: imgSize);
+  SpriteAnimation getAnimation(int modelValue) {
+    throw UnimplementedError();
   }
 
   @override
-  Future<void> preloadSprites(RevaliaObs gameRef) async{
-        gameBackground = await getSpriteComponent(
-        path: Assets.resources.images.gameBackground32x32.path,
-        imgSize: gameRef.camDimension);}
+  SpriteComponent getSpriteComponent(
+      {required Sprite sprite, required Vector2 imgSize}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  String getSpritePath(int type) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> preloadAnimations(RevaliaObs gameRef) async {}
+
+  @override
+  Future<void> preloadSprites(RevaliaObs gameRef) async {
+    gameBackground = SpriteSpec(
+        await SpriteAnimatorCache.loadSprite(
+            path: Assets.resources.images.gameBackground32x32.path),
+        gameRef.camDimension);
+  }
 }

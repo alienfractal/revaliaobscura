@@ -1,6 +1,6 @@
 
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/sound/audio_player_wrapper.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/sound/audio_player_wrapper.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:logger/logger.dart' as log;
 

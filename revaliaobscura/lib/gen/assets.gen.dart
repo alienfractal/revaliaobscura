@@ -261,6 +261,9 @@ class $ResourcesAudioGen {
 class $ResourcesFontsGen {
   const $ResourcesFontsGen();
 
+  /// File path: resources/fonts/PressStart2P-Regular.ttf
+  String get pressStart2PRegular => 'resources/fonts/PressStart2P-Regular.ttf';
+
   /// File path: resources/fonts/SCUMM-Font.ttf
   String get sCUMMFont => 'resources/fonts/SCUMM-Font.ttf';
 
@@ -268,7 +271,7 @@ class $ResourcesFontsGen {
   String get arcade => 'resources/fonts/arcade.ttf';
 
   /// List of all assets
-  List<String> get values => [sCUMMFont, arcade];
+  List<String> get values => [pressStart2PRegular, sCUMMFont, arcade];
 }
 
 class $ResourcesImagesGen {
@@ -317,6 +320,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/Rebane-50x84-idle-16.png
   AssetGenImage get rebane50x84Idle16 =>
       const AssetGenImage('resources/images/Rebane-50x84-idle-16.png');
+
+  /// File path: resources/images/Rebane-50x84-talk-6.png
+  AssetGenImage get rebane50x84Talk6 =>
+      const AssetGenImage('resources/images/Rebane-50x84-talk-6.png');
 
   /// File path: resources/images/Rebane-50x84.aseprite
   String get rebane50x84 => 'resources/images/Rebane-50x84.aseprite';
@@ -529,6 +536,10 @@ class $ResourcesImagesGen {
   AssetGenImage get flameicon1 =>
       const AssetGenImage('resources/images/flameicon1.png');
 
+  /// File path: resources/images/game-cover.png
+  AssetGenImage get gameCover =>
+      const AssetGenImage('resources/images/game-cover.png');
+
   /// File path: resources/images/gamecover-template.aseprite
   String get gamecoverTemplateAseprite =>
       'resources/images/gamecover-template.aseprite';
@@ -597,6 +608,14 @@ class $ResourcesImagesGen {
   /// File path: resources/images/mecharcht-sailor-sheet-50x85.png
   AssetGenImage get mecharchtSailorSheet50x85 =>
       const AssetGenImage('resources/images/mecharcht-sailor-sheet-50x85.png');
+
+  /// File path: resources/images/mecharcht-sailor-sheet-7-50x85.png
+  AssetGenImage get mecharchtSailorSheet750x85 => const AssetGenImage(
+      'resources/images/mecharcht-sailor-sheet-7-50x85.png');
+
+  /// File path: resources/images/mecharcht-sailor-talk-50x85-9-sheet.png
+  AssetGenImage get mecharchtSailorTalk50x859Sheet => const AssetGenImage(
+      'resources/images/mecharcht-sailor-talk-50x85-9-sheet.png');
 
   /// File path: resources/images/mecharcht-sailor.aseprite
   String get mecharchtSailor => 'resources/images/mecharcht-sailor.aseprite';
@@ -730,6 +749,7 @@ class $ResourcesImagesGen {
         rebane46x77,
         rebane50x849,
         rebane50x84Idle16,
+        rebane50x84Talk6,
         rebane50x84,
         revalGates128x91,
         revalGates320x200Aseprite,
@@ -785,6 +805,7 @@ class $ResourcesImagesGen {
         flameiconAseprite,
         flameiconPng,
         flameicon1,
+        gameCover,
         gamecoverTemplateAseprite,
         gamecoverTemplatePng,
         gamelogo140x32,
@@ -804,6 +825,8 @@ class $ResourcesImagesGen {
         greenZombie,
         guardDistance152x74,
         mecharchtSailorSheet50x85,
+        mecharchtSailorSheet750x85,
+        mecharchtSailorTalk50x859Sheet,
         mecharchtSailor,
         minerAttackSheet48x489,
         minerBlockSheet48x487,

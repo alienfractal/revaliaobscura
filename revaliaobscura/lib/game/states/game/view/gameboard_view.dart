@@ -1,22 +1,20 @@
 import 'dart:async';
 
-import 'package:coolorburn/game/states/game/behaviours/actorflip_behavior.dart';
-import 'package:coolorburn/game/states/game/behaviours/walking_area_behaviour.dart';
-import 'package:coolorburn/game/states/game/model/player_model.dart';
-import 'package:coolorburn/game/states/game/view/dialog_frame_entity.dart';
-import 'package:coolorburn/game/states/game/view/playerentity.dart';
-import 'package:coolorburn/revalia_obs.dart';
+import 'package:revalia/game/states/game/behaviours/actorflip_behavior.dart';
+import 'package:revalia/game/states/game/behaviours/walking_area_behaviour.dart';
+import 'package:revalia/game/states/game/model/player_model.dart';
+import 'package:revalia/game/states/game/view/dialog_frame_entity.dart';
+import 'package:revalia/game/states/game/view/playerentity.dart';
+import 'package:revalia/revalia_obs.dart';
 
-import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
-import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/game/states/game/view/actorentity.dart';
-import 'package:coolorburn/game/states/game/view/game_board_ui_comp_handler.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/components/actionable_entitty_component.dart';
-import 'package:coolorburn/utils/dialogsystem/dialog_manager.dart';
-import 'package:coolorburn/utils/dialogsystem/dialogue.dart';
-import 'package:coolorburn/utils/translation/app_translations.dart';
-import 'package:coolorburn/utils/ui/color_status_text_component.dart';
+import 'package:revalia/game/states/game/model/gameboardmodel.dart';
+import 'package:revalia/game/states/game/model/actor_model.dart';
+import 'package:revalia/game/states/game/view/actorentity.dart';
+import 'package:revalia/game/states/game/view/game_board_ui_comp_handler.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/components/actionable_entitty_component.dart';
+import 'package:revalia/utils/translation/app_translations.dart';
+import 'package:revalia/utils/ui/game_text_component.dart';
 import 'package:flame/components.dart';
 
 class GameboardView extends World
@@ -39,10 +37,13 @@ class GameboardView extends World
   bool isEnemyDefeated = false;
   int clickCount = 0;
 
-  late DialogFrameEntity df;
+  DialogFrameEntity? df;
 
   double _emplasedTime = -1;
   ActionableType actionType = ActionableType.move;
+  int _conclusionToken = 0;
+
+  late ActorEntity activeActor;
   GameboardView() {
     gBoardModel = GameBoardModel();
     uiGameBoardComponents = UIGameBoardComponents(gameboardView: this);
@@ -59,7 +60,7 @@ class GameboardView extends World
   @override
   void onMount() {
     super.onMount();
-    debugMode = true;
+    // debugMode = true;
     print("GameboardView onMount");
 
     //clearBoard();
@@ -80,7 +81,6 @@ class GameboardView extends World
     //game generic button uses an internal await that fucked me over
     uiGameBoardComponents.gameActionGroup
         .onButtonTapped(uiGameBoardComponents.wallkButton);
-    
   }
 
   void clearBoard() {
@@ -101,12 +101,16 @@ class GameboardView extends World
   @override
   void onRemove() {
     super.onRemove();
+    _conclusionToken++;
     gameRef.cam.moveTo(Vector2(0, 0));
     uiGameBoardComponents.removeGameUIComponents();
 
     isGameFinished = true;
     isGameStarted = false;
     clickCount = 0;
+    removeAll(children);
+    actors.clear();
+    df = null;
   }
 
   @override
@@ -209,10 +213,10 @@ class GameboardView extends World
 
     if (gBoardModel.levelPlayTime.toInt() >= 30) {
       uiGameBoardComponents.textComponentTime
-          .updateUI(ColorStatusTextComponent.NORMAL);
+          .updateUI(GameTextComponent.NORMAL);
     } else if (gBoardModel.levelPlayTime.toInt() >= 5) {
       uiGameBoardComponents.textComponentTime
-          .updateUI(ColorStatusTextComponent.WARNING);
+          .updateUI(GameTextComponent.WARNING);
     } else {
       int status = (gBoardModel.levelPlayTime * 8).toInt() % 3;
       uiGameBoardComponents.textComponentTime.updateUI(status);
@@ -225,14 +229,17 @@ class GameboardView extends World
   }
 
   void onLevelConclusion(bool win) {
+    final token = ++_conclusionToken;
     if (win) {
-      gBoardModel.flipResultOutcome = ActionOutcome.timeOver;
+      gBoardModel.flipResultOutcome = ActionOutcome.levelCompleted;
       gameRef.ap.playSoundFx(Assets.resources.audio.levelup);
 
       gameRef.ap.stopMusic();
       gameRef.ap.playMusic(Assets.resources.audio.mfxLevelWin);
     } else {
-      gBoardModel.flipResultOutcome = ActionOutcome.timeOver;
+      gBoardModel.flipResultOutcome = gBoardModel.levelPlayTime <= 0
+          ? ActionOutcome.timeOver
+          : ActionOutcome.invalidMove;
       gameRef.ap.playSoundFx(Assets.resources.audio.explosion2);
 
       gameRef.ap.stopMusic();
@@ -240,6 +247,9 @@ class GameboardView extends World
     }
 
     Future.delayed(const Duration(milliseconds: 3500), () {
+      if (!isMounted || token != _conclusionToken) {
+        return;
+      }
       transitionToNextState();
     });
   }
@@ -295,21 +305,41 @@ class GameboardView extends World
     add(npc);
   }
 
-  void callRenderDialogue(String actorDialogueId) {
+  void callRenderDialogue(ActorEntity actorEntity) {
+    activeActor = actorEntity;
     // If df exists, remove it first
-   
-  if( actorDialogueId =="" || actorDialogueId =="end"){
-    removeDialogFrame();
+    if (df == null) {
+      df = DialogFrameEntity(
+          position: Vector2(160, 80), size: Vector2(256 + 16, 32 + 16));
+      add(df!);
+      df?.initDialog(activeActor.actorDialogueId);
+    } else if (!df!.isDialogActive) {
+      add(df!);
+      df?.initDialog(activeActor.actorDialogueId);
+    } else {
+      print("dialog already active");
+    }
   }
-  else{
-    df = DialogFrameEntity(position: Vector2(160, 80), size: Vector2(256, 120));
-    add(df);
-    df.initDialog(actorDialogueId);
-  }
+
+  void callRenderDialogueOnError(String dialogId) {
+    final message = AppTranslations.getTranslation(
+        gameRef.currentLocale, "dialogues.$dialogId.player_text");
+    // If df exists, remove it first
+    if (df == null) {
+      df = DialogFrameEntity(
+          position: Vector2(160, 80), size: Vector2(256 + 16, 32 + 16));
+      add(df!);
+      df?.showScreenMessage(message);
+    } else if (!df!.isDialogActive) {
+      add(df!);
+      df?.showScreenMessage(message);
+    } else {
+      print("dialog already active");
+    }
   }
 
   void removeDialogFrame() {
-     df.clearDialog();
-     df.removeFromParent();
+    df?.clearDialogText();
+    df?.removeFromParent();
   }
 }

@@ -1,6 +1,6 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/game/model/actor_model.dart';
-import 'package:coolorburn/game/states/game/view/actorentity.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/game/states/game/model/actor_model.dart';
+import 'package:revalia/game/states/game/view/actorentity.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
@@ -19,8 +19,7 @@ class ActorAnimationHandler {
 
   ActorAnimationHandler();
 
-  void init(
-      SpriteAnimation spriteAnimation, Vector2 size, ActorEntity parent) {
+  void init(SpriteAnimation spriteAnimation, Vector2 size, ActorEntity parent) {
     actorViewParent = parent;
     spriteAnimationComponent = SpriteAnimationComponent(
       animation: spriteAnimation,
@@ -111,5 +110,19 @@ class ActorAnimationHandler {
         });
 
     parent.add(_blinkTimer);
+  }
+
+  void showTalk() {
+    isAnimating = true;
+    spriteAnimationComponent.animation =
+        gameRef.actorCacheService.npcOldSailorTalk;
+    animationTicker = spriteAnimationComponent.animationTicker;
+  }
+
+  void showIdle() {
+    isAnimating = false;
+    spriteAnimationComponent.animation =
+        gameRef.actorCacheService.npcOldSailorIdle;
+    animationTicker = spriteAnimationComponent.animationTicker;
   }
 }

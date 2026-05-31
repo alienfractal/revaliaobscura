@@ -1,4 +1,4 @@
-import 'package:coolorburn/gen/assets.gen.dart';
+import 'package:revalia/gen/assets.gen.dart';
 
 abstract class AudioPlayerWrapper {
   static final  List<String> hitHurtSounds = [

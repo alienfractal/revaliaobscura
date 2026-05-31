@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/game/states/game/model/gameboardmodel.dart';
-import 'package:coolorburn/utils/ui/text_component.dart';
-import 'package:coolorburn/gen/assets.gen.dart';
-import 'package:coolorburn/utils/text_utils.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/game/states/game/model/gameboardmodel.dart';
+import 'package:revalia/utils/ui/text_component.dart';
+import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/utils/text_utils.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -28,6 +28,7 @@ class GameScoreView extends World
   late int coinCount;
   late int totalScore;
   late ActionOutcome flipResultOutcome;
+  int _summaryToken = 0;
 
   @override
   void onLoad() {
@@ -40,35 +41,25 @@ class GameScoreView extends World
   void onMount() {
     print("Score onMount");
     super.onMount();
+    textComponentCurrentScore.enableBlinking();
     initializeModelData(); // Centralized model initialization
-    scoreSummary();
+    scoreSummary(++_summaryToken);
   }
 
   @override
   void onRemove() {
     super.onRemove();
+    _summaryToken++;
     textComponentCurrentScore.disableBlinking();
-    gameBackground.removeFromParent();
-    textComponentLoading.removeFromParent();
-    textComponentItemsUsed.removeFromParent();
-    textComponentTimeUsed.removeFromParent();
-    textComponentCurrentScore.removeFromParent();
-    textComponentCoinsCollected.removeFromParent();
   }
 
   // Initialization of components
   void init() {
-    gameBackground = gameRef.actorCacheService.gameBackground;
+    gameBackground =
+        gameRef.actorCacheService.gameBackground.getSpriteComponent();
 
-    textComponentLoading = TextUtils.addTextToview(
-        gameRef,
-        'SCORE SUMMARY',
-        Vector2(90, 10),
-        16,
-        true,
-        Colors.white,
-        1.0,
-        false);
+    textComponentLoading = TextUtils.addTextToview(gameRef, 'SCORE SUMMARY',
+        Vector2(90, 10), 16, true, Colors.white, 1.0, false);
 
     textComponentItemsUsed = TextUtils.addTextToview(
         gameRef,
@@ -80,15 +71,8 @@ class GameScoreView extends World
         1.0,
         false);
 
-    textComponentTimeUsed = TextUtils.addTextToview(
-        gameRef,
-        'Time left: ${0}',
-        Vector2(10, 100),
-        6,
-        true,
-        TextUtils.coolblueText,
-        1.0,
-        false);
+    textComponentTimeUsed = TextUtils.addTextToview(gameRef, 'Time left: ${0}',
+        Vector2(10, 100), 6, true, TextUtils.coolblueText, 1.0, false);
 
     textComponentCoinsCollected = TextUtils.addTextToview(
         gameRef,
@@ -131,16 +115,20 @@ class GameScoreView extends World
     flipResultOutcome = gameRef.gboard.gBoardModel.flipResultOutcome;
   }
 
-  void scoreSummary() {
-    animateFlameTimeScoreCount();
+  void scoreSummary(int token) {
+    animateFlameTimeScoreCount(token);
     Future.delayed(const Duration(milliseconds: 3500), () {
+      if (!isMounted || token != _summaryToken) {
+        return;
+      }
       transitionToNextState();
     });
   }
 
-  Future<void> animateFlameTimeScoreCount() async {
+  Future<void> animateFlameTimeScoreCount(int token) async {
     for (int i = 0; i <= min(energyCount, 4); i++) {
       await Future.delayed(const Duration(milliseconds: 120));
+      if (!isMounted || token != _summaryToken) return;
       textComponentItemsUsed.text = 'Energy left: $i';
       gameRef.ap.playSoundFx(Assets.resources.audio.pickupCoin);
     }
@@ -149,6 +137,7 @@ class GameScoreView extends World
     var round = min(levelPlayTime, 4);
     for (int i = 0; i <= round; i++) {
       await Future.delayed(const Duration(milliseconds: 120));
+      if (!isMounted || token != _summaryToken) return;
       textComponentTimeUsed.text = 'Time left: $i';
       gameRef.ap.playSoundFx(Assets.resources.audio.pickupCoin);
     }
@@ -157,6 +146,7 @@ class GameScoreView extends World
     if (coinCount > 0) {
       for (int i = 0; i <= min(coinCount, 4); i++) {
         await Future.delayed(const Duration(milliseconds: 120));
+        if (!isMounted || token != _summaryToken) return;
         textComponentCoinsCollected.text = 'Coins Collected: $i';
         gameRef.ap.playSoundFx(Assets.resources.audio.pickupCoin);
       }
@@ -175,7 +165,7 @@ class GameScoreView extends World
   void transitionToNextState() {
     print('ScoreView lastOutcome = $flipResultOutcome');
     switch (flipResultOutcome) {
-      case ActionOutcome.invalidMove  :
+      case ActionOutcome.invalidMove:
         gameRef.gameFsm.gameEnd();
         break;
       case ActionOutcome.timeOver:

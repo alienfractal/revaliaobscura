@@ -1,6 +1,6 @@
-import 'package:coolorburn/game/states/game/view/actorentity.dart';
-import 'package:coolorburn/utils/dialogsystem/dialog_manager.dart';
-import 'package:coolorburn/utils/dialogsystem/dialogue.dart';
+import 'package:revalia/game/states/game/view/actorentity.dart';
+import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
+import 'package:revalia/utils/dialogsystem/dialogue.dart';
 
 class DialogueRenderer {
  

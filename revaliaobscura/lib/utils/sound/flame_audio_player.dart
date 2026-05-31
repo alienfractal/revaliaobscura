@@ -1,4 +1,4 @@
-import 'package:coolorburn/utils/sound/audio_player_wrapper.dart';
+import 'package:revalia/utils/sound/audio_player_wrapper.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 

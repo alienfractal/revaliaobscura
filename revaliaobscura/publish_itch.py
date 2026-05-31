@@ -58,7 +58,6 @@ def fetch_game_info(api_key, game_title):
  
     # Create game entry
     url = f'https://itch.io/api/1/{api_key}/my-games'
-    print(url)
     fetch_games = requests.get(url)
     filtered_game= filter_games(fetch_games, game_title)
     # Extract the last part of the path (the internal name)
@@ -102,10 +101,14 @@ def prepareIndexPage():
     print(f"Modified {index_html_path} by removing <base href='/'>")
 
 
+api_key = os.environ.get('ITCH_API_KEY')
+if not api_key:
+    print("Missing ITCH_API_KEY environment variable.")
+    sys.exit(1)
+
 prepareIndexPage()
-#get_current_version()   
-api_key = 'dWyTjeb7ePLyzFANZMrkjTMskvxAtth5SiwbyTXn'
-game_title = 'Pick or Burn'
+#get_current_version()
+game_title = 'Revalia Obscura'
 game_info=fetch_game_info(api_key,game_title)
 developer_name = game_info['username']
 internal_gamename = game_info['internal_name']

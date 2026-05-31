@@ -1,11 +1,9 @@
 import 'dart:ui';
 
- 
- 
-import 'package:coolorburn/game/states/game/model/player_model.dart';
- 
-import 'package:coolorburn/game/states/game/view/playerentity.dart';
-import 'package:coolorburn/revalia_obs.dart';
+import 'package:revalia/game/states/game/model/player_model.dart';
+
+import 'package:revalia/game/states/game/view/playerentity.dart';
+import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
@@ -30,26 +28,22 @@ class PlayerAnimationHandler {
     this.gameRef = gameRef;
     this.playerEntity = parent;
 
-    playerSizeView =parent.size;
+    playerSizeView = parent.size;
     spriteAnimationComponent = SpriteAnimationComponent(
-        animation: gameRef.enemyCacheService.idlePlayer,
-        size: playerSizeView);
+        animation: gameRef.enemyCacheService.idlePlayer, size: playerSizeView);
 
     this.playerEntity.playerModel.status = PlayerModel.IDLE;
     animationTicker = spriteAnimationComponent.animationTicker;
     parent.add(spriteAnimationComponent);
   }
 
-    void cleanUpAnimations() {
+  void cleanUpAnimations() {
     spriteAnimationComponent.removeFromParent();
-   
   }
-
-
 
   // Call this method to trigger the attack animation
   void triggerAttack(Vector2 cardPosition) {
-   /* if (!isAnimating) {
+    /* if (!isAnimating) {
       isAnimating = true;
       enemyView.playerModel.status = PlayerModel.ATTACK;
 
@@ -83,93 +77,43 @@ class PlayerAnimationHandler {
     }*/
   }
 
-  void triggerHurt(Vector2 cardPosition) {
-   
+  void triggerHurt(Vector2 cardPosition) {}
+
+  void triggerParry(Vector2 cardPosition) {}
+
+  void showWalk(Vector2 destination) {
+    _applyFacing(destination);
+    isAnimating = true;
+    playerEntity.playerModel.status = PlayerModel.WALKING;
+    spriteAnimationComponent.animation =
+        gameRef.enemyCacheService.walkingPlayer;
+    animationTicker = spriteAnimationComponent.animationTicker;
   }
 
-  void triggerParry(Vector2 cardPosition) {
-    
+  void showIdle(Vector2 facingTarget) {
+    _applyFacing(facingTarget);
+    isAnimating = false;
+    playerEntity.playerModel.status = PlayerModel.IDLE;
+    spriteAnimationComponent.animation = gameRef.enemyCacheService.idlePlayer;
+    animationTicker = spriteAnimationComponent.animationTicker;
   }
 
-   void triggerWalk({required Vector2 cardPosition,required bool resetAnimation}) {
-    if(resetAnimation){
-      isAnimating = false;
-    }
+  void showTalk() {
+    isAnimating = true;
+    playerEntity.playerModel.status = PlayerModel.TALK;
+    spriteAnimationComponent.animation = gameRef.enemyCacheService.talkPlayer;
+    animationTicker = spriteAnimationComponent.animationTicker;
+  }
 
-    if (!isAnimating ) {
-      isAnimating = true;
-      playerEntity.playerModel.status = PlayerModel.WALKING;
-
-      // Check if the card is to the left or right of the miner
-      if (cardPosition.x < playerEntity.position.x) {
-        // Card is to the left, flip the sprite
-        if (!spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
-      } else {
-        // Card is to the right, make sure the sprite is not flipped
-        if (spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
+  void _applyFacing(Vector2 target) {
+    if (target.x < playerEntity.position.x) {
+      if (!spriteAnimationComponent.isFlippedHorizontally) {
+        spriteAnimationComponent.flipHorizontallyAroundCenter();
       }
-      // Play the attack animation
-
-      spriteAnimationComponent.animation =
-          gameRef.enemyCacheService.walkingPlayer;
-      animationTicker = spriteAnimationComponent.animationTicker;
-      // Listen for when the attack animation finishes
-      animationTicker?.onComplete = () {
-        // Once attack is finished, switch back to idle
-        playerEntity.playerModel.status = PlayerModel.IDLE;
-        spriteAnimationComponent.animation =
-            gameRef.enemyCacheService.idlePlayer;
-        animationTicker = spriteAnimationComponent.animationTicker;
-
-        isAnimating = false;
-      };
+    } else if (spriteAnimationComponent.isFlippedHorizontally) {
+      spriteAnimationComponent.flipHorizontallyAroundCenter();
     }
-    
   }
-
-   void triggerIdle({required Vector2 cardPosition,required bool resetAnimation}) {
-    print("triggerIdle");
-      if(resetAnimation){
-      isAnimating = false;
-    }
-    if (!isAnimating) {
-      isAnimating = true;
-      playerEntity.playerModel.status = PlayerModel.IDLE;
-     
-      // Check if the card is to the left or right of the miner
-      if (cardPosition.x < playerEntity.position.x) {
-        print("cardPosition.x < playerEntity.position.x ${cardPosition.x} ${playerEntity.position.x}");
-        // Card is to the left, flip the sprite
-        if (!spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
-      } else {
-        // Card is to the right, make sure the sprite is not flipped
-        if (spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
-      }
-      // Play the attack animation
-
-      spriteAnimationComponent.animation =
-          gameRef.enemyCacheService.idlePlayer;
-      animationTicker = spriteAnimationComponent.animationTicker;
-      // Listen for when the attack animation finishes
-      animationTicker?.onComplete = () {
-        // Once attack is finished, switch back to idle
-     // isAnimating = false;
-      };
-    }
-    
-  }
-
-
-
-
 
   // Method to make the card blink once
   void blinkSprite(PlayerPosEntity parent, {Color color = Colors.red}) {
@@ -225,8 +169,4 @@ class PlayerAnimationHandler {
       };
     }
   }
-
- 
-
-  
 }

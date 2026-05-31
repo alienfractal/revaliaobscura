@@ -1,6 +1,6 @@
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/gamefsm/fsm.dart';
-import 'package:coolorburn/gamefsm/istate.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gamefsm/fsm.dart';
+import 'package:revalia/gamefsm/istate.dart';
 
 class GameLoading implements IState{
   late RevaliaObs mainGame;

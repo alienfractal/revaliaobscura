@@ -1,7 +1,7 @@
 
-import 'package:coolorburn/revalia_obs.dart';
-import 'package:coolorburn/utils/image/image_utils.dart';
-import 'package:coolorburn/utils/ui/text_component.dart';
+import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/utils/image/image_utils.dart';
+import 'package:revalia/utils/ui/text_component.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
