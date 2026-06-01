@@ -288,7 +288,6 @@ class GameboardView extends World
         size: Vector2(200, 32));
     actors.add(walkingAreaView);
     walkingAreaView.add(WalkingAreaBehaviour());
-    walkingAreaView.actorDialogueId = "npc_intro";
     add(walkingAreaView);
   }
 
@@ -298,10 +297,10 @@ class GameboardView extends World
     ActorEntity npc = ActorEntity(
         actorModel: npcModel,
         position: Vector2(25, 150),
-        size: Vector2(50, 85));
+        size: Vector2(50, 85),
+        dialogueActorId: 'old_sailor');
     actors.add(npc);
     npc.add(ActorBehavior());
-    npc.actorDialogueId = "npc_intro";
     add(npc);
   }
 
@@ -326,10 +325,10 @@ class GameboardView extends World
       df = DialogFrameEntity(
           position: Vector2(160, 80), size: Vector2(256 + 16, 32 + 16));
       add(df!);
-      df?.initDialog(activeActor.actorDialogueId);
+      df?.initDialog(activeActor.dialogueActorId!);
     } else if (!df!.isDialogActive) {
       add(df!);
-      df?.initDialog(activeActor.actorDialogueId);
+      df?.initDialog(activeActor.dialogueActorId!);
     } else {
       print("dialog already active");
     }

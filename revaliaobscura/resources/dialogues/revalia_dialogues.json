@@ -1,12 +1,37 @@
 {
+  "actors": {
+    "old_sailor": {
+      "id": "old_sailor",
+      "name_key": "actors.old_sailor.name",
+      "entrypoints": [
+        {
+          "dialogue": "npc_after_identity",
+          "when": {
+            "flag": "sailor_identity_known"
+          }
+        },
+        {
+          "dialogue": "npc_intro"
+        }
+      ]
+    }
+  },
   "dialogues": {
     "npc_intro": {
       "event": "npc_intro_event",
       "responses": [
         {
+          "id": "ask_identity",
+          "once": true,
+          "effects": [
+            {
+              "set_flag": "sailor_identity_known"
+            }
+          ],
           "next": "npc_identity"
         },
         {
+          "id": "leave",
           "next": "end"
         }
       ]
@@ -14,6 +39,15 @@
     "npc_identity": {
       "responses": [
         {
+          "id": "finish_identity",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_after_identity": {
+      "responses": [
+        {
+          "id": "leave",
           "next": "end"
         }
       ]

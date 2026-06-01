@@ -17,17 +17,33 @@ class Dialogue {
     required String id,
     required Map<String, dynamic> graphNode,
     required Map<String, String> translations,
+    required bool Function(
+      String responseId,
+      Map<String, dynamic>? condition,
+      bool once,
+    ) isResponseAvailable,
   }) {
     final responses = <DialogueResponse>[];
     final graphResponses = graphNode['responses'] as List<dynamic>? ?? [];
     for (var index = 0; index < graphResponses.length; index++) {
       final graphResponse = graphResponses[index] as Map<String, dynamic>;
+      final responseId = graphResponse['id'] as String;
+      final condition = graphResponse['when'] as Map<String, dynamic>?;
+      final once = graphResponse['once'] as bool? ?? false;
+      if (!isResponseAvailable(responseId, condition, once)) {
+        continue;
+      }
       responses.add(
         DialogueResponse(
+          id: responseId,
           text: translations['dialogues.$id.responses[$index].text'] ??
               '[Missing Response: $id[$index]]',
           next: graphResponse['next'] as String? ?? 'end',
           event: graphResponse['event'] as String?,
+          effects: (graphResponse['effects'] as List<dynamic>? ?? [])
+              .map((effect) => effect as Map<String, dynamic>)
+              .toList(),
+          once: once,
         ),
       );
     }
@@ -44,9 +60,19 @@ class Dialogue {
 }
 
 class DialogueResponse {
+  final String id;
   final String text;
   final String next;
   final String? event;
+  final List<Map<String, dynamic>> effects;
+  final bool once;
 
-  DialogueResponse({required this.text, required this.next, this.event});
+  DialogueResponse({
+    required this.id,
+    required this.text,
+    required this.next,
+    required this.effects,
+    required this.once,
+    this.event,
+  });
 }

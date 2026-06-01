@@ -21,6 +21,11 @@
     "sound": "Sound",
     "music": "Music"
   },
+  "actors": {
+    "old_sailor": {
+      "name": "Old Sailor"
+    }
+  },
   "loading": {
     "title": "EESTLAND Anno Domini 1343",
     "context_intro": [
@@ -44,14 +49,23 @@
         {
           "text": "Goodbye."
         }
-      ]
-    },
+      ]                   
+    },                    
     "npc_identity": {
       "player_text": "Who are you really?",
       "text": "I am a navigator looking for work. have nothing better to do.",
       "responses": [
         {
           "text": "Thanks for the info."
+        }
+      ]
+    },
+    "npc_after_identity": {
+      "player_text": "Hello again.",
+      "text": "Have you found work for a navigator?",
+      "responses": [
+        {
+          "text": "Not yet. Goodbye."
         }
       ]
     }

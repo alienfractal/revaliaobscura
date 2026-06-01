@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:revalia/game/states/game/behaviours/dialogue_text_behaviour.dart';
+import 'package:revalia/dialoguefsm/dialogue.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/utils/dialogsystem/dialog_event_manager.dart';
 import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
-import 'package:revalia/utils/dialogsystem/dialogue.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/ui/dialogue_text_component%20.dart';
 import 'package:revalia/utils/ui/game_text_component.dart';
@@ -76,19 +76,21 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     _phase = DialoguePhase.inactive;
   }
 
-  void initDialog(String actorDialogueId) {
+  void initDialog(String dialogueActorId) {
     print("talk?");
-    print(" initDialog actorDialogueId ${actorDialogueId}");
+    print(" initDialog dialogueActorId $dialogueActorId");
     DialogueManager.setTranslations(
         AppTranslations.translationsFor(gameRef.currentLocale));
 
-    loadDialogueTextToFrame(actorDialogueId);
+    final current = DialogueManager.startConversation(dialogueActorId);
+    _showDialogue(current);
   }
 
-  void loadDialogueTextToFrame(String actorDialogueId) {
-    print("loadDialogueTextToFrame actorDialogueId ${actorDialogueId}");
+  void loadDialogueTextToFrame(String dialogueId) {
+    print("loadDialogueTextToFrame dialogueId $dialogueId");
 
-    if (actorDialogueId == "end") {
+    if (dialogueId == "end") {
+      DialogueManager.endDialogue();
       clearDialogText();
       removeFromParent();
       isDialogActive = false;
@@ -99,7 +101,11 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     }
     clearDialogText();
 
-    Dialogue current = DialogueManager.startDialogue(actorDialogueId);
+    final current = DialogueManager.startDialogue(dialogueId);
+    _showDialogue(current);
+  }
+
+  void _showDialogue(Dialogue current) {
     print("current.text ${current.text}");
     print("current.playerText ${current.playerText}");
     if (current.id == "error") {

@@ -1,9 +1,8 @@
 import 'package:revalia/game/states/game/view/actorentity.dart';
+import 'package:revalia/dialoguefsm/dialogue.dart';
 import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
-import 'package:revalia/utils/dialogsystem/dialogue.dart';
 
 class DialogueRenderer {
- 
   static void showDialogueConsole(Dialogue dialogue) {
     // Display NPC dialogue text
     print("${dialogue.id}: ${dialogue.text}");
@@ -13,14 +12,10 @@ class DialogueRenderer {
     }
   }
 
-  static void showDialogonComponent(ActorEntity actor){
-    
-
-    if(actor.actorDialogueId.isNotEmpty){
-
-      DialogueManager.startDialogue(actor.actorDialogueId);
+  static void showDialogonComponent(ActorEntity actor) {
+    final dialogueActorId = actor.dialogueActorId;
+    if (dialogueActorId != null) {
+      DialogueManager.startConversation(dialogueActorId);
     }
-
-
   }
 }

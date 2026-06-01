@@ -21,12 +21,15 @@ class ActorEntity extends PositionedEntity
   static int actorCount = 0;
   late ActorAnimationHandler animationHandler;
   late CardLogicService gameCardLogicService;
-  late String actorDialogueId = "";
+  final String? dialogueActorId;
   ActorActionState actionState = ActorActionState.idle;
   double _actionSecondsRemaining = 0;
 
   ActorEntity(
-      {required this.actorModel, required super.position, required super.size})
+      {required this.actorModel,
+      required super.position,
+      required super.size,
+      this.dialogueActorId})
       : super(anchor: Anchor.center, behaviors: []) {
     // Initialize the card with default behaviors or properties
     // For example, you can add a visual component based on the card type
@@ -117,6 +120,11 @@ class ActorEntity extends PositionedEntity
       return;
     }
 
+    if (!canTalk) {
+      gameRef.gboard.callRenderDialogueOnError("player_error_interact");
+      return;
+    }
+
     gameRef.gboard.callRenderDialogue(this);
   }
 
@@ -142,6 +150,8 @@ class ActorEntity extends PositionedEntity
   }
 
   Vector2 get interactionPoint => Vector2(position.x, position.y + size.y / 2);
+
+  bool get canTalk => dialogueActorId != null;
 
   void performAction(ActionableType actionType) {
     switch (actionType) {
