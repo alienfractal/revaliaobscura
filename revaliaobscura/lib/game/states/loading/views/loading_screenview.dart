@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:revalia/game/states/game/view/dialog_frame_entity.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
-import 'package:revalia/utils/ui/dialogue_text_component%20.dart';
 import 'package:revalia/utils/ui/text_component.dart';
 import 'package:revalia/utils/text_utils.dart';
 import 'package:flame/components.dart';
@@ -63,9 +60,7 @@ class LoadingView extends World
     _introFrame = df;
 
     add(df);
-    df.setScreenMessage(text);
-
-    Future.delayed(const Duration(milliseconds: 9500), () {
+    df.showScreenMessage(text, durationSeconds: 9.5, onDismissed: () {
       if (!isMounted || token != _loadToken) {
         return;
       }

@@ -38,7 +38,7 @@ Scene construction identifies an NPC by its stable actor ID. The dialogue
 progression FSM selects the first eligible entrypoint. Put conditional
 entrypoints before the unconditional fallback.
 
-Each node under `dialogues` may contain:
+Each node under `nodes` may contain:
 
 - `event`: optional event emitted when the node starts
 - `responses`: the available player choices

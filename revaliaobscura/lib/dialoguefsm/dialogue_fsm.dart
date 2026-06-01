@@ -67,7 +67,7 @@ class DialogueFsm {
           ),
         ),
       );
-    _graphNodes = graph['dialogues'] as Map<String, dynamic>? ?? {};
+    _graphNodes = graph['nodes'] as Map<String, dynamic>? ?? {};
     _translations = translations;
     _validateGraph();
     resetProgress();

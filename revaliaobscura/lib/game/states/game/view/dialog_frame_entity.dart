@@ -10,6 +10,7 @@ import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/ui/dialogue_text_component%20.dart';
 import 'package:revalia/utils/ui/game_text_component.dart';
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
 enum DialoguePhase {
@@ -20,14 +21,20 @@ enum DialoguePhase {
   screenMessage
 }
 
-class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
+class DialogFrameEntity extends PositionedEntity
+    with TapCallbacks, HasGameRef<RevaliaObs> {
   List<GameTextComponent> textLinesList = [];
   bool isDialogActive = false;
   DialoguePhase _phase = DialoguePhase.inactive;
   Dialogue? _currentDialogue;
+  void Function()? _onScreenMessageDismissed;
   double _phaseSecondsRemaining = 0;
+  late final double _minimumHeight;
+
   DialogFrameEntity({required super.position, required super.size})
-      : super(anchor: Anchor.center, behaviors: []);
+      : super(anchor: Anchor.center, behaviors: []) {
+    _minimumHeight = size.y;
+  }
 
   @override
   void update(double dt) {
@@ -38,6 +45,19 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     }
     _phaseSecondsRemaining -= dt;
     if (_phaseSecondsRemaining <= 0) {
+      _advancePhase();
+    }
+  }
+
+  @override
+  bool containsLocalPoint(Vector2 point) => isDialogActive;
+
+  @override
+  void onTapDown(TapDownEvent event) {
+    super.onTapDown(event);
+    if (_phase == DialoguePhase.playerInquiry ||
+        _phase == DialoguePhase.npcResponse ||
+        _phase == DialoguePhase.screenMessage) {
       _advancePhase();
     }
   }
@@ -124,10 +144,13 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
 
   void _advancePhase() {
     if (_phase == DialoguePhase.screenMessage) {
+      final onDismissed = _onScreenMessageDismissed;
+      _onScreenMessageDismissed = null;
       clearDialogText();
       isDialogActive = false;
       _phase = DialoguePhase.inactive;
       removeFromParent();
+      onDismissed?.call();
       return;
     }
 
@@ -158,6 +181,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   }
 
   void setReplyOptions(Dialogue current) {
+    _resizeForReplyOptions(current.responses.length);
     for (int i = 0; i < current.responses.length; i++) {
       DialogueResponse response = current.responses[i];
       GameTextComponent txtResponse = GameTextComponent(response.text,
@@ -174,6 +198,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   }
 
   void setNpcResponse(Dialogue current) {
+    _resizeForText(current.text);
     DialogueTextComponent textGreet = DialogueTextComponent(
         text: current.text,
         position: Vector2(16, 0),
@@ -185,6 +210,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   }
 
   void setPlayerInquiry(Dialogue current) {
+    _resizeForText(current.playerText);
     DialogueTextComponent textGreet = DialogueTextComponent(
         text: current.playerText,
         position: Vector2(16, 0),
@@ -193,6 +219,7 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   }
 
   void setScreenMessage(String message) {
+    _resizeForText(message, fontSize: 6, fontName: "press2p");
     DialogueTextComponent textGreet = DialogueTextComponent(
         text: message,
         position: Vector2(16, 0),
@@ -202,11 +229,16 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     add(textGreet);
   }
 
-  void showScreenMessage(String message, {double durationSeconds = 2}) {
+  void showScreenMessage(
+    String message, {
+    double durationSeconds = 2,
+    void Function()? onDismissed,
+  }) {
     clearDialogText();
     setScreenMessage(message);
     isDialogActive = true;
     _currentDialogue = null;
+    _onScreenMessageDismissed = onDismissed;
     _phase = DialoguePhase.screenMessage;
     _phaseSecondsRemaining = durationSeconds;
   }
@@ -214,5 +246,25 @@ class DialogFrameEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   void clearDialogText() {
     textLinesList.clear();
     removeAll(children);
+    size.y = _minimumHeight;
+  }
+
+  void _resizeForText(
+    String text, {
+    double fontSize = 8,
+    String fontName = "scumm",
+  }) {
+    final requiredHeight = DialogueTextComponent.requiredHeight(
+          text,
+          fontSize: fontSize,
+          fontName: fontName,
+        ) +
+        8;
+    size.y = requiredHeight > _minimumHeight ? requiredHeight : _minimumHeight;
+  }
+
+  void _resizeForReplyOptions(int count) {
+    final requiredHeight = ((count * 16) + 32).toDouble();
+    size.y = requiredHeight > _minimumHeight ? requiredHeight : _minimumHeight;
   }
 }

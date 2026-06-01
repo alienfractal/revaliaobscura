@@ -23,25 +23,24 @@
   },
   "actors": {
     "old_sailor": {
-      "name": "Old Sailor"
+      "name": "Navigator"
     }
   },
   "loading": {
     "title": "EESTLAND Anno Domini 1343",
     "context_intro": [
-      "Arrival of Rebane Mölder",
-      "In the Year of Darkness, 1343, Eestland",
-      "Rebane Mölder, sent by concerned merchants of the Hanseatic League",
-      "was sent to investigate missing caravans in the contested regions",
-      "follow the road into the hearth of Eestland",
-      "Uncover whether the threat is mundane or supernatural"
+      "Rebane Molder arrives in Reval.",
+      "EESTLAND, 1343",
+      "Something has followed him.",
+      "Caravans vanish along the old roads.",
+      "Merchants whisper of something in the dark."
     ],
     "exit_button": "Exit"
   },
   "dialogues": {
     "npc_intro": {
-      "player_text": "Hello, there man in a fancy dress.",
-      "text": "Hello, traveler! Welcome to Reval.",
+      "player_text": "You look like a man who knows these waters.",
+      "text": "I know the Baltic roads. Even the ones best left alone.",
       "responses": [
         {
           "text": "Who are you?"
@@ -52,20 +51,77 @@
       ]                   
     },                    
     "npc_identity": {
-      "player_text": "Who are you really?",
-      "text": "I am a navigator looking for work. have nothing better to do.",
+      "player_text": "Who are you?",
+      "text": "A navigator. I know the Baltic coasts, the old roads, and the places sensible merchants avoid. I might be looking for work, if the work is worth my time.",
       "responses": [
         {
-          "text": "Thanks for the info."
+          "text": "You must have a lot of personality to come out dressed like this in the street."
+        },
+        {
+          "text": "I will leave you to it."
+        }
+      ]
+    },
+    "npc_silent_stare": {
+      "player_text": "You must have a lot of personality to come out dressed like this in the street.",
+      "text": "...",
+      "responses": [
+        {
+          "text": "Are you a comedian by any chance, Navigator?"
+        }
+      ]
+    },
+    "npc_hendrik_identity": {
+      "player_text": "Are you a comedian by any chance, Navigator?",
+      "text": "No, I am not. And the name is Hendrik.",
+      "responses": [
+        {
+          "text": "What do you need?"
+        },
+        {
+          "text": "I will leave you to it."
+        }
+      ]
+    },
+    "npc_ask_name": {
+      "player_text": "What do you need?",
+      "text": "Interesting that you ask. Before we discuss business, what is your name?",
+      "responses": [
+        {
+          "text": "Rebane."
+        },
+        {
+          "text": "Perhaps another time."
+        }
+      ]
+    },
+    "npc_ink_request": {
+      "player_text": "Rebane.",
+      "text": "Good, Rebane. I have run out of ink, and without ink my maps are useless. Bring me some, and perhaps I will decide you are worth my time.",
+      "responses": [
+        {
+          "text": "I will find ink for you."
         }
       ]
     },
     "npc_after_identity": {
       "player_text": "Hello again.",
-      "text": "Have you found work for a navigator?",
+      "text": "Back again? If you want a navigator's time, show me that you can notice what is needed.",
       "responses": [
         {
-          "text": "Not yet. Goodbye."
+          "text": "What do you need?"
+        },
+        {
+          "text": "Not now. Goodbye."
+        }
+      ]
+    },
+    "npc_waiting_for_ink": {
+      "player_text": "About that ink...",
+      "text": "Bring me ink for my maps, Rebane. Then we can discuss opportunities.",
+      "responses": [
+        {
+          "text": "I am still looking."
         }
       ]
     }

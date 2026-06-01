@@ -5,6 +5,12 @@
       "name_key": "actors.old_sailor.name",
       "entrypoints": [
         {
+          "dialogue": "npc_waiting_for_ink",
+          "when": {
+            "flag": "navigator_ink_quest_started"
+          }
+        },
+        {
           "dialogue": "npc_after_identity",
           "when": {
             "flag": "sailor_identity_known"
@@ -16,18 +22,12 @@
       ]
     }
   },
-  "dialogues": {
+  "nodes": {
     "npc_intro": {
       "event": "npc_intro_event",
       "responses": [
         {
           "id": "ask_identity",
-          "once": true,
-          "effects": [
-            {
-              "set_flag": "sailor_identity_known"
-            }
-          ],
           "next": "npc_identity"
         },
         {
@@ -39,12 +39,78 @@
     "npc_identity": {
       "responses": [
         {
-          "id": "finish_identity",
+          "id": "mock_outfit",
+          "next": "npc_silent_stare"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_silent_stare": {
+      "responses": [
+        {
+          "id": "ask_if_comedian",
+          "effects": [
+            {
+              "set_flag": "sailor_identity_known"
+            }
+          ],
+          "next": "npc_hendrik_identity"
+        }
+      ]
+    },
+    "npc_hendrik_identity": {
+      "responses": [
+        {
+          "id": "ask_need",
+          "next": "npc_ask_name"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ask_name": {
+      "responses": [
+        {
+          "id": "answer_rebane",
+          "next": "npc_ink_request"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ink_request": {
+      "responses": [
+        {
+          "id": "accept_ink_quest",
+          "effects": [
+            {
+              "set_flag": "navigator_ink_quest_started"
+            }
+          ],
           "next": "end"
         }
       ]
     },
     "npc_after_identity": {
+      "responses": [
+        {
+          "id": "ask_need",
+          "next": "npc_ask_name"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_waiting_for_ink": {
       "responses": [
         {
           "id": "leave",
