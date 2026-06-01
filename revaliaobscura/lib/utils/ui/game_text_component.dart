@@ -1,10 +1,9 @@
 import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
+import 'package:flame/text.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
-
 
 class GameTextComponent extends PositionedEntity {
   bool switchColor = false;
@@ -19,26 +18,40 @@ class GameTextComponent extends PositionedEntity {
   late TextPaint textCritical;
   late TextPaint textWarning;
   late TextPaint textHighlight;
-  
+
   late TextComponent textComponent; // Holds the actual text
   Color tcolor;
   double fontSize;
   String fontName = "scumm";
 
-  GameTextComponent(String text, 
+  GameTextComponent(String text,
       {required this.fontSize,
       required bool isBlinking,
       required double interval,
       required this.tcolor,
-      required Vector2 position})
-      : super(position: position, size: Vector2(200,32)) { // Adjust size if needed
-    textComponent = TextComponent(
-      text: text,
-      textRenderer: TextPaint(
-          style: TextStyle(
-              fontSize: fontSize, color: tcolor, fontFamily: fontName)),
-      position: Vector2.zero(), // Centered inside parent
-    );
+      required Vector2 position,
+      Vector2? componentSize,
+      double? maxWidth})
+      : super(position: position, size: componentSize ?? Vector2(200, 32)) {
+    // Adjust size if needed
+    final textRenderer = TextPaint(
+        style:
+            TextStyle(fontSize: fontSize, color: tcolor, fontFamily: fontName));
+    textComponent = maxWidth == null
+        ? TextComponent(
+            text: text,
+            textRenderer: textRenderer,
+            position: Vector2.zero(), // Centered inside parent
+          )
+        : TextBoxComponent(
+            text: text,
+            textRenderer: textRenderer,
+            boxConfig: TextBoxConfig(
+              maxWidth: maxWidth,
+              timePerChar: 0,
+            ),
+            position: Vector2.zero(),
+          );
 
     textCritical = TextPaint(
       style: TextStyle(
@@ -98,6 +111,5 @@ class GameTextComponent extends PositionedEntity {
   void onRemove() {
     // TODO: implement onRemove
     super.onRemove();
-   
   }
 }

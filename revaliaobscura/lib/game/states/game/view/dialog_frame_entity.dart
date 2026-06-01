@@ -23,6 +23,9 @@ enum DialoguePhase {
 
 class DialogFrameEntity extends PositionedEntity
     with TapCallbacks, HasGameRef<RevaliaObs> {
+  static const double _replyFontSize = 8;
+  static const double _replySpacing = 8;
+
   List<GameTextComponent> textLinesList = [];
   bool isDialogActive = false;
   DialoguePhase _phase = DialoguePhase.inactive;
@@ -181,18 +184,24 @@ class DialogFrameEntity extends PositionedEntity
   }
 
   void setReplyOptions(Dialogue current) {
-    _resizeForReplyOptions(current.responses.length);
+    _resizeForReplyOptions(current.responses);
+    double y = 8;
     for (int i = 0; i < current.responses.length; i++) {
       DialogueResponse response = current.responses[i];
+      final replyHeight = _replyHeight(response.text);
       GameTextComponent txtResponse = GameTextComponent(response.text,
-          fontSize: 8,
+          fontSize: _replyFontSize,
           isBlinking: false,
           interval: 0,
           tcolor: Color.fromARGB(255, 0, 195, 255),
-          position: Vector2(16, ((i * 16) + 8).toDouble()));
+          position: Vector2(16, y),
+          componentSize:
+              Vector2(DialogueTextComponent.maxTextWidth, replyHeight),
+          maxWidth: DialogueTextComponent.maxTextWidth);
       //txtResponse.updateUI(ColorStatusTextComponent.HIGHLIGHT);
       txtResponse.add(DialogueReplyTextBehaviour(textId: i, dialogue: current));
       textLinesList.add(txtResponse);
+      y += replyHeight + _replySpacing;
     }
     addAll(textLinesList);
   }
@@ -263,8 +272,20 @@ class DialogFrameEntity extends PositionedEntity
     size.y = requiredHeight > _minimumHeight ? requiredHeight : _minimumHeight;
   }
 
-  void _resizeForReplyOptions(int count) {
-    final requiredHeight = ((count * 16) + 32).toDouble();
+  void _resizeForReplyOptions(List<DialogueResponse> responses) {
+    final requiredHeight = responses.fold<double>(
+          16,
+          (height, response) =>
+              height + _replyHeight(response.text) + _replySpacing,
+        ) +
+        8;
     size.y = requiredHeight > _minimumHeight ? requiredHeight : _minimumHeight;
+  }
+
+  double _replyHeight(String text) {
+    return DialogueTextComponent.requiredHeight(
+      text,
+      fontSize: _replyFontSize,
+    );
   }
 }
