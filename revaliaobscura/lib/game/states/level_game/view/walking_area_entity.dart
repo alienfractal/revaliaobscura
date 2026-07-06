@@ -20,7 +20,7 @@ class WalkingAreaEntity extends LevelEntity {
   void onLoad() {
     super.onLoad();
     animationHandler.init(
-      idleAnimation: gameRef.entitySpriteCache.walkingArea,
+      idleAnimation: game.entitySpriteCache.walkingArea,
       size: Vector2(256, 32),
       parent: this,
     );

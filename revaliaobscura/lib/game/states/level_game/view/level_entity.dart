@@ -8,7 +8,7 @@ import 'package:revalia/utils/components/entity_action_behaviour.dart';
 enum LevelEntityActionState { idle, talking }
 
 abstract class LevelEntity extends PositionedEntity
-    with HasGameRef<RevaliaObs>
+    with HasGameReference<RevaliaObs>
     implements ActionTarget {
   static const double interactionRange = 60;
 
