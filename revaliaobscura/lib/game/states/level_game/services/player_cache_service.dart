@@ -1,4 +1,4 @@
-import 'package:revalia/game/states/game/model/player_model.dart';
+import 'package:revalia/game/states/level_game/model/player_model.dart';
 import 'package:revalia/revalia_obs.dart';
 
 import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
@@ -6,13 +6,9 @@ import 'package:revalia/gen/assets.gen.dart';
 import 'package:flame/components.dart';
 
 class PlayerCacheService extends SpriteAnimatorCache {
-  // Individual animations for card types
-
   late SpriteAnimation walkingPlayer;
 
   late SpriteAnimation idlePlayer;
-
-  late SpriteSpec oldTownCenter;
 
   late SpriteAnimation talkPlayer;
 
@@ -48,24 +44,12 @@ class PlayerCacheService extends SpriteAnimatorCache {
       ),
     );
 
-    oldTownCenter = SpriteSpec(
-        await SpriteAnimatorCache.loadSprite(
-            path: Assets.resources.images.revalTowncenter320x200.path),
-        Vector2(320, 200));
-
     print("All player animations preloaded successfully.");
   }
 
   @override
   String getSpritePath(int type) {
-    switch (type) {
-      case PlayerModel.IDLE:
-        return Assets.resources.images.blacksquare48x48.path;
-      case PlayerModel.WALKING:
-        return Assets.resources.images.celldarkDirtRelicSheet.path;
-      default:
-        throw Exception('Unknown CardType: $type');
-    }
+    throw UnsupportedError('PlayerCacheService uses named animations.');
   }
 
   @override
@@ -78,7 +62,7 @@ class PlayerCacheService extends SpriteAnimatorCache {
         return walkingPlayer;
 
       default:
-        throw Exception('Unknown CardType: $modelValue');
+        throw Exception('Unknown player animation: $modelValue');
     }
   }
 

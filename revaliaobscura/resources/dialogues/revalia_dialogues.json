@@ -43,13 +43,51 @@
           "next": "npc_silent_stare"
         },
         {
+          "id": "ask_if_comedian",
+          "effects": [
+            {
+              "set_flag": "sailor_identity_known"
+            }
+          ],
+          "next": "npc_hendrik_identity"
+        },
+        {
           "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_defend_honor": {
+      "responses": [
+        {
+          "id": "apologize",
+          "next": "npc_silent_stare"
+        },
+        {
+          "id": "laugh_again",
+          "next": "npc_final_insult"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_final_insult": {
+      "responses": [
+        {
+          "id": "face_consequence",
+          "event": "player_death",
           "next": "end"
         }
       ]
     },
     "npc_silent_stare": {
       "responses": [
+        {
+          "id": "laugh",
+          "next": "npc_defend_honor"
+        },
         {
           "id": "ask_if_comedian",
           "effects": [

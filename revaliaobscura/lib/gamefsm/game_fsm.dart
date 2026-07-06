@@ -1,20 +1,15 @@
 import 'package:revalia/gamefsm/fsm.dart';
 
-class GameFsm extends Fsm  {
- 
-
+class GameFsm extends Fsm {
   GameFsm({required super.currentState, required super.mainGame}) {
-    
-     Fsm.gmenu.mainGame = super.mainGame;
-     Fsm.gstart.mainGame = super.mainGame;
-     Fsm.gload.mainGame = super.mainGame;
-     Fsm.gend.mainGame = super.mainGame;
-     Fsm.gscore.mainGame = super.mainGame;
+    Fsm.gmenu.mainGame = super.mainGame;
+    Fsm.gstart.mainGame = super.mainGame;
+    Fsm.gload.mainGame = super.mainGame;
+    Fsm.gend.mainGame = super.mainGame;
+    Fsm.gscore.mainGame = super.mainGame;
   }
- 
-  
- void transition(StateType newState) {
 
+  void transition(StateType newState) {
     // Exit the current state
     currentState.exit(this);
 
@@ -34,7 +29,7 @@ class GameFsm extends Fsm  {
         break;
       case StateType.GameScore:
         currentState = Fsm.gscore;
-        break;  
+        break;
     }
     currentStateType = newState;
 
@@ -61,10 +56,9 @@ class GameFsm extends Fsm  {
   void gameStart() {
     transition(StateType.GameStart);
   }
-  
+
   @override
   void gameScore() {
-   
     transition(StateType.GameScore);
   }
 }

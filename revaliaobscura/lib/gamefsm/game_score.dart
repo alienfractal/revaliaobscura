@@ -8,7 +8,6 @@ class GameScore implements IState {
 
   @override
   void enter(Fsm gameFsm) {
- 
     // gameFsm.currentStateType = StateType.GameLoading;
     mainGame.switchToWorld(mainGame.scoreView);
     gameFsm.actions += "L";
@@ -16,13 +15,10 @@ class GameScore implements IState {
 
   @override
   void exit(Fsm gameFsm) {
- 
     gameFsm.actions += "X";
     mainGame.clearWorld(gameFsm.currentStateType);
   }
 
   @override
-  void update(double dt) {
- 
-  }
+  void update(double dt) {}
 }

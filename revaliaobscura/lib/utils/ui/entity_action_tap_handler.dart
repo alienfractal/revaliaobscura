@@ -27,6 +27,5 @@ class EntityActionTapHandler extends Behavior<GenericButton>
     print("GLobal actionType  set to $actionType");
     //EntityUIManager.blinkEntity(parent);
     buttonManager.onButtonTapped(parent);
-    
   }
 }

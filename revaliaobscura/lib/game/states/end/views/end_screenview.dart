@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:revalia/revalia_obs.dart';
-import 'package:revalia/game/states/game/model/gameboardmodel.dart';
-import 'package:revalia/gen/assets.gen.dart';
+import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
 import 'package:revalia/utils/image/image_utils.dart';
 import 'package:revalia/utils/ui/text_component.dart';
 import 'package:revalia/utils/text_utils.dart';
@@ -51,7 +50,7 @@ class GameEndView extends World
     textComponentEnd.toggleBlinking();
 
     gameBackground =
-        gameRef.actorCacheService.gameBackground.getSpriteComponent();
+        gameRef.entitySpriteCache.gameBackground.getSpriteComponent();
 
     textComponentMessage = TextUtils.addTextToview(
         gameRef,

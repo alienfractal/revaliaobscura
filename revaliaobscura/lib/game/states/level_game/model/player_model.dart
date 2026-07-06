@@ -9,22 +9,15 @@ class PlayerModel {
   static const int TALK = 7;
   int x, y;
   bool isAlive = true;
- 
+
   int currentPathIndex = 0;
   int pathStepIndex = 0;
   int status = IDLE;
   bool movingForward = true;
-  double attack=0;
-  double defense=0;
+  double attack = 0;
+  double defense = 0;
 
-  int health=0;
+  int health = 0;
 
-
-  PlayerModel({
-    required this.x,
-    required this.y,
-    required this.status
-   
-  });
-
+  PlayerModel({required this.x, required this.y, required this.status});
 }

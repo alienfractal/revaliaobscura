@@ -1,14 +1,13 @@
-import 'package:revalia/game/states/game/behaviours/action_type_behaviour.dart';
-import 'package:revalia/game/states/game/model/actor_model.dart';
-import 'package:revalia/game/states/game/view/actorentity.dart';
 import 'package:revalia/revalia_obs.dart';
-import 'package:revalia/game/states/game/model/gameboardmodel.dart';
-import 'package:revalia/game/states/game/view/gameboard_view.dart';
+import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
+import 'package:revalia/game/states/level_game/view/market_background_entity.dart';
+import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
 import 'package:revalia/game/states/main_menu/behaviours/crt_shader_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
+import 'package:revalia/utils/ui/entity_action_tap_handler.dart';
 
 import 'package:revalia/utils/ui/game_button.dart';
 import 'package:revalia/utils/ui/game_energy_bar.dart';
@@ -69,9 +68,6 @@ class UIGameBoardComponents {
   }
 
   void loadUIComponents(RevaliaObs gameRef) {
-    gameboardView
-        .add(gameRef.enemyCacheService.oldTownCenter.getSpriteComponent());
-
     addAnimatedBackground();
 
     blinkTextComponentScore = TextUtils.addTextToview(
@@ -113,7 +109,7 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition, gapy),
         spriteComponent:
-            gameRef.actorCacheService.walkButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.walkButtonSprite.getSpriteComponent(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.move, buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
@@ -125,7 +121,7 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 2, gapy),
         spriteComponent:
-            gameRef.actorCacheService.lookAtButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.lookAtButtonSprite.getSpriteComponent(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.look, buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
@@ -136,7 +132,7 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 3, gapy),
         spriteComponent:
-            gameRef.actorCacheService.touchButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.touchButtonSprite.getSpriteComponent(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.touch, buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
@@ -148,7 +144,7 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 4, gapy),
         spriteComponent:
-            gameRef.actorCacheService.talkToButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.talkToButtonSprite.getSpriteComponent(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.talk, buttonManager: gameActionGroup),
         buttonSize: horizontalArrowButtonSize,
@@ -172,7 +168,7 @@ class UIGameBoardComponents {
     gameRef.cam.viewport.add(energyBar);
 
     scoreIcon = GenericSpriteAnimation(
-        spriteAnimation: gameRef.actorCacheService.scoreIcon,
+        spriteAnimation: gameRef.entitySpriteCache.scoreIcon,
         animationSize: Vector2(32, 32),
         position: Vector2(18, 8),
         behaviors: []);
@@ -214,12 +210,11 @@ class UIGameBoardComponents {
   }
 
   void addAnimatedBackground() {
-    ActorModel backAnimationModel =
-        ActorModel(x: 0, y: 0, distance: 0, status: ActorModel.BACK_ANIM);
-    ActorEntity backAnimationEntity = ActorEntity(
-        actorModel: backAnimationModel,
+    gameboardView.add(
+      MarketBackgroundEntity(
         position: Vector2(160, 100),
-        size: Vector2(320, 200));
-    gameboardView.add(backAnimationEntity);
+        size: Vector2(320, 200),
+      ),
+    );
   }
 }

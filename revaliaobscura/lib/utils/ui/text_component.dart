@@ -82,9 +82,9 @@ class BlinkingTextComponent extends TextComponent {
     if (_elapsedTime >= interval) {
       _elapsedTime = 0; // Reset elapsed time
       // Toggle between idle and blinking text renderer
-        textRenderer = (textRenderer == _textRendererIdle)
-            ? _textRendererBlinking
-            : _textRendererIdle;
+      textRenderer = (textRenderer == _textRendererIdle)
+          ? _textRendererBlinking
+          : _textRendererIdle;
     }
   }
 }

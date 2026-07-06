@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:ui' as ui;
 
-import 'package:revalia/game/states/game/services/actor_cache_service.dart';
-import 'package:revalia/game/states/game/services/player_cache_service.dart';
-import 'package:revalia/game/states/game/view/gameboard_view.dart';
+import 'package:revalia/game/states/level_game/services/entity_sprite_cache_service.dart';
+import 'package:revalia/game/states/level_game/services/player_cache_service.dart';
+import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
 import 'package:revalia/game/states/end/views/end_screenview.dart';
 import 'package:revalia/game/states/loading/services/loading_cache_service.dart';
 import 'package:revalia/game/states/loading/views/loading_screenview.dart';
@@ -47,10 +47,10 @@ class RevaliaObs extends FlameGame {
   late bool isCrtShaderActive;
   late ui.FragmentProgram uiProgram;
 
-  late ActorCacheService actorCacheService;
+  late EntitySpriteCacheService entitySpriteCache;
   late MenuCacheSerivce menuCacheService;
   late LoadingCacheService loadingCacheService;
-  late PlayerCacheService enemyCacheService;
+  late PlayerCacheService playerSpriteCache;
   late GameWidget gameWidget;
   AppTranslations appTranslations = AppTranslations();
 
@@ -61,10 +61,10 @@ class RevaliaObs extends FlameGame {
     isCrtShaderActive = false;
     debugMode = true;
 
-    actorCacheService = ActorCacheService();
+    entitySpriteCache = EntitySpriteCacheService();
     menuCacheService = MenuCacheSerivce();
     loadingCacheService = LoadingCacheService();
-    enemyCacheService = PlayerCacheService();
+    playerSpriteCache = PlayerCacheService();
   }
 
   @override
@@ -122,12 +122,12 @@ class RevaliaObs extends FlameGame {
     // Load the shader
     uiProgram =
         await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
-    await actorCacheService.preloadAnimations(this);
-    await actorCacheService.preloadSprites(this);
+    await entitySpriteCache.preloadAnimations(this);
+    await entitySpriteCache.preloadSprites(this);
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);
-    await enemyCacheService.preloadAnimations(this);
+    await playerSpriteCache.preloadAnimations(this);
     await appTranslations.loadTranslations();
     await DialogueManager.loadDialogueGraph(
       assetPath: 'resources/dialogues/revalia_dialogues.json',
@@ -145,15 +145,12 @@ class RevaliaObs extends FlameGame {
       gameFsm = GameFsm(currentState: Fsm.gmenu, mainGame: this);
 
       viewport = FixedResolutionViewport(resolution: camDimension);
-      cam = CameraComponent.withFixedResolution(
-          world: menuView, width: camDimension.x, height: camDimension.y);
-
+      cam = camera;
       cam.viewport = viewport;
       cam.viewfinder.anchor = Anchor.topLeft;
       // cam.viewfinder.position = size / 4;
       cam.viewfinder.zoom = 1.0;
-
-      addAll([cam, menuView]);
+      world = menuView;
     });
   }
 
@@ -185,47 +182,13 @@ class RevaliaObs extends FlameGame {
 
   // Method to switch worlds
   void switchToWorld(World newWorld) {
-    /*cam.world = gboard; // Switch the camera to focus on the new world
+    world = newWorld;
     cam.viewfinder.anchor = Anchor.topLeft;
-    add(gboard);*/
-    if (newWorld.runtimeType == GameboardView) {
-      cam.world = gboard;
-    } else if (newWorld.runtimeType == MainMenuView) {
-      cam.world = menuView;
-    } else if (newWorld.runtimeType == LoadingView) {
-      cam.world = loadingView;
-    } else if (newWorld.runtimeType == GameEndView) {
-      cam.world = endView;
-    } else if (newWorld.runtimeType == GameScoreView) {
-      cam.world = scoreView;
-    }
-
-    cam.viewfinder.anchor = Anchor.topLeft;
-    add(newWorld);
   }
 
   void clearWorld(StateType nextStateType) {
     //print(gameFsm.currentState.toString());
     RevaliaObs.logger.d(gameFsm.currentState.toString());
-    switch (nextStateType) {
-      case StateType.GameMenu:
-        remove(menuView);
-        break;
-      case StateType.GameLoading:
-        remove(loadingView);
-        break;
-      case StateType.GameStart:
-        remove(gboard);
-        break;
-      case StateType.GameEnd:
-        remove(endView);
-        break;
-      case StateType.GameScore:
-        remove(scoreView);
-        break;
-      default:
-        break;
-    }
   }
 }
 

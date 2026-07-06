@@ -25,7 +25,7 @@ void main() {
     expect(mockOutfit.next, 'npc_silent_stare');
 
     final silentStare = fsm.showNode(mockOutfit.next);
-    final askIfComedian = fsm.chooseResponse(silentStare, 0);
+    final askIfComedian = fsm.chooseResponse(silentStare, 1);
     expect(askIfComedian.next, 'npc_hendrik_identity');
     expect(fsm.storyState.flag('sailor_identity_known'), isTrue);
 
@@ -57,7 +57,7 @@ void main() {
     final identity = fsm.showNode(fsm.chooseResponse(intro, 0).next);
     expect(
       identity.responses.map((response) => response.id),
-      ['mock_outfit', 'leave'],
+      ['mock_outfit', 'ask_if_comedian', 'leave'],
     );
   });
 
@@ -67,9 +67,7 @@ void main() {
 
     final intro = fsm.startConversation('old_sailor');
     final identity = fsm.showNode(fsm.chooseResponse(intro, 0).next);
-    final silentStare = fsm.showNode(fsm.chooseResponse(identity, 0).next);
-    final hendrikIdentity =
-        fsm.showNode(fsm.chooseResponse(silentStare, 0).next);
+    final hendrikIdentity = fsm.showNode(fsm.chooseResponse(identity, 1).next);
     final askNeed = fsm.chooseResponse(hendrikIdentity, 0);
     expect(askNeed.next, 'npc_ask_name');
 
@@ -84,6 +82,36 @@ void main() {
 
     fsm.endConversation();
     expect(fsm.startConversation('old_sailor').id, 'npc_waiting_for_ink');
+  });
+
+  test('continuing without mocking reveals Hendrik identity', () {
+    final fsm = DialogueFsm();
+    fsm.configure(graph: _graph, translations: _translations);
+
+    final intro = fsm.startConversation('old_sailor');
+    final identity = fsm.showNode(fsm.chooseResponse(intro, 0).next);
+    final continueConversation = fsm.chooseResponse(identity, 1);
+
+    expect(continueConversation.next, 'npc_hendrik_identity');
+    expect(fsm.storyState.flag('sailor_identity_known'), isTrue);
+  });
+
+  test('laughing at the navigator outfit triggers honor response', () {
+    final fsm = DialogueFsm();
+    fsm.configure(graph: _graph, translations: _translations);
+
+    final intro = fsm.startConversation('old_sailor');
+    final identity = fsm.showNode(fsm.chooseResponse(intro, 0).next);
+    final silentStare = fsm.showNode(fsm.chooseResponse(identity, 0).next);
+    final laugh = fsm.chooseResponse(silentStare, 0);
+    expect(laugh.next, 'npc_defend_honor');
+
+    final honor = fsm.showNode(laugh.next);
+    expect(honor.text, 'I must defend my honor.');
+    final apologize = fsm.chooseResponse(honor, 0);
+    expect(apologize.next, 'npc_silent_stare');
+    final laughAgain = fsm.chooseResponse(honor, 1);
+    expect(laughAgain.next, 'end');
   });
 }
 
@@ -118,11 +146,26 @@ final Map<String, dynamic> _graph = {
     'npc_identity': {
       'responses': [
         {'id': 'mock_outfit', 'next': 'npc_silent_stare'},
+        {
+          'id': 'ask_if_comedian',
+          'effects': [
+            {'set_flag': 'sailor_identity_known'},
+          ],
+          'next': 'npc_hendrik_identity',
+        },
+        {'id': 'leave', 'next': 'end'},
+      ],
+    },
+    'npc_defend_honor': {
+      'responses': [
+        {'id': 'apologize', 'next': 'npc_silent_stare'},
+        {'id': 'laugh_again', 'next': 'end'},
         {'id': 'leave', 'next': 'end'},
       ],
     },
     'npc_silent_stare': {
       'responses': [
+        {'id': 'laugh', 'next': 'npc_defend_honor'},
         {
           'id': 'ask_if_comedian',
           'effects': [
@@ -177,10 +220,17 @@ final Map<String, String> _translations = {
   'dialogues.npc_identity.player_text': 'Who are you?',
   'dialogues.npc_identity.text': 'A navigator.',
   'dialogues.npc_identity.responses[0].text': 'That outfit.',
-  'dialogues.npc_identity.responses[1].text': 'Goodbye.',
+  'dialogues.npc_identity.responses[1].text': 'Are you a comedian?',
+  'dialogues.npc_identity.responses[2].text': 'Goodbye.',
+  'dialogues.npc_defend_honor.player_text': 'Hahaha.',
+  'dialogues.npc_defend_honor.text': 'I must defend my honor.',
+  'dialogues.npc_defend_honor.responses[0].text': 'Sorry.',
+  'dialogues.npc_defend_honor.responses[1].text': 'Hahaha.',
+  'dialogues.npc_defend_honor.responses[2].text': 'Goodbye.',
   'dialogues.npc_silent_stare.player_text': 'That outfit.',
   'dialogues.npc_silent_stare.text': '...',
-  'dialogues.npc_silent_stare.responses[0].text': 'Are you a comedian?',
+  'dialogues.npc_silent_stare.responses[0].text': 'Hahaha.',
+  'dialogues.npc_silent_stare.responses[1].text': 'Are you a comedian?',
   'dialogues.npc_hendrik_identity.player_text': 'Are you a comedian?',
   'dialogues.npc_hendrik_identity.text': 'My name is Hendrik.',
   'dialogues.npc_hendrik_identity.responses[0].text': 'What do you need?',

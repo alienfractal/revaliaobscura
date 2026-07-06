@@ -1,4 +1,3 @@
-import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
@@ -50,6 +49,7 @@ class GameTextComponent extends PositionedEntity {
               maxWidth: maxWidth,
               timePerChar: 0,
             ),
+            pixelRatio: 4.0,
             position: Vector2.zero(),
           );
 

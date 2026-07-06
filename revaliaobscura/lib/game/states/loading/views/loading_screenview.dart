@@ -1,4 +1,4 @@
-import 'package:revalia/game/states/game/view/dialog_frame_entity.dart';
+import 'package:revalia/game/states/level_game/view/dialog_frame_entity.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
@@ -44,7 +44,7 @@ class LoadingView extends World
   }
 
   void loadLevel(int token) {
-    gameRef.ap.playMusic(Assets.resources.audio.mfxchoralintro1);
+    gameRef.ap.playMusic(Assets.resources.audio.mfxchoralintro1, loop: true);
     // textComponentLevel.text = "Level ${gameRef.gboard.gBoardModel.currentLevel}";
     String text = "";
     for (int i = 0; i < 5; i++) {

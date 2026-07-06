@@ -39,7 +39,7 @@
   },
   "dialogues": {
     "npc_intro": {
-      "player_text": "You look like a man who knows these waters.",
+      "player_text": "You look like a man who knows this place.",
       "text": "I know the Baltic roads. Even the ones best left alone.",
       "responses": [
         {
@@ -58,16 +58,46 @@
           "text": "You must have a lot of personality to come out dressed like this in the street."
         },
         {
+          "text": "Are you a comedian by any chance, Navigator?"
+        },
+        {
           "text": "I will leave you to it."
         }
       ]
     },
     "npc_silent_stare": {
       "player_text": "You must have a lot of personality to come out dressed like this in the street.",
-      "text": "...",
+      "text": "Cursing in old livonian...",
       "responses": [
         {
-          "text": "Are you a comedian by any chance, Navigator?"
+          "text": "Hahaha."
+        },
+        {
+          "text": "I apologize."
+        }
+      ]
+    },
+    "npc_defend_honor": {
+      "player_text": "Hahaha.",
+      "text": "I demand respect.",
+      "responses": [
+        {
+          "text": "I apologize."
+        },
+        {
+          "text": "Hahaha."
+        },
+        {
+          "text": "Then I shall leave you to your honor."
+        }
+      ]
+    },
+    "npc_final_insult": {
+      "player_text": "Hahaha.",
+      "text": "You insulted me for the last time.",
+      "responses": [
+        {
+          "text": "..."
         }
       ]
     },

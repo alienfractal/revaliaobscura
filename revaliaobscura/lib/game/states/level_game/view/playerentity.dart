@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:revalia/game/states/game/handlers/playerentity_animation_handler.dart';
-import 'package:revalia/game/states/game/model/player_model.dart';
-import 'package:revalia/game/states/game/services/player_logic_service.dart';
-import 'package:revalia/game/states/game/view/actorentity.dart';
+import 'package:revalia/game/states/level_game/handlers/playerentity_animation_handler.dart';
+import 'package:revalia/game/states/level_game/model/player_model.dart';
+import 'package:revalia/game/states/level_game/services/player_logic_service.dart';
+import 'package:revalia/game/states/level_game/view/level_entity.dart';
 
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
@@ -12,9 +12,7 @@ import 'package:flame_behaviors/flame_behaviors.dart';
 
 enum PlayerActionState { idle, walking, talking, dialogueLocked, disabled }
 
-class PlayerPosEntity extends PositionedEntity
-    with HasGameRef<RevaliaObs>
-    implements ActionableEntityComponent {
+class PlayerPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   late PlayerModel playerModel;
   late PlayerLogicService playerLogicService;
   late PlayerAnimationHandler playerAnimationHandler;
@@ -27,7 +25,7 @@ class PlayerPosEntity extends PositionedEntity
 
   PlayerActionState actionState = PlayerActionState.idle;
   double _actionSecondsRemaining = 0;
-  ActorEntity? _pendingInteractionTarget;
+  LevelEntity? _pendingInteractionTarget;
   ActionableType? _pendingInteractionType;
 
   PlayerPosEntity(
@@ -52,7 +50,7 @@ class PlayerPosEntity extends PositionedEntity
     playerAnimationHandler.init(this, gameRef);
     playerStartPoint = position.toPoint();
     print(
-        "enemy card detected card.position ${playerStartPoint.x} ${playerStartPoint.y}");
+        "player entity detected entity.position ${playerStartPoint.x} ${playerStartPoint.y}");
   }
 
   @override
@@ -99,16 +97,6 @@ class PlayerPosEntity extends PositionedEntity
     position += direction * distanceToMove;
   }
 
-  @override
-  void onLook() {
-    // TODO: implement onLook
-  }
-
-  @override
-  void onMove(Vector2 newLocation) {
-    requestMove(newLocation);
-  }
-
   bool requestMove(Vector2 newLocation, {bool keepPendingInteraction = false}) {
     if (actionState == PlayerActionState.disabled ||
         actionState == PlayerActionState.talking ||
@@ -126,7 +114,7 @@ class PlayerPosEntity extends PositionedEntity
 
   bool requestActorAction({
     required ActionableType actionType,
-    required ActorEntity target,
+    required LevelEntity target,
   }) {
     if (actionState == PlayerActionState.disabled ||
         actionState == PlayerActionState.talking ||
@@ -134,7 +122,7 @@ class PlayerPosEntity extends PositionedEntity
       return false;
     }
 
-    if (actionType == ActionableType.talk &&
+    if (target.shouldApproachFor(actionType) &&
         !target.isPlayerWithinInteractionRange()) {
       _pendingInteractionTarget = target;
       _pendingInteractionType = actionType;
@@ -189,20 +177,5 @@ class PlayerPosEntity extends PositionedEntity
   void _clearPendingInteraction() {
     _pendingInteractionTarget = null;
     _pendingInteractionType = null;
-  }
-
-  @override
-  void onTalk() {
-    // TODO: implement onTalk
-  }
-
-  @override
-  void onTouch() {
-    // TODO: implement onTouch
-  }
-
-  @override
-  void onUse() {
-    // TODO: implement onUse
   }
 }

@@ -1,8 +1,6 @@
-import 'dart:ui';
+import 'package:revalia/game/states/level_game/model/player_model.dart';
 
-import 'package:revalia/game/states/game/model/player_model.dart';
-
-import 'package:revalia/game/states/game/view/playerentity.dart';
+import 'package:revalia/game/states/level_game/view/playerentity.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
@@ -26,13 +24,13 @@ class PlayerAnimationHandler {
   PlayerAnimationHandler();
   void init(PlayerPosEntity parent, RevaliaObs gameRef) {
     this.gameRef = gameRef;
-    this.playerEntity = parent;
+    playerEntity = parent;
 
     playerSizeView = parent.size;
     spriteAnimationComponent = SpriteAnimationComponent(
-        animation: gameRef.enemyCacheService.idlePlayer, size: playerSizeView);
+        animation: gameRef.playerSpriteCache.idlePlayer, size: playerSizeView);
 
-    this.playerEntity.playerModel.status = PlayerModel.IDLE;
+    playerEntity.playerModel.status = PlayerModel.IDLE;
     animationTicker = spriteAnimationComponent.animationTicker;
     parent.add(spriteAnimationComponent);
   }
@@ -62,14 +60,14 @@ class PlayerAnimationHandler {
       // Play the attack animation
 
       spriteAnimationComponent.animation =
-          gameRef.enemyCacheService.attackAnimation;
+          gameRef.playerSpriteCache.attackAnimation;
       animationTicker = spriteAnimationComponent.animationTicker;
       // Listen for when the attack animation finishes
       animationTicker?.onComplete = () {
         // Once attack is finished, switch back to idle
         enemyView.enemyModel.status = EnemyModel.IDLE;
         spriteAnimationComponent.animation =
-            gameRef.enemyCacheService.idleAnimation;
+            gameRef.playerSpriteCache.idleAnimation;
         animationTicker = spriteAnimationComponent.animationTicker;
 
         isAnimating = false;
@@ -86,7 +84,7 @@ class PlayerAnimationHandler {
     isAnimating = true;
     playerEntity.playerModel.status = PlayerModel.WALKING;
     spriteAnimationComponent.animation =
-        gameRef.enemyCacheService.walkingPlayer;
+        gameRef.playerSpriteCache.walkingPlayer;
     animationTicker = spriteAnimationComponent.animationTicker;
   }
 
@@ -94,14 +92,14 @@ class PlayerAnimationHandler {
     _applyFacing(facingTarget);
     isAnimating = false;
     playerEntity.playerModel.status = PlayerModel.IDLE;
-    spriteAnimationComponent.animation = gameRef.enemyCacheService.idlePlayer;
+    spriteAnimationComponent.animation = gameRef.playerSpriteCache.idlePlayer;
     animationTicker = spriteAnimationComponent.animationTicker;
   }
 
   void showTalk() {
     isAnimating = true;
     playerEntity.playerModel.status = PlayerModel.TALK;
-    spriteAnimationComponent.animation = gameRef.enemyCacheService.talkPlayer;
+    spriteAnimationComponent.animation = gameRef.playerSpriteCache.talkPlayer;
     animationTicker = spriteAnimationComponent.animationTicker;
   }
 
@@ -163,7 +161,7 @@ class PlayerAnimationHandler {
       // Play the attack animation
 
       spriteAnimationComponent.animation =
-          gameRef.enemyCacheService.walkingPlayer;
+          gameRef.playerSpriteCache.walkingPlayer;
       animationTicker = spriteAnimationComponent.animationTicker;
       // Listen for when the attack animation finishes
       animationTicker?.onComplete = () {

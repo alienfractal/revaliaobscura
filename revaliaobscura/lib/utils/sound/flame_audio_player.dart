@@ -2,7 +2,7 @@ import 'package:revalia/utils/sound/audio_player_wrapper.dart';
 import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/foundation.dart';
 
-class GameAudioPlayer  extends AudioPlayerWrapper{
+class GameAudioPlayer extends AudioPlayerWrapper {
   static final Map<String, AudioPool> _audioPools = {};
   AudioPlayer? _musicAudioPlayer;
 
@@ -26,11 +26,13 @@ class GameAudioPlayer  extends AudioPlayerWrapper{
   }
 
   // Play a sound effect
-    @override
- void playSoundFx(String path)  {
+  @override
+  void playSoundFx(String path) {
     if (_audioPools.containsKey(path)) {
       try {
-         _audioPools[path]?.start(volume: soundFxVolume).then((value) => print('Sound Played now plz fuckoff'));
+        _audioPools[path]
+            ?.start(volume: soundFxVolume)
+            .then((value) => print('Sound Played now plz fuckoff'));
       } catch (e) {
         debugPrint("Error playing sound effect $path: $e");
       }
@@ -40,17 +42,15 @@ class GameAudioPlayer  extends AudioPlayerWrapper{
   }
 
   // Play background music
-    @override
+  @override
   Future<void> playMusic(String path, {bool loop = false}) async {
     if (isMusicPlaying) {
       await stopMusic();
     }
     try {
-      _musicAudioPlayer = await FlameAudio.play(
-        path,
-        volume: musicVolume,
-       
-      );
+      _musicAudioPlayer = loop
+          ? await FlameAudio.loop(path, volume: musicVolume)
+          : await FlameAudio.play(path, volume: musicVolume);
       isMusicPlaying = true;
     } catch (e) {
       debugPrint("Error playing music $path: $e");
@@ -58,7 +58,7 @@ class GameAudioPlayer  extends AudioPlayerWrapper{
   }
 
   // Stop background music
-    @override
+  @override
   Future<void> stopMusic() async {
     if (_musicAudioPlayer != null) {
       await _musicAudioPlayer?.stop();
@@ -89,7 +89,7 @@ class GameAudioPlayer  extends AudioPlayerWrapper{
       _musicAudioPlayer?.setVolume(musicVolume);
     }
   }
-  
+
   @override
   Future<void> stopSfx() {
     // TODO: implement stopSfxMusic

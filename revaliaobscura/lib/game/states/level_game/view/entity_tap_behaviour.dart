@@ -1,6 +1,4 @@
-// Example Behavior class for Card
-
-import 'package:revalia/game/states/game/view/actorentity.dart';
+import 'package:revalia/game/states/level_game/view/level_entity.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
@@ -9,21 +7,15 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class ActorBehavior extends Behavior<ActorEntity>
+class EntityTapBehaviour extends Behavior<LevelEntity>
     with TapCallbacks, HasGameRef<RevaliaObs> {
   static int tapCount = 0;
 
   @override
   void onMount() {
-    // TODO: implement onMount
     super.onMount();
     tapCount = 0;
     gameRef.gboard.isEnemyDefeated = false;
-  }
-
-  @override
-  void update(double dt) {
-    // Logic for the flip behavior
   }
 
   @override
@@ -43,7 +35,6 @@ class ActorBehavior extends Behavior<ActorEntity>
     print(
         "parent.absolutePositionOf(event.localPosition)  ${absPos.x} ${absPos.y}");
 
-    //gameRef.gboard.playerView.position =absPos;
     if (gameRef.gboard.actionType == ActionableType.move) {
       print("move");
       if (gameRef.gboard.playerEntity.requestMove(absPos)) {

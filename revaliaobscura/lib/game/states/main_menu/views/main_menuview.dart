@@ -47,7 +47,7 @@ class MainMenuView extends World
     textComponent.toggleBlinking();
     gameRef.ap.stopMusic();
 
-    gameRef.ap.playMusic(Assets.resources.audio.mfxshortintro);
+    gameRef.ap.playMusic(Assets.resources.audio.mfxcitygates, loop: true);
   }
 
   @override

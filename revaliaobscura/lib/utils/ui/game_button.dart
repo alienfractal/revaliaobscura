@@ -15,7 +15,7 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late String imagePath = "";
   late Behavior behavior;
   late Vector2 imgSize;
-  late SpriteSheet spriteSheet ;
+  late SpriteSheet spriteSheet;
   late bool isSimpleSpriteSheet;
   int currentFrameIndex = 0;
 
@@ -34,32 +34,34 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
 
   Future<void> init() async {
     if (isSimpleSpriteSheet) {
-      SpriteSheet sprs = await ComponentUtils.loadSpriteSheet(imagePath, imgSize, columns, rows, gameRef);
+      SpriteSheet sprs = await ComponentUtils.loadSpriteSheet(
+          imagePath, imgSize, columns, rows, gameRef);
       spriteComponent = SpriteComponent(
         sprite: sprs.getSprite(0, 0),
         size: imgSize,
       );
-      
+
       spriteSheet = sprs;
-      setFrame( currentFrameIndex);
+      setFrame(currentFrameIndex);
       add(spriteComponent);
       add(behavior);
       //setFrame(2);
     } else {
-      spriteComponent = await ComponentUtils.createSpriteComponent(path: imagePath, imgSize: imgSize);
+      spriteComponent = await ComponentUtils.createSpriteComponent(
+          path: imagePath, imgSize: imgSize);
       add(spriteComponent);
       add(behavior);
     }
   }
 
   @override
-  Future<void>  onLoad() async  {
+  Future<void> onLoad() async {
     await super.onLoad();
     await init();
   }
 
-void setFrame(int frameIndex) {
-    if ( spriteSheet != null) {
+  void setFrame(int frameIndex) {
+    if (spriteSheet != null) {
       print("game_button setFrame $frameIndex");
       spriteComponent.sprite = spriteSheet.getSpriteById(frameIndex);
     } else {

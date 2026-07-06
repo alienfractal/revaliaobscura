@@ -1,9 +1,3 @@
-import 'dart:collection';
-
-import 'package:revalia/game/states/game/model/actor_model.dart';
-
-//for rock (0), hot (1), cold (2), start point (3), and exit point (4).
-
 enum ActionOutcome {
   validMove,
   invalidMove,
@@ -17,18 +11,12 @@ class GameBoardModel {
   int counter = 0;
   List<List<int>> board = List.empty();
 
-  List<ActorModel> enemies = List<ActorModel>.empty();
-  int energyCount = 10; // Starting number of flames
+  int energyCount = 10;
   int currentLevel = 0;
-  double levelPlayTime = 30; //Standard Time limit for each level
-  int bombCount = 1;
+  double levelPlayTime = 30;
   int coinCount = 0;
 
   int totalScore = 0;
-  int baseScore = 0; // Starting score
-  Queue<ActorModel> currentQueue = Queue<ActorModel>();
-
-  int relicCount = 0;
 
   ActionOutcome flipResultOutcome = ActionOutcome.validMove;
 
@@ -47,5 +35,3 @@ class GameBoardModel {
     coinCount = 0;
   }
 }
-
-void main() {}

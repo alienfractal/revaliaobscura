@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:revalia/game/states/game/behaviours/dialogue_text_behaviour.dart';
+import 'package:revalia/utils/dialogsystem/dialogue_response_tap_behaviour.dart';
 import 'package:revalia/dialoguefsm/dialogue.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/utils/dialogsystem/dialog_event_manager.dart';
@@ -42,8 +42,7 @@ class DialogFrameEntity extends PositionedEntity
   @override
   void update(double dt) {
     super.update(dt);
-    if (_phase == DialoguePhase.inactive ||
-        _phase == DialoguePhase.replyOptions) {
+    if (_phase != DialoguePhase.screenMessage) {
       return;
     }
     _phaseSecondsRemaining -= dt;
@@ -140,7 +139,6 @@ class DialogFrameEntity extends PositionedEntity
     DialogEventManager.notifycation(event: current.text);
     _currentDialogue = current;
     _phase = DialoguePhase.playerInquiry;
-    _phaseSecondsRemaining = 3.5;
     gameRef.gboard.playerEntity.requestTalk(durationSeconds: 3.5);
     DialogEventManager.notifycation(event: current.text);
   }
@@ -169,7 +167,6 @@ class DialogFrameEntity extends PositionedEntity
         gameRef.gboard.playerEntity.lockForDialogue();
         gameRef.gboard.activeActor.requestTalk(durationSeconds: 3.5);
         _phase = DialoguePhase.npcResponse;
-        _phaseSecondsRemaining = 3.5;
         break;
       case DialoguePhase.npcResponse:
         setReplyOptions(current);
@@ -199,7 +196,9 @@ class DialogFrameEntity extends PositionedEntity
               Vector2(DialogueTextComponent.maxTextWidth, replyHeight),
           maxWidth: DialogueTextComponent.maxTextWidth);
       //txtResponse.updateUI(ColorStatusTextComponent.HIGHLIGHT);
-      txtResponse.add(DialogueReplyTextBehaviour(textId: i, dialogue: current));
+      txtResponse.add(
+        DialogueResponseTapBehaviour(responseIndex: i, dialogue: current),
+      );
       textLinesList.add(txtResponse);
       y += replyHeight + _replySpacing;
     }

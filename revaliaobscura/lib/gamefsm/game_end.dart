@@ -7,20 +7,16 @@ class GameEnd implements IState {
   GameEnd();
   @override
   void enter(Fsm gameFsm) {
-  
     gameFsm.actions += "E";
     mainGame.switchToWorld(mainGame.endView);
   }
 
   @override
   void exit(Fsm gameFsm) {
-     
     gameFsm.actions += "X";
     mainGame.clearWorld(gameFsm.currentStateType);
   }
 
   @override
-  void update(double dt) {
-     
-  }
+  void update(double dt) {}
 }

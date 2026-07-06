@@ -1,7 +1,8 @@
 import 'dart:math';
 
 class CombatLogicService {
-  static InitiativeOutcome currentIntiative = InitiativeOutcome.playerHasInitiative;
+  static InitiativeOutcome currentIntiative =
+      InitiativeOutcome.playerHasInitiative;
   static CombatOutcome determineCombatOutcome({
     required double playerAttackStrength,
     required double playerDefenseStrength,
@@ -10,7 +11,7 @@ class CombatLogicService {
     required Random random,
   }) {
     // Step 1: Determine initiative with probability
-      currentIntiative = _decideInitiative(
+    currentIntiative = _decideInitiative(
       playerStrength: playerAttackStrength,
       enemyStrength: enemyAttackStrength,
       random: random,
@@ -19,7 +20,7 @@ class CombatLogicService {
     // Step 2: Resolve the attack outcome based on initiative
     if (currentIntiative == InitiativeOutcome.playerHasInitiative) {
       print("Player has initiative.");
-   
+
       return _resolveAttack(
         attackerStrength: playerAttackStrength,
         defenderStrength: enemyDefenseStrength,
@@ -32,11 +33,9 @@ class CombatLogicService {
         defenderStrength: playerDefenseStrength,
         random: random,
       );
-    }
-    else{
+    } else {
       print("uNknown state wtf initiative.");
       return CombatOutcome.uNknown;
-
     }
   }
 
@@ -50,13 +49,18 @@ class CombatLogicService {
 
     // Avoid division by zero
     if (totalStrength == 0) {
-      return random.nextBool()?InitiativeOutcome.playerHasInitiative:InitiativeOutcome.enemyHasInitiative; // Equal chance if both strengths are zero
+      return random.nextBool()
+          ? InitiativeOutcome.playerHasInitiative
+          : InitiativeOutcome
+              .enemyHasInitiative; // Equal chance if both strengths are zero
     }
 
     double playerInitiativeProbability = playerStrength / totalStrength;
 
     // Generate a random number to determine initiative
-    return random.nextDouble() < playerInitiativeProbability?InitiativeOutcome.playerHasInitiative:InitiativeOutcome.enemyHasInitiative;
+    return random.nextDouble() < playerInitiativeProbability
+        ? InitiativeOutcome.playerHasInitiative
+        : InitiativeOutcome.enemyHasInitiative;
   }
 
   /// Resolves an attack based on attacker and defender strengths.
@@ -65,7 +69,8 @@ class CombatLogicService {
     required double defenderStrength,
     required Random random,
   }) {
-    double attackSuccessProbability = attackerStrength / (attackerStrength + defenderStrength);
+    double attackSuccessProbability =
+        attackerStrength / (attackerStrength + defenderStrength);
 
     double randomValue = random.nextDouble();
     return randomValue < attackSuccessProbability
@@ -74,7 +79,8 @@ class CombatLogicService {
   }
 
   static const double baseCriticalChance = 0.05; // 5% minimum critical chance
-  static const double maxCriticalBonus = 0.50;  // Additional 50% chance at full energy
+  static const double maxCriticalBonus =
+      0.50; // Additional 50% chance at full energy
 
   static bool isCriticalHit({
     required int currentEnergy,
@@ -83,7 +89,8 @@ class CombatLogicService {
   }) {
     // Calculate the critical hit chance
     double energyRatio = currentEnergy / maxEnergy;
-    double criticalHitChance = baseCriticalChance + (energyRatio * maxCriticalBonus);
+    double criticalHitChance =
+        baseCriticalChance + (energyRatio * maxCriticalBonus);
 
     // Generate a random value between 0 and 1
     double roll = random.nextDouble();
@@ -93,8 +100,9 @@ class CombatLogicService {
   }
 }
 
-enum CombatOutcome { attackSuccess, attackFail , uNknown}
-enum InitiativeOutcome { playerHasInitiative, enemyHasInitiative}
+enum CombatOutcome { attackSuccess, attackFail, uNknown }
+
+enum InitiativeOutcome { playerHasInitiative, enemyHasInitiative }
 
 void main() {
   Random random = Random();
@@ -122,7 +130,7 @@ void main() {
         break;
       default:
         print("Unknown state wtf");
-        break;  
+        break;
     }
   }
 

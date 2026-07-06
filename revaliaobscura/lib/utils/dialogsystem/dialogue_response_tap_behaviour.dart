@@ -7,27 +7,24 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class DialogueReplyTextBehaviour extends Behavior<GameTextComponent>
+class DialogueResponseTapBehaviour extends Behavior<GameTextComponent>
     with TapCallbacks, HasGameRef<RevaliaObs> {
-  int textId = -1;
-  Dialogue dialogue;
+  final int responseIndex;
+  final Dialogue dialogue;
 
-  DialogueReplyTextBehaviour({required this.textId, required this.dialogue})
-      : super();
-  @override
-  void update(double dt) {
-    // Logic for the flip behavior
-  }
+  DialogueResponseTapBehaviour({
+    required this.responseIndex,
+    required this.dialogue,
+  }) : super();
 
   @override
   void onTapDown(TapDownEvent event) {
     super.onTapDown(event);
-    print("Clicked on response index :  ${textId}");
-    String nextDialogueEvent = DialogueManager.chooseResponse(dialogue, textId);
+    print("Clicked on response index :  $responseIndex");
+    final nextDialogueEvent =
+        DialogueManager.chooseResponse(dialogue, responseIndex);
 
-    print("loadDialogueTextToFrame nextDialogueEvent ${nextDialogueEvent}");
-    //gameRef.gboard.removeDialogFrame();
-    //gameRef.gboard.callRenderDialogue(nextDialogueEvent);
+    print("loadDialogueTextToFrame nextDialogueEvent $nextDialogueEvent");
     gameRef.gboard.df?.clearDialogText();
     gameRef.gboard.df?.loadDialogueTextToFrame(nextDialogueEvent);
   }
