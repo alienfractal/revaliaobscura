@@ -2,11 +2,13 @@ class DialogueActorProfile {
   final String id;
   final String nameKey;
   final List<DialogueEntrypoint> entrypoints;
+  final Map<String, String> actions;
 
   DialogueActorProfile({
     required this.id,
     required this.nameKey,
     required this.entrypoints,
+    required this.actions,
   });
 
   factory DialogueActorProfile.fromGraph(
@@ -23,6 +25,7 @@ class DialogueActorProfile {
     return DialogueActorProfile(
       id: id,
       nameKey: nameKey,
+      actions: _readActions(graph, 'Dialogue actor "$mapKey"'),
       entrypoints: entrypoints
           .map(
             (entrypoint) => DialogueEntrypoint.fromGraph(
@@ -30,6 +33,23 @@ class DialogueActorProfile {
             ),
           )
           .toList(),
+    );
+  }
+}
+
+class DialogueObjectProfile {
+  final String id;
+  final Map<String, String> actions;
+
+  DialogueObjectProfile({required this.id, required this.actions});
+
+  factory DialogueObjectProfile.fromGraph(
+    String mapKey,
+    Map<String, dynamic> graph,
+  ) {
+    return DialogueObjectProfile(
+      id: mapKey,
+      actions: _readActions(graph, 'Dialogue object "$mapKey"'),
     );
   }
 }
@@ -50,4 +70,19 @@ class DialogueEntrypoint {
       condition: graph['when'] as Map<String, dynamic>?,
     );
   }
+}
+
+Map<String, String> _readActions(
+  Map<String, dynamic> graph,
+  String ownerDescription,
+) {
+  final actions = graph['actions'] as Map<String, dynamic>? ?? {};
+  return actions.map((action, messageId) {
+    if (messageId is! String || messageId.isEmpty) {
+      throw FormatException(
+        '$ownerDescription has an invalid "$action" message ID.',
+      );
+    }
+    return MapEntry(action, messageId);
+  });
 }

@@ -4,7 +4,7 @@ import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/components.dart';
 
 class LoadingCacheService extends SpriteAnimatorCache {
-  late SpriteSpec gameBackground;
+  late StaticSprite gameBackground;
 
   @override
   SpriteAnimation getAnimation(int modelValue) {
@@ -27,7 +27,7 @@ class LoadingCacheService extends SpriteAnimatorCache {
 
   @override
   Future<void> preloadSprites(RevaliaObs gameRef) async {
-    gameBackground = SpriteSpec(
+    gameBackground = StaticSprite(
         await SpriteAnimatorCache.loadSprite(
             path: Assets.resources.images.gameBackground32x32.path),
         gameRef.camDimension);

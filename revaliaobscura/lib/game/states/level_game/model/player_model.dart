@@ -7,6 +7,7 @@ class PlayerModel {
   static const int HURTS = 5;
   static const int DIE = 6;
   static const int TALK = 7;
+  static const int LAUGH = 8;
   int x, y;
   bool isAlive = true;
 

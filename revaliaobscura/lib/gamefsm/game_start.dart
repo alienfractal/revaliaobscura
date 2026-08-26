@@ -7,7 +7,7 @@ class GameStart implements IState {
   GameStart();
   @override
   void enter(Fsm gameFsm) {
-    mainGame.switchToWorld(mainGame.gboard);
+    mainGame.loadFreshGameboard();
     gameFsm.actions += "S";
   }
 

@@ -113,6 +113,14 @@ class GameScoreView extends World
     coinCount = gameRef.gboard.gBoardModel.coinCount;
     totalScore = gameRef.gboard.gBoardModel.totalScore;
     flipResultOutcome = gameRef.gboard.gBoardModel.flipResultOutcome;
+    viewType = flipResultOutcome == ActionOutcome.playerKilled
+        ? ScoreViewType.gameover
+        : ScoreViewType.levelWon;
+    textComponentLoading.text = viewType == ScoreViewType.gameover
+        ? 'YOU WERE KILLED'
+        : 'SCORE SUMMARY';
+    textComponentLoading.position.x =
+        (gameRef.camDimension.x - textComponentLoading.size.x) / 2;
   }
 
   void scoreSummary(int token) {
@@ -169,6 +177,9 @@ class GameScoreView extends World
         gameRef.gameFsm.gameEnd();
         break;
       case ActionOutcome.timeOver:
+        gameRef.gameFsm.gameEnd();
+        break;
+      case ActionOutcome.playerKilled:
         gameRef.gameFsm.gameEnd();
         break;
       case ActionOutcome.levelCompleted:

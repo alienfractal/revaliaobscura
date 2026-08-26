@@ -1,21 +1,21 @@
 import 'package:revalia/revalia_obs.dart';
 
-import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/image/image_utils.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/components.dart';
 import 'package:flame/sprite.dart';
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-import '../../game/states/main_menu/behaviours/start_button_taphandler.dart';
-
 class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late SpriteComponent spriteComponent;
 
-  late String imagePath = "";
+  String? imagePath;
+  SpriteComponent? cachedSpriteComponent;
+  CachedSpriteSheet? cachedSpriteSheet;
   late Behavior behavior;
   late Vector2 imgSize;
-  late SpriteSheet spriteSheet;
+  SpriteSheet? spriteSheet;
   late bool isSimpleSpriteSheet;
   int currentFrameIndex = 0;
 
@@ -24,7 +24,9 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   late int columns;
   GameButton(
       {required super.position,
-      required this.imagePath,
+      this.imagePath,
+      this.cachedSpriteComponent,
+      this.cachedSpriteSheet,
       required this.behavior,
       required this.imgSize,
       this.isSimpleSpriteSheet = false,
@@ -34,8 +36,9 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
 
   Future<void> init() async {
     if (isSimpleSpriteSheet) {
-      SpriteSheet sprs = await ComponentUtils.loadSpriteSheet(
-          imagePath, imgSize, columns, rows, gameRef);
+      final sprs = cachedSpriteSheet?.spriteSheet ??
+          await ComponentUtils.loadSpriteSheet(
+              imagePath!, imgSize, columns, rows, gameRef);
       spriteComponent = SpriteComponent(
         sprite: sprs.getSprite(0, 0),
         size: imgSize,
@@ -47,8 +50,9 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
       add(behavior);
       //setFrame(2);
     } else {
-      spriteComponent = await ComponentUtils.createSpriteComponent(
-          path: imagePath, imgSize: imgSize);
+      spriteComponent = cachedSpriteComponent ??
+          await ComponentUtils.createSpriteComponent(
+              path: imagePath!, imgSize: imgSize);
       add(spriteComponent);
       add(behavior);
     }
@@ -61,11 +65,18 @@ class GameButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   }
 
   void setFrame(int frameIndex) {
-    if (spriteSheet != null) {
+    final sheet = spriteSheet;
+    if (sheet != null) {
       print("game_button setFrame $frameIndex");
-      spriteComponent.sprite = spriteSheet.getSpriteById(frameIndex);
+      final frameCount = columns * rows;
+      currentFrameIndex = frameCount > 0 ? frameIndex % frameCount : 0;
+      spriteComponent.sprite = sheet.getSpriteById(currentFrameIndex);
     } else {
       print("spriteComponent not initialized yet");
     }
+  }
+
+  void advanceFrame() {
+    setFrame(currentFrameIndex + 1);
   }
 }

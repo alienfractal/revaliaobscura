@@ -46,13 +46,16 @@ class LoadingView extends World
   void loadLevel(int token) {
     gameRef.ap.playMusic(Assets.resources.audio.mfxchoralintro1, loop: true);
     // textComponentLevel.text = "Level ${gameRef.gboard.gBoardModel.currentLevel}";
-    String text = "";
-    for (int i = 0; i < 5; i++) {
-      text += AppTranslations.getTranslation(
-          gameRef.currentLocale, 'loading.context_intro[$i]');
-      text += " ";
-      text += "\n";
+    final translations = AppTranslations.translationsFor(gameRef.currentLocale);
+    final introLines = <String>[];
+    for (int i = 0;; i++) {
+      final line = translations['loading.context_intro[$i]'];
+      if (line == null) {
+        break;
+      }
+      introLines.add(line);
     }
+    final text = introLines.join('\n');
     // textComponentLevel.text =text;
     _introFrame?.removeFromParent();
     final df = DialogFrameEntity(

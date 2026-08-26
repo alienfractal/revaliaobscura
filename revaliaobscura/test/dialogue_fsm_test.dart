@@ -111,7 +111,26 @@ void main() {
     final apologize = fsm.chooseResponse(honor, 0);
     expect(apologize.next, 'npc_silent_stare');
     final laughAgain = fsm.chooseResponse(honor, 1);
-    expect(laughAgain.next, 'end');
+    expect(laughAgain.next, 'npc_final_insult');
+
+    final finalInsult = fsm.showNode(laughAgain.next);
+    final consequence = fsm.chooseResponse(finalInsult, 0);
+    expect(consequence.response.event, 'player_death');
+    expect(consequence.next, 'end');
+  });
+
+  test('interaction messages resolve through target actions and fallbacks', () {
+    final fsm = DialogueFsm();
+    fsm.configure(graph: _graph, translations: _translations);
+
+    expect(
+      fsm.interactionMessage('old_sailor', 'look'),
+      'An old sailor.',
+    );
+    expect(
+      fsm.interactionMessage('unknown_object', 'touch'),
+      'I cannot touch that.',
+    );
   });
 }
 
@@ -120,6 +139,7 @@ final Map<String, dynamic> _graph = {
     'old_sailor': {
       'id': 'old_sailor',
       'name_key': 'actors.old_sailor.name',
+      'actions': {'look': 'old_sailor_look'},
       'entrypoints': [
         {
           'dialogue': 'npc_waiting_for_ink',
@@ -133,6 +153,17 @@ final Map<String, dynamic> _graph = {
       ],
     },
   },
+  'objects': {
+    'walking_area': {
+      'actions': {'look': 'walking_area_look'},
+    },
+  },
+  'messages': {
+    'old_sailor_look': {},
+    'walking_area_look': {},
+    'generic_touch': {},
+  },
+  'fallbacks': {'touch': 'generic_touch'},
   'nodes': {
     'npc_intro': {
       'responses': [
@@ -159,8 +190,17 @@ final Map<String, dynamic> _graph = {
     'npc_defend_honor': {
       'responses': [
         {'id': 'apologize', 'next': 'npc_silent_stare'},
-        {'id': 'laugh_again', 'next': 'end'},
+        {'id': 'laugh_again', 'next': 'npc_final_insult'},
         {'id': 'leave', 'next': 'end'},
+      ],
+    },
+    'npc_final_insult': {
+      'responses': [
+        {
+          'id': 'face_consequence',
+          'event': 'player_death',
+          'next': 'end',
+        },
       ],
     },
     'npc_silent_stare': {
@@ -215,38 +255,46 @@ final Map<String, dynamic> _graph = {
 final Map<String, String> _translations = {
   'dialogues.npc_intro.player_text': 'Hello.',
   'dialogues.npc_intro.text': 'Welcome.',
-  'dialogues.npc_intro.responses[0].text': 'Who are you?',
-  'dialogues.npc_intro.responses[1].text': 'Goodbye.',
+  'dialogues.npc_intro.responses.ask_identity.text': 'Who are you?',
+  'dialogues.npc_intro.responses.leave.text': 'Goodbye.',
   'dialogues.npc_identity.player_text': 'Who are you?',
   'dialogues.npc_identity.text': 'A navigator.',
-  'dialogues.npc_identity.responses[0].text': 'That outfit.',
-  'dialogues.npc_identity.responses[1].text': 'Are you a comedian?',
-  'dialogues.npc_identity.responses[2].text': 'Goodbye.',
+  'dialogues.npc_identity.responses.mock_outfit.text': 'That outfit.',
+  'dialogues.npc_identity.responses.ask_if_comedian.text':
+      'Are you a comedian?',
+  'dialogues.npc_identity.responses.leave.text': 'Goodbye.',
   'dialogues.npc_defend_honor.player_text': 'Hahaha.',
   'dialogues.npc_defend_honor.text': 'I must defend my honor.',
-  'dialogues.npc_defend_honor.responses[0].text': 'Sorry.',
-  'dialogues.npc_defend_honor.responses[1].text': 'Hahaha.',
-  'dialogues.npc_defend_honor.responses[2].text': 'Goodbye.',
+  'dialogues.npc_defend_honor.responses.apologize.text': 'Sorry.',
+  'dialogues.npc_defend_honor.responses.laugh_again.text': 'Hahaha.',
+  'dialogues.npc_defend_honor.responses.leave.text': 'Goodbye.',
+  'dialogues.npc_final_insult.player_text': 'Hahaha.',
+  'dialogues.npc_final_insult.text': 'You insulted me.',
+  'dialogues.npc_final_insult.responses.face_consequence.text': '...',
   'dialogues.npc_silent_stare.player_text': 'That outfit.',
   'dialogues.npc_silent_stare.text': '...',
-  'dialogues.npc_silent_stare.responses[0].text': 'Hahaha.',
-  'dialogues.npc_silent_stare.responses[1].text': 'Are you a comedian?',
+  'dialogues.npc_silent_stare.responses.laugh.text': 'Hahaha.',
+  'dialogues.npc_silent_stare.responses.ask_if_comedian.text':
+      'Are you a comedian?',
   'dialogues.npc_hendrik_identity.player_text': 'Are you a comedian?',
   'dialogues.npc_hendrik_identity.text': 'My name is Hendrik.',
-  'dialogues.npc_hendrik_identity.responses[0].text': 'What do you need?',
-  'dialogues.npc_hendrik_identity.responses[1].text': 'Goodbye.',
+  'dialogues.npc_hendrik_identity.responses.ask_need.text': 'What do you need?',
+  'dialogues.npc_hendrik_identity.responses.leave.text': 'Goodbye.',
   'dialogues.npc_ask_name.player_text': 'What do you need?',
   'dialogues.npc_ask_name.text': 'What is your name?',
-  'dialogues.npc_ask_name.responses[0].text': 'Rebane.',
-  'dialogues.npc_ask_name.responses[1].text': 'Goodbye.',
+  'dialogues.npc_ask_name.responses.answer_rebane.text': 'Rebane.',
+  'dialogues.npc_ask_name.responses.leave.text': 'Goodbye.',
   'dialogues.npc_ink_request.player_text': 'Rebane.',
   'dialogues.npc_ink_request.text': 'Bring me ink.',
-  'dialogues.npc_ink_request.responses[0].text': 'I will.',
+  'dialogues.npc_ink_request.responses.accept_ink_quest.text': 'I will.',
   'dialogues.npc_after_identity.player_text': 'Hello again.',
   'dialogues.npc_after_identity.text': 'Any work?',
-  'dialogues.npc_after_identity.responses[0].text': 'What do you need?',
-  'dialogues.npc_after_identity.responses[1].text': 'Goodbye.',
+  'dialogues.npc_after_identity.responses.ask_need.text': 'What do you need?',
+  'dialogues.npc_after_identity.responses.leave.text': 'Goodbye.',
   'dialogues.npc_waiting_for_ink.player_text': 'About that ink.',
   'dialogues.npc_waiting_for_ink.text': 'Bring me ink.',
-  'dialogues.npc_waiting_for_ink.responses[0].text': 'Goodbye.',
+  'dialogues.npc_waiting_for_ink.responses.leave.text': 'Goodbye.',
+  'messages.old_sailor_look.text': 'An old sailor.',
+  'messages.walking_area_look.text': 'A road.',
+  'messages.generic_touch.text': 'I cannot touch that.',
 };

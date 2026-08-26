@@ -9,9 +9,7 @@ class MusicButtonTapHandler extends Behavior<GameButton>
   @override
   void onTapDown(TapDownEvent event) {
     Future.delayed(const Duration(milliseconds: 100), () {
-      parent.currentFrameIndex += 1;
-      int frameIndex = parent.currentFrameIndex % parent.spriteSheet.columns;
-      parent.setFrame(frameIndex);
+      parent.advanceFrame();
 
       //gameRef.ap.updateMusicVolume(frameIndex);
     });

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
+import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/image/image_utils.dart';
 import 'package:revalia/utils/ui/text_component.dart';
 import 'package:revalia/utils/text_utils.dart';
@@ -29,6 +30,13 @@ class GameEndView extends World
   @override
   void onMount() {
     super.onMount();
+    gameRef.ap.playSoundFx(Assets.resources.audio.gameover);
+    textComponentMessage.text =
+        endingCondition(gameRef.gboard.gBoardModel.flipResultOutcome);
+    textComponentMessage.position = Vector2(
+      gameRef.camDimension.x / 2 - textComponentMessage.size.x / 2,
+      gameRef.camDimension.y / 3,
+    );
     final token = ++_endToken;
     Future.delayed(const Duration(milliseconds: 4500), () {
       if (!isMounted || token != _endToken) {
@@ -80,6 +88,8 @@ class GameEndView extends World
       return "OUT OF TIME";
     } else if (lastOutcome == ActionOutcome.invalidMove) {
       return "OUT OF MANA";
+    } else if (lastOutcome == ActionOutcome.playerKilled) {
+      return "YOU DIED";
     } else {
       return "OUT OF LUCK";
     }

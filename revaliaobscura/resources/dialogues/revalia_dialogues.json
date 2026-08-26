@@ -3,6 +3,11 @@
     "old_sailor": {
       "id": "old_sailor",
       "name_key": "actors.old_sailor.name",
+      "actions": {
+        "look": "old_sailor_look",
+        "touch": "old_sailor_touch",
+        "walk": "old_sailor_walk"
+      },
       "entrypoints": [
         {
           "dialogue": "npc_waiting_for_ink",
@@ -21,6 +26,42 @@
         }
       ]
     }
+  },
+  "objects": {
+    "walking_area": {
+      "actions": {
+        "look": "walking_area_look",
+        "touch": "walking_area_touch"
+      }
+    },
+    "glowing_gem": {
+      "actions": {
+        "look": "glowing_gem_look",
+        "touch": "glowing_gem_touch"
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {},
+    "old_sailor_touch": {},
+    "old_sailor_walk": {},
+    "walking_area_look": {},
+    "walking_area_touch": {},
+    "glowing_gem_look": {},
+    "glowing_gem_touch": {},
+    "player_killed": {},
+    "generic_look": {},
+    "generic_touch": {},
+    "generic_talk": {},
+    "generic_walk": {},
+    "generic_use": {}
+  },
+  "fallbacks": {
+    "look": "generic_look",
+    "touch": "generic_touch",
+    "talk": "generic_talk",
+    "walk": "generic_walk",
+    "use": "generic_use"
   },
   "nodes": {
     "npc_intro": {
@@ -47,6 +88,12 @@
           "effects": [
             {
               "set_flag": "sailor_identity_known"
+            },
+            {
+              "award_score": {
+                "id": "learn_navigator_identity",
+                "points": 100
+              }
             }
           ],
           "next": "npc_hendrik_identity"
@@ -93,6 +140,12 @@
           "effects": [
             {
               "set_flag": "sailor_identity_known"
+            },
+            {
+              "award_score": {
+                "id": "learn_navigator_identity",
+                "points": 100
+              }
             }
           ],
           "next": "npc_hendrik_identity"
@@ -115,6 +168,14 @@
       "responses": [
         {
           "id": "answer_rebane",
+          "effects": [
+            {
+              "award_score": {
+                "id": "introduce_rebane",
+                "points": 100
+              }
+            }
+          ],
           "next": "npc_ink_request"
         },
         {
@@ -124,6 +185,7 @@
       ]
     },
     "npc_ink_request": {
+      "event": "score_milestone:discover_ink_quest:250",
       "responses": [
         {
           "id": "accept_ink_quest",

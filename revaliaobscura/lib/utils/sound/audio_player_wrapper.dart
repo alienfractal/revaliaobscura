@@ -30,7 +30,11 @@ abstract class AudioPlayerWrapper {
 
   void playSoundFx(String path);
 
-  Future<void> playMusic(String path, {bool loop = false});
+  Future<void> playMusic(
+    String path, {
+    bool loop = false,
+    int playCount = 1,
+  });
 
   Future<void> stopMusic();
 

@@ -1,4 +1,5 @@
 import 'package:revalia/game/states/level_game/model/player_model.dart';
+import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
 
 import 'package:revalia/game/states/level_game/view/playerentity.dart';
 import 'package:revalia/revalia_obs.dart';
@@ -7,6 +8,8 @@ import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 class PlayerAnimationHandler {
+  static final Vector2 knockedVisualSize = Vector2(84, 84);
+
   late RevaliaObs gameRef;
   late SpriteAnimationComponent spriteAnimationComponent;
   late SpriteAnimationTicker? animationTicker;
@@ -14,6 +17,7 @@ class PlayerAnimationHandler {
   late bool isAnimating = false;
   late bool isExplodingSFX = false;
   late bool isAlive = true;
+  bool _isPlayingOneShot = false;
   late PlayerPosEntity playerEntity;
   late Vector2 playerSizeView;
 
@@ -28,11 +32,25 @@ class PlayerAnimationHandler {
 
     playerSizeView = parent.size;
     spriteAnimationComponent = SpriteAnimationComponent(
-        animation: gameRef.playerSpriteCache.idlePlayer, size: playerSizeView);
+      animation: gameRef.playerSpriteCache.idlePlayer,
+      size: playerSizeView,
+      anchor: Anchor.bottomCenter,
+      position: Vector2(parent.size.x / 2, parent.size.y),
+    );
 
     playerEntity.playerModel.status = PlayerModel.IDLE;
     animationTicker = spriteAnimationComponent.animationTicker;
     parent.add(spriteAnimationComponent);
+  }
+
+  void updatePerspectiveScale(double feetY) {
+    final perspectiveScale = PerspectiveConfig.characterScaleForFeetY(feetY);
+    final facingDirection =
+        spriteAnimationComponent.scale.x.isNegative ? -1.0 : 1.0;
+    spriteAnimationComponent.scale.setValues(
+      perspectiveScale * facingDirection,
+      perspectiveScale,
+    );
   }
 
   void cleanUpAnimations() {
@@ -97,10 +115,28 @@ class PlayerAnimationHandler {
   }
 
   void showTalk() {
+    if (_isPlayingOneShot) {
+      return;
+    }
     isAnimating = true;
     playerEntity.playerModel.status = PlayerModel.TALK;
     spriteAnimationComponent.animation = gameRef.playerSpriteCache.talkPlayer;
     animationTicker = spriteAnimationComponent.animationTicker;
+  }
+
+  void showLaugh() {
+    if (!playerEntity.playerModel.isAlive) {
+      return;
+    }
+    _isPlayingOneShot = true;
+    isAnimating = true;
+    playerEntity.playerModel.status = PlayerModel.LAUGH;
+    spriteAnimationComponent.animation = gameRef.playerSpriteCache.laughPlayer;
+    animationTicker = spriteAnimationComponent.animationTicker;
+    animationTicker?.onComplete = () {
+      _isPlayingOneShot = false;
+      showIdle(playerEntity.position);
+    };
   }
 
   void _applyFacing(Vector2 target) {
@@ -141,34 +177,26 @@ class PlayerAnimationHandler {
     parent.add(_blinkTimer);
   }
 
-  void triggerDie(Vector2 cardPosition) {
-    if (!isAnimating) {
-      isAnimating = true;
-      playerEntity.playerModel.status = PlayerModel.DIE;
+  void triggerDie({void Function()? onComplete}) {
+    _isPlayingOneShot = false;
+    isAnimating = true;
+    playerEntity.playerModel
+      ..status = PlayerModel.DIE
+      ..isAlive = false;
 
-      // Check if the card is to the left or right of the miner
-      if (cardPosition.x < playerEntity.position.x) {
-        // Card is to the left, flip the sprite
-        if (!spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
-      } else {
-        // Card is to the right, make sure the sprite is not flipped
-        if (spriteAnimationComponent.isFlippedHorizontally) {
-          spriteAnimationComponent.flipHorizontallyAroundCenter();
-        }
-      }
-      // Play the attack animation
+    spriteAnimationComponent
+      ..anchor = Anchor.bottomCenter
+      ..position = Vector2(
+        playerEntity.size.x / 2,
+        playerEntity.size.y,
+      )
+      ..size = knockedVisualSize
+      ..animation = gameRef.playerSpriteCache.knockedPlayer;
 
-      spriteAnimationComponent.animation =
-          gameRef.playerSpriteCache.walkingPlayer;
-      animationTicker = spriteAnimationComponent.animationTicker;
-      // Listen for when the attack animation finishes
-      animationTicker?.onComplete = () {
-        // Once attack is finished, switch back to idle
-        playerEntity.playerModel.status = PlayerModel.DIE;
-        isAnimating = false;
-      };
-    }
+    animationTicker = spriteAnimationComponent.animationTicker;
+    animationTicker?.onComplete = () {
+      isAnimating = false;
+      onComplete?.call();
+    };
   }
 }

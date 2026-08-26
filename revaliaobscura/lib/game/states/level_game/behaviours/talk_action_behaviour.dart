@@ -2,14 +2,6 @@ import 'package:revalia/utils/components/entity_action_behaviour.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
 
 class TalkActionBehaviour extends EntityActionBehaviour {
-  final String outOfRangeDialogId;
-  final String unavailableDialogId;
-
-  TalkActionBehaviour({
-    this.outOfRangeDialogId = 'player_error_talk',
-    this.unavailableDialogId = 'player_error_interact',
-  });
-
   @override
   ActionableType get actionType => ActionableType.talk;
 
@@ -19,12 +11,12 @@ class TalkActionBehaviour extends EntityActionBehaviour {
   @override
   void execute() {
     if (!parent.isPlayerWithinInteractionRange()) {
-      game.gboard.callRenderDialogueOnError(outOfRangeDialogId);
+      parent.showInteractionReaction(actionType);
       return;
     }
 
     if (!parent.canTalk) {
-      game.gboard.callRenderDialogueOnError(unavailableDialogId);
+      parent.showInteractionReaction(actionType);
       return;
     }
 

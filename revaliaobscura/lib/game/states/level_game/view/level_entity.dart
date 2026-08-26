@@ -1,18 +1,23 @@
 import 'package:flame/components.dart';
 import 'package:flame_behaviors/flame_behaviors.dart';
 import 'package:revalia/game/states/level_game/handlers/level_entity_animation_handler.dart';
+import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
 import 'package:revalia/utils/components/entity_action_behaviour.dart';
+import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
+import 'package:revalia/utils/translation/app_translations.dart';
 
-enum LevelEntityActionState { idle, talking }
+enum LevelEntityActionState { idle, talking, attacking }
 
 abstract class LevelEntity extends PositionedEntity
     with HasGameReference<RevaliaObs>
     implements ActionTarget {
   static const double interactionRange = 60;
 
+  final String interactionId;
   final String? dialogueActorId;
+  final bool isWalkable;
   final LevelEntityAnimationHandler animationHandler =
       LevelEntityAnimationHandler();
   LevelEntityActionState actionState = LevelEntityActionState.idle;
@@ -21,13 +26,21 @@ abstract class LevelEntity extends PositionedEntity
   LevelEntity({
     required super.position,
     required super.size,
+    required this.interactionId,
     this.dialogueActorId,
+    this.isWalkable = false,
     super.behaviors,
   }) : super(anchor: Anchor.center);
 
   @override
   void update(double dt) {
     super.update(dt);
+    if (usesPerspectiveScaling) {
+      animationHandler.updatePerspectiveScale(interactionPoint.y);
+    }
+    if (usesDepthSorting) {
+      priority = PerspectiveConfig.depthPriorityForFeetY(depthSortY);
+    }
     if (actionState == LevelEntityActionState.talking) {
       _actionSecondsRemaining -= dt;
       if (_actionSecondsRemaining <= 0) {
@@ -37,10 +50,13 @@ abstract class LevelEntity extends PositionedEntity
     }
   }
 
+  bool get usesPerspectiveScaling => false;
+  bool get usesDepthSorting => false;
+  double get depthSortY => interactionPoint.y;
+
   @override
   void onRemove() {
     super.onRemove();
-    animationHandler.cleanUpAnimations();
   }
 
   void requestTalk({required double durationSeconds}) {
@@ -49,10 +65,23 @@ abstract class LevelEntity extends PositionedEntity
     animationHandler.showTalk();
   }
 
-  bool isPlayerWithinInteractionRange() {
-    return gameRef.gboard.playerEntity.position.distanceTo(interactionPoint) <=
-        interactionRange;
+  void requestAttack({void Function()? onComplete}) {
+    actionState = LevelEntityActionState.attacking;
+    animationHandler.showAttack(onComplete: () {
+      actionState = LevelEntityActionState.idle;
+      onComplete?.call();
+    });
   }
+
+  bool isPlayerWithinInteractionRange() {
+    return game.gboard.playerEntity.position.distanceTo(interactionPoint) <=
+        currentInteractionRange;
+  }
+
+  double get currentInteractionRange => usesPerspectiveScaling
+      ? interactionRange *
+          PerspectiveConfig.characterScaleForFeetY(interactionPoint.y)
+      : interactionRange;
 
   @override
   Vector2 get interactionPoint => Vector2(position.x, position.y + size.y / 2);
@@ -72,7 +101,7 @@ abstract class LevelEntity extends PositionedEntity
       return;
     }
 
-    gameRef.gboard.callRenderDialogueOnError(_fallbackDialogFor(actionType));
+    showInteractionReaction(actionType);
   }
 
   EntityActionBehaviour? _actionBehaviourFor(ActionableType actionType) {
@@ -84,12 +113,14 @@ abstract class LevelEntity extends PositionedEntity
     return null;
   }
 
-  String _fallbackDialogFor(ActionableType actionType) {
-    return switch (actionType) {
-      ActionableType.look => 'player_error_observe',
-      ActionableType.talk => 'player_error_talk',
-      ActionableType.move => 'player_error_walk',
-      ActionableType.touch || ActionableType.use => 'player_error_interact',
-    };
+  void showInteractionReaction(ActionableType actionType) {
+    DialogueManager.setTranslations(
+      AppTranslations.translationsFor(game.currentLocale),
+    );
+    final message = DialogueManager.interactionMessage(
+      interactionId,
+      actionType == ActionableType.move ? 'walk' : actionType.name,
+    );
+    game.gboard.showScreenMessage(message);
   }
 }

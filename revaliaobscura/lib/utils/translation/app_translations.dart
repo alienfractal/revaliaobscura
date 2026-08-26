@@ -55,6 +55,11 @@ class AppTranslations {
         await rootBundle.loadString(Assets.resources.translations.es);
     allTranslations['es'] =
         flattenJson(jsonDecode(esJson) as Map<String, dynamic>);
+
+    String eeJson =
+        await rootBundle.loadString(Assets.resources.translations.ee);
+    allTranslations['ee'] =
+        flattenJson(jsonDecode(eeJson) as Map<String, dynamic>);
   }
 
   static String getTranslation(String locale, String key) {

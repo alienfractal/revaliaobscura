@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:revalia/game/states/level_game/services/entity_sprite_cache_service.dart';
 import 'package:revalia/game/states/level_game/services/player_cache_service.dart';
 import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
+import 'package:revalia/game/states/level_game/view/level_opening_curtain.dart';
 import 'package:revalia/game/states/end/views/end_screenview.dart';
 import 'package:revalia/game/states/loading/services/loading_cache_service.dart';
 import 'package:revalia/game/states/loading/views/loading_screenview.dart';
@@ -16,6 +17,7 @@ import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/sound/web_audio_player.dart';
+import 'package:revalia/utils/ui_sprite_cache_service.dart';
 
 import 'package:flame/camera.dart';
 
@@ -36,7 +38,7 @@ class RevaliaObs extends FlameGame {
   late final CameraComponent cam;
   late WebAudioPlayer ap;
   late GameFsm gameFsm;
-  final GameboardView gboard = GameboardView();
+  GameboardView gboard = GameboardView();
   final MainMenuView menuView = MainMenuView();
   final LoadingView loadingView = LoadingView();
   final GameEndView endView = GameEndView();
@@ -48,6 +50,7 @@ class RevaliaObs extends FlameGame {
   late ui.FragmentProgram uiProgram;
 
   late EntitySpriteCacheService entitySpriteCache;
+  late UiSpriteCacheService uiSpriteCache;
   late MenuCacheSerivce menuCacheService;
   late LoadingCacheService loadingCacheService;
   late PlayerCacheService playerSpriteCache;
@@ -55,13 +58,17 @@ class RevaliaObs extends FlameGame {
   AppTranslations appTranslations = AppTranslations();
 
   String currentLocale = 'en';
+  bool _levelOpeningBlackout = false;
+  LevelOpeningCurtain? _screenOpeningCurtain;
+  int _screenTransitionToken = 0;
 
   RevaliaObs() {
     ap = WebAudioPlayer();
     isCrtShaderActive = false;
-    debugMode = true;
+    //debugMode = true;
 
     entitySpriteCache = EntitySpriteCacheService();
+    uiSpriteCache = UiSpriteCacheService();
     menuCacheService = MenuCacheSerivce();
     loadingCacheService = LoadingCacheService();
     playerSpriteCache = PlayerCacheService();
@@ -99,19 +106,24 @@ class RevaliaObs extends FlameGame {
   void render(Canvas canvas) {
     if (!isCrtShaderActive) {
       super.render(canvas);
-      return;
+    } else {
+      texture?.dispose();
+      texture = captureGameTexture();
+
+      if (shader != null && texture != null) {
+        final shaderPainter = ShaderPainter(shader: shader, texture: texture);
+        shaderPainter.paint(canvas, canvasSize.toSize());
+      } else {
+        super.render(canvas);
+      }
     }
 
-    texture?.dispose();
-    texture = captureGameTexture();
-
-    if (shader != null && texture != null) {
-      final shaderPainter = ShaderPainter(shader: shader, texture: texture);
-      shaderPainter.paint(canvas, size.toSize());
-      return;
+    if (_levelOpeningBlackout) {
+      canvas.drawRect(
+        Rect.fromLTWH(0, 0, canvasSize.x, canvasSize.y),
+        Paint()..color = const Color(0xFF000000),
+      );
     }
-
-    super.render(canvas);
   }
 
   @override
@@ -124,6 +136,8 @@ class RevaliaObs extends FlameGame {
         await ui.FragmentProgram.fromAsset('resources/shaders/test.frag');
     await entitySpriteCache.preloadAnimations(this);
     await entitySpriteCache.preloadSprites(this);
+    await uiSpriteCache.preloadAnimations(this);
+    await uiSpriteCache.preloadSprites(this);
     await menuCacheService.preloadSprites(this);
     await loadingCacheService.preloadSprites(this);
     await ap.initSfxPool(Assets.resources.audio.values);
@@ -150,16 +164,19 @@ class RevaliaObs extends FlameGame {
       cam.viewfinder.anchor = Anchor.topLeft;
       // cam.viewfinder.position = size / 4;
       cam.viewfinder.zoom = 1.0;
-      world = menuView;
+      switchToWorld(menuView);
     });
   }
 
   ui.Image captureGameTexture() {
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
+    final canvas = Canvas(
+      recorder,
+      Rect.fromLTWH(0, 0, canvasSize.x, canvasSize.y),
+    );
     super.render(canvas);
     final picture = recorder.endRecording();
-    return picture.toImageSync(size.x.toInt(), size.y.toInt());
+    return picture.toImageSync(canvasSize.x.toInt(), canvasSize.y.toInt());
   }
 
   void toggleCrtShader() {
@@ -182,8 +199,35 @@ class RevaliaObs extends FlameGame {
 
   // Method to switch worlds
   void switchToWorld(World newWorld) {
+    final transitionToken = ++_screenTransitionToken;
+    _levelOpeningBlackout = true;
+    if (_screenOpeningCurtain?.parent != null) {
+      _screenOpeningCurtain?.removeFromParent();
+    }
+
     world = newWorld;
     cam.viewfinder.anchor = Anchor.topLeft;
+
+    final curtain = LevelOpeningCurtain(
+      screenSize: camDimension,
+      onReady: () {
+        if (transitionToken == _screenTransitionToken) {
+          _levelOpeningBlackout = false;
+        }
+      },
+      onComplete: () {
+        if (transitionToken == _screenTransitionToken) {
+          _screenOpeningCurtain = null;
+        }
+      },
+    );
+    _screenOpeningCurtain = curtain;
+    cam.viewport.add(curtain);
+  }
+
+  void loadFreshGameboard() {
+    gboard = GameboardView(model: gboard.gBoardModel);
+    switchToWorld(gboard);
   }
 
   void clearWorld(StateType nextStateType) {
@@ -237,8 +281,8 @@ class ShaderPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     if (shader != null && texture != null) {
-      shader!.setFloat(0, texture!.width.toDouble()); // uResolution.x
-      shader!.setFloat(1, texture!.height.toDouble()); // uResolution.y
+      shader!.setFloat(0, size.width); // uResolution.x
+      shader!.setFloat(1, size.height); // uResolution.y
       shader!.setImageSampler(0, texture!); // uTexture
 
       final paint = Paint()..shader = shader;

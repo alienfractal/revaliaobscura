@@ -1,11 +1,9 @@
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
-import 'package:revalia/game/states/level_game/view/market_background_entity.dart';
 import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
 import 'package:revalia/game/states/main_menu/behaviours/crt_shader_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
-import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
 import 'package:revalia/utils/ui/entity_action_tap_handler.dart';
 
@@ -51,13 +49,20 @@ class UIGameBoardComponents {
     gBoardModel = gameboardView.gBoardModel;
   }
 
+  void flashScoreChange() {
+    blinkTextComponentScore.flashColors(
+      const [Colors.red, Colors.yellow, Colors.white],
+      durationSeconds: 2,
+      intervalSeconds: 0.1,
+    );
+  }
+
   void removeGameUIComponents() {
     // Add the game UI components here
     touchButton.removeFromParent();
     talkButton.removeFromParent();
     lookButton.removeFromParent();
     wallkButton.removeFromParent();
-    timeIcon.removeFromParent();
     scoreIcon.removeFromParent();
     energyBar.removeFromParent();
     blinkTextComponentScore.removeFromParent();
@@ -68,12 +73,10 @@ class UIGameBoardComponents {
   }
 
   void loadUIComponents(RevaliaObs gameRef) {
-    addAnimatedBackground();
-
     blinkTextComponentScore = TextUtils.addTextToview(
         gameRef,
         'SCORE : ${gBoardModel.totalScore.toString().padLeft(6, '0')}',
-        Vector2(26, 4),
+        Vector2(26, 8),
         6,
         false,
         Colors.white,
@@ -81,6 +84,7 @@ class UIGameBoardComponents {
         false);
     gameRef.cam.viewport.add(blinkTextComponentScore);
     blinkTextComponentScore.toggleBlinking();
+
     textComponentTime = GameTextComponent(
         'TIME : ${gBoardModel.levelPlayTime.toString().padLeft(3, '0')}',
         fontSize: 10,
@@ -168,17 +172,17 @@ class UIGameBoardComponents {
     gameRef.cam.viewport.add(energyBar);
 
     scoreIcon = GenericSpriteAnimation(
-        spriteAnimation: gameRef.entitySpriteCache.scoreIcon,
-        animationSize: Vector2(32, 32),
-        position: Vector2(18, 8),
+        spriteAnimation: gameRef.entitySpriteCache.scoreIcon.animation,
+        animationSize: gameRef.entitySpriteCache.scoreIcon.imgSize,
+        position: Vector2(18, 12),
         behaviors: []);
     gameRef.cam.viewport.add(scoreIcon);
 
     buttonSndFXVolume = GameButton(
-        position: Vector2(20, 175),
-        imagePath: Assets.resources.images.soundfxVolume.path,
+        position: Vector2(254, 189.5),
+        cachedSpriteSheet: gameRef.uiSpriteCache.soundFxVolume,
         behavior: SoundButtonTapHandler(),
-        imgSize: Vector2((34) / 2, (34) / 2),
+        imgSize: gameRef.uiSpriteCache.soundFxVolume.imgSize,
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
@@ -186,10 +190,10 @@ class UIGameBoardComponents {
     //buttonSndFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.soundfxVolume);
     gameRef.cam.viewport.add(buttonSndFXVolume);
     buttonMscFXVolume = GameButton(
-        position: Vector2(40, 175),
-        imagePath: Assets.resources.images.musicfxVolume.path,
+        position: Vector2(276, 189.5),
+        cachedSpriteSheet: gameRef.uiSpriteCache.musicFxVolume,
         behavior: MusicButtonTapHandler(),
-        imgSize: Vector2((34) / 2, (34) / 2),
+        imgSize: gameRef.uiSpriteCache.musicFxVolume.imgSize,
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
@@ -197,24 +201,15 @@ class UIGameBoardComponents {
     //buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
     gameRef.cam.viewport.add(buttonMscFXVolume);
     buttonCrtShader = GenericButton(
-      position: Vector2(60, 175),
-      buttonIconPath: 'resources/images/crton-32x32-8.png',
+      position: Vector2(302, 182),
       behavior: CrtShaderButtonTapHandler(),
-      buttonSize: Vector2(17, 17),
+      buttonSize: gameRef.uiSpriteCache.crtShaderButton.buttonSize,
       isAnimated: true,
       animationFrames: 8,
       animationStepTime: 0.12,
-      animationFrameSize: Vector2(32, 32),
+      animationFrameSize: gameRef.uiSpriteCache.crtShaderButton.frameSize,
+      cachedAnimation: gameRef.uiSpriteCache.crtShaderButton,
     );
     gameRef.cam.viewport.add(buttonCrtShader);
-  }
-
-  void addAnimatedBackground() {
-    gameboardView.add(
-      MarketBackgroundEntity(
-        position: Vector2(160, 100),
-        size: Vector2(320, 200),
-      ),
-    );
   }
 }

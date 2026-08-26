@@ -1,3 +1,4 @@
+import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -12,8 +13,11 @@ class GameBackgroundTapComponent extends SpriteComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    //print('Background tapped');
     super.onTapDown(event);
+    gameRef.ap.playMusic(
+      Assets.resources.audio.mfxcityouterwalls,
+      playCount: 2,
+    );
   }
 
   @override

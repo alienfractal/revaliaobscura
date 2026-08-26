@@ -27,20 +27,18 @@ class EntityTapBehaviour extends Behavior<LevelEntity>
   }
 
   void parseTapLocation(TapDownEvent event) {
-    var absPos = parent.absolutePositionOf(event.localPosition);
-
     print(
         "event.localPosition ${event.localPosition.x} ${event.localPosition.y}");
 
-    print(
-        "parent.absolutePositionOf(event.localPosition)  ${absPos.x} ${absPos.y}");
-
-    if (gameRef.gboard.actionType == ActionableType.move) {
-      print("move");
-      if (gameRef.gboard.playerEntity.requestMove(absPos)) {
+    if (gameRef.gboard.actionType == ActionableType.move && parent.isWalkable) {
+      final destination = parent.absolutePositionOf(event.localPosition);
+      if (gameRef.gboard.playerEntity.requestMove(destination)) {
         gameRef.ap.playSoundFx(Assets.resources.audio.select);
       }
-    } else if (gameRef.gboard.playerEntity.requestActorAction(
+      return;
+    }
+
+    if (gameRef.gboard.playerEntity.requestActorAction(
       actionType: gameRef.gboard.actionType,
       target: parent,
     )) {

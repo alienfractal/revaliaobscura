@@ -31,11 +31,11 @@ class DialogFrameEntity extends PositionedEntity
   DialoguePhase _phase = DialoguePhase.inactive;
   Dialogue? _currentDialogue;
   void Function()? _onScreenMessageDismissed;
-  double _phaseSecondsRemaining = 0;
+  double? _phaseSecondsRemaining;
   late final double _minimumHeight;
 
   DialogFrameEntity({required super.position, required super.size})
-      : super(anchor: Anchor.center, behaviors: []) {
+      : super(anchor: Anchor.center, behaviors: [], priority: 2000) {
     _minimumHeight = size.y;
   }
 
@@ -45,8 +45,12 @@ class DialogFrameEntity extends PositionedEntity
     if (_phase != DialoguePhase.screenMessage) {
       return;
     }
-    _phaseSecondsRemaining -= dt;
-    if (_phaseSecondsRemaining <= 0) {
+    final remaining = _phaseSecondsRemaining;
+    if (remaining == null) {
+      return;
+    }
+    _phaseSecondsRemaining = remaining - dt;
+    if (_phaseSecondsRemaining! <= 0) {
       _advancePhase();
     }
   }
@@ -214,6 +218,11 @@ class DialogFrameEntity extends PositionedEntity
 
     add(textGreet);
 
+    final event = current.event;
+    if (event != null) {
+      DialogEventManager.notifycation(event: event);
+    }
+
     addAll(textLinesList);
   }
 
@@ -239,7 +248,7 @@ class DialogFrameEntity extends PositionedEntity
 
   void showScreenMessage(
     String message, {
-    double durationSeconds = 2,
+    double? durationSeconds = 15,
     void Function()? onDismissed,
   }) {
     clearDialogText();

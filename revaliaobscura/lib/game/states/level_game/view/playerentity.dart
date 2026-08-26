@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:revalia/game/states/level_game/handlers/playerentity_animation_handler.dart';
 import 'package:revalia/game/states/level_game/model/player_model.dart';
+import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
 import 'package:revalia/game/states/level_game/services/player_logic_service.dart';
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
 
@@ -38,8 +39,6 @@ class PlayerPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
   @override
   void onRemove() {
     super.onRemove();
-    playerAnimationHandler.cleanUpAnimations();
-    removeFromParent();
   }
 
   @override
@@ -71,11 +70,17 @@ class PlayerPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
       case PlayerActionState.disabled:
         break;
     }
+    playerAnimationHandler.updatePerspectiveScale(position.y);
+    priority = PerspectiveConfig.depthPriorityForFeetY(position.y);
   }
 
   void makeVisible(bool visible) {}
 
   void _updateWalking(double dt) {
+    if (_resolvePendingInteractionWhenInRange()) {
+      return;
+    }
+
     // Calculate the direction to the destination
     final direction = (destination - position).normalized();
 
@@ -95,6 +100,18 @@ class PlayerPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
 
     // Move the component
     position += direction * distanceToMove;
+  }
+
+  bool _resolvePendingInteractionWhenInRange() {
+    final target = _pendingInteractionTarget;
+    if (target == null ||
+        !target.isMounted ||
+        !target.isPlayerWithinInteractionRange()) {
+      return false;
+    }
+    actionState = PlayerActionState.idle;
+    _resolvePendingInteraction();
+    return true;
   }
 
   bool requestMove(Vector2 newLocation, {bool keepPendingInteraction = false}) {

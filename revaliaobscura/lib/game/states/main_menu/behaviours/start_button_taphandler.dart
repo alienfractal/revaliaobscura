@@ -18,9 +18,9 @@ class StartButtonTapHandler extends Behavior<GameButton>
     Future.delayed(const Duration(milliseconds: 100), () {
       parent.size /= 0.99; // Reset to original size
       parent.spriteComponent.size /= 0.99; // Reset sprite size
-      gameRef.ap.stopMusic();
       gameRef.menuView.emplasedTime = -1;
       DialogueManager.resetProgress();
+      gameRef.gboard.gBoardModel.resetGameProgress();
       gameRef.gameFsm.gameLoading();
     });
 

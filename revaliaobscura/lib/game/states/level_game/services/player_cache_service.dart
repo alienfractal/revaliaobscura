@@ -12,6 +12,10 @@ class PlayerCacheService extends SpriteAnimatorCache {
 
   late SpriteAnimation talkPlayer;
 
+  late SpriteAnimation laughPlayer;
+
+  late SpriteAnimation knockedPlayer;
+
   @override
   Future<void> preloadAnimations(RevaliaObs gameRef) async {
     walkingPlayer = await gameRef.loadSpriteAnimation(
@@ -44,6 +48,26 @@ class PlayerCacheService extends SpriteAnimatorCache {
       ),
     );
 
+    laughPlayer = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.rebaneLaughts50x843.path,
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        stepTime: 0.15,
+        textureSize: Vector2(50, 84),
+        loop: true,
+      ),
+    );
+
+    knockedPlayer = await gameRef.loadSpriteAnimation(
+      Assets.resources.images.rebaneKnocked84x846.path,
+      SpriteAnimationData.sequenced(
+        amount: 6,
+        stepTime: 0.15,
+        textureSize: Vector2(84, 84),
+        loop: false,
+      ),
+    );
+
     print("All player animations preloaded successfully.");
   }
 
@@ -57,9 +81,15 @@ class PlayerCacheService extends SpriteAnimatorCache {
     print("getAnimation modelValue $modelValue");
     switch (modelValue) {
       case PlayerModel.IDLE:
-        return walkingPlayer;
+        return idlePlayer;
       case PlayerModel.WALKING:
         return walkingPlayer;
+      case PlayerModel.TALK:
+        return talkPlayer;
+      case PlayerModel.LAUGH:
+        return laughPlayer;
+      case PlayerModel.DIE:
+        return knockedPlayer;
 
       default:
         throw Exception('Unknown player animation: $modelValue');

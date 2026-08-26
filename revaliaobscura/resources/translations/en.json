@@ -30,150 +30,168 @@
     "title": "EESTLAND Anno Domini 1343",
     "context_intro": [
       "Rebane Molder arrives in Reval.",
-      "EESTLAND, 1343",
-      "Something has followed him.",
-      "Caravans vanish along the old roads.",
-      "Merchants whisper of something in the dark."
+      "EESTLAND, 1343"
     ],
     "exit_button": "Exit"
   },
   "dialogues": {
     "npc_intro": {
       "player_text": "You look like a man who knows this place.",
-      "text": "I know the Baltic roads. Even the ones best left alone.",
-      "responses": [
-        {
+      "text": "I know the Baltic roads.",
+      "responses": {
+        "ask_identity": {
           "text": "Who are you?"
         },
-        {
+        "leave": {
           "text": "Goodbye."
         }
-      ]                   
+      }
     },                    
     "npc_identity": {
       "player_text": "Who are you?",
-      "text": "A navigator. I know the Baltic coasts, the old roads, and the places sensible merchants avoid. I might be looking for work, if the work is worth my time.",
-      "responses": [
-        {
-          "text": "You must have a lot of personality to come out dressed like this in the street."
+      "text": "A navigator. I know the Baltic coasts and the old roads.",
+      "responses": {
+        "mock_outfit": {
+          "text": "You must have a lot of personality."
         },
-        {
+        "ask_if_comedian": {
           "text": "Are you a comedian by any chance, Navigator?"
         },
-        {
+        "leave": {
           "text": "I will leave you to it."
         }
-      ]
+      }
     },
     "npc_silent_stare": {
-      "player_text": "You must have a lot of personality to come out dressed like this in the street.",
-      "text": "Cursing in old livonian...",
-      "responses": [
-        {
-          "text": "Hahaha."
+      "player_text": "You must have a lot of personality.",
+      "text": "Who do you think you are?",
+      "responses": {
+        "laugh": {
+          "text": "HahahaHahahaHahahaHahahaHahahaHahahaHahaha."
         },
-        {
+        "ask_if_comedian": {
           "text": "I apologize."
         }
-      ]
+      }
     },
     "npc_defend_honor": {
       "player_text": "Hahaha.",
       "text": "I demand respect.",
-      "responses": [
-        {
+      "responses": {
+        "apologize": {
           "text": "I apologize."
         },
-        {
+        "laugh_again": {
           "text": "Hahaha."
         },
-        {
+        "leave": {
           "text": "Then I shall leave you to your honor."
         }
-      ]
+      }
     },
     "npc_final_insult": {
       "player_text": "Hahaha.",
       "text": "You insulted me for the last time.",
-      "responses": [
-        {
+      "responses": {
+        "face_consequence": {
           "text": "..."
         }
-      ]
+      }
     },
     "npc_hendrik_identity": {
-      "player_text": "Are you a comedian by any chance, Navigator?",
+      "player_text": "Are you a comedian, Navigator?",
       "text": "No, I am not. And the name is Hendrik.",
-      "responses": [
-        {
+      "responses": {
+        "ask_need": {
           "text": "What do you need?"
         },
-        {
+        "leave": {
           "text": "I will leave you to it."
         }
-      ]
+      }
     },
     "npc_ask_name": {
       "player_text": "What do you need?",
       "text": "Interesting that you ask. Before we discuss business, what is your name?",
-      "responses": [
-        {
+      "responses": {
+        "answer_rebane": {
           "text": "Rebane."
         },
-        {
+        "leave": {
           "text": "Perhaps another time."
         }
-      ]
+      }
     },
     "npc_ink_request": {
       "player_text": "Rebane.",
       "text": "Good, Rebane. I have run out of ink, and without ink my maps are useless. Bring me some, and perhaps I will decide you are worth my time.",
-      "responses": [
-        {
+      "responses": {
+        "accept_ink_quest": {
           "text": "I will find ink for you."
         }
-      ]
+      }
     },
     "npc_after_identity": {
       "player_text": "Hello again.",
       "text": "Back again? If you want a navigator's time, show me that you can notice what is needed.",
-      "responses": [
-        {
+      "responses": {
+        "ask_need": {
           "text": "What do you need?"
         },
-        {
+        "leave": {
           "text": "Not now. Goodbye."
         }
-      ]
+      }
     },
     "npc_waiting_for_ink": {
       "player_text": "About that ink...",
       "text": "Bring me ink for my maps, Rebane. Then we can discuss opportunities.",
-      "responses": [
-        {
+      "responses": {
+        "leave": {
           "text": "I am still looking."
         }
-      ]
+      }
     }
-    ,
-    "player_error_talk": {
-      "player_text": "I'm not close enough.",
-      "text": ""
   },
-  "player_error_interact": {
-      "player_text": "I can't interact with this.",
-      "text": ""
-   
-  },
-  "player_error_walk": {
-      "player_text": "I can't walk there.",
-      "text": ""
-   
-  },
-  "player_error_observe": {
-      "player_text": "I see nothing interesting.",
-      "text": ""
-   
-  }  
-}
+  "messages": {
+    "old_sailor_look": {
+      "text": "An old sailor stands before me."
+    },
+    "old_sailor_touch": {
+      "text": "I should keep my hands to myself."
+    },
+    "old_sailor_walk": {
+      "text": "I can't walk through him."
+    },
+    "walking_area_look": {
+      "text": "The road continues through the town square."
+    },
+    "walking_area_touch": {
+      "text": "Dust and worn stone."
+    },
+    "glowing_gem_look": {
+      "text": "A small gem pulses with an unnatural light."
+    },
+    "glowing_gem_touch": {
+      "text": "The gem feels warm beneath my fingers."
+    },
+    "player_killed": {
+      "text": "The navigator strikes you down."
+    },
+    "generic_look": {
+      "text": "I see nothing interesting."
+    },
+    "generic_touch": {
+      "text": "I can't interact with this."
+    },
+    "generic_talk": {
+      "text": "There is no one to talk to."
+    },
+    "generic_walk": {
+      "text": "I can't walk there."
+    },
+    "generic_use": {
+      "text": "I can't use that here."
+    }
+  }
 }

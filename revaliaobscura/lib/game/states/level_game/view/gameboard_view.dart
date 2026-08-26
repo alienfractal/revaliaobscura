@@ -1,8 +1,14 @@
 import 'dart:async';
 
 import 'package:revalia/game/states/level_game/model/player_model.dart';
+import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
+import 'package:revalia/game/states/level_game/scenario/scenario_config.dart';
+import 'package:revalia/game/states/level_game/scenario/scenario_loader.dart';
+import 'package:revalia/game/states/level_game/view/animated_scene_prop_entity.dart';
 import 'package:revalia/game/states/level_game/view/dialog_frame_entity.dart';
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
+import 'package:revalia/game/states/level_game/view/market_background_entity.dart';
+import 'package:revalia/game/states/level_game/view/perspective_guide_entity.dart';
 import 'package:revalia/game/states/level_game/view/playerentity.dart';
 import 'package:revalia/game/states/level_game/view/sailor_npc_entity.dart';
 import 'package:revalia/game/states/level_game/view/walking_area_entity.dart';
@@ -12,12 +18,14 @@ import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
 import 'package:revalia/game/states/level_game/view/game_board_ui_comp_handler.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
+import 'package:revalia/utils/dialogsystem/dialog_event_manager.dart';
+import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/ui/game_text_component.dart';
 import 'package:flame/components.dart';
 
 class GameboardView extends World
-    with HasGameRef<RevaliaObs>
+    with HasGameReference<RevaliaObs>
     implements ViewTransitionInterface {
   late GameBoardModel gBoardModel;
   int horizontalCells = 0;
@@ -25,6 +33,7 @@ class GameboardView extends World
   late List<LevelEntity> levelEntities;
   late WalkingAreaEntity walkingAreaView;
   late PlayerPosEntity playerEntity;
+  late ScenarioConfig scenario;
 
   late int activeLevel = gBoardModel.currentLevel;
   late UIGameBoardComponents uiGameBoardComponents;
@@ -34,45 +43,50 @@ class GameboardView extends World
   bool isGameStarted = false;
   bool isEnemyDefeated = false;
   int clickCount = 0;
+  bool _scoreTransitionRequested = false;
 
   DialogFrameEntity? df;
 
   ActionableType actionType = ActionableType.move;
   int _conclusionToken = 0;
+  late final DialogueEventListener _dialogueEventListener;
 
   late LevelEntity activeActor;
-  GameboardView() {
-    gBoardModel = GameBoardModel();
+  GameboardView({GameBoardModel? model}) {
+    gBoardModel = model ?? GameBoardModel();
     uiGameBoardComponents = UIGameBoardComponents(gameboardView: this);
+    _dialogueEventListener = _handleDialogueEvent;
   }
   @override
-  void onLoad() {
-    super.onLoad();
+  Future<void> onLoad() async {
+    await super.onLoad();
     print("GameboardView onLoad");
     isBoardLoaded = false;
     levelEntities = <LevelEntity>[];
-    uiGameBoardComponents.gameRef = gameRef;
+    uiGameBoardComponents.gameRef = game;
+    scenario = await ScenarioLoader.load(
+      'resources/scenarios/town_square.json',
+    );
   }
 
   @override
   void onMount() {
     super.onMount();
+    DialogEventManager.addListener(_dialogueEventListener);
+    actionType = ActionableType.move;
     // debugMode = true;
     print("GameboardView onMount");
 
     //clearBoard();
 
-    uiGameBoardComponents.loadUIComponents(gameRef);
-
-    addWalkingArea();
-    addPlayer();
-    addNPC();
+    _buildScenario(scenario);
+    uiGameBoardComponents.loadUIComponents(game);
 
     isBoardLoaded = true;
     isGameFinished = false;
+    _scoreTransitionRequested = false;
     clickCount = 0;
-    gameRef.ap.stopMusic();
-    gameRef.ap.playMusic(Assets.resources.audio.mfxcitygates, loop: true);
+    game.ap.playMusic(Assets.resources.audio.mfxcitygates, loop: true);
     //game generic button uses an internal await that fucked me over
     uiGameBoardComponents.gameActionGroup
         .onButtonTapped(uiGameBoardComponents.wallkButton);
@@ -83,11 +97,9 @@ class GameboardView extends World
       return;
     }
     for (final entity in levelEntities) {
-      entity.animationHandler.cleanUpAnimations();
-
       if (entity.parent != null) {
         print("entity.parent.toString() ${entity.parent.toString()}");
-        remove(entity);
+        entity.removeFromParent();
       }
     }
     levelEntities.clear();
@@ -95,22 +107,83 @@ class GameboardView extends World
 
   @override
   void onRemove() {
+    DialogEventManager.removeListener(_dialogueEventListener);
     super.onRemove();
     _conclusionToken++;
-    gameRef.cam.moveTo(Vector2(0, 0));
+    game.cam.moveTo(Vector2(0, 0));
     uiGameBoardComponents.removeGameUIComponents();
 
     isGameFinished = true;
     isGameStarted = false;
+    _scoreTransitionRequested = false;
     clickCount = 0;
-    removeAll(children);
     levelEntities.clear();
     df = null;
+  }
+
+  void _handleDialogueEvent(String event) {
+    if (event.startsWith('score_milestone:')) {
+      final parts = event.split(':');
+      if (parts.length == 3) {
+        final points = int.tryParse(parts[2]);
+        if (points != null &&
+            gBoardModel.awardScoreMilestone(parts[1], points)) {
+          game.ap.playSoundFx(Assets.resources.audio.blipSelect2);
+          updateUIComponents();
+          uiGameBoardComponents.flashScoreChange();
+        }
+      }
+      return;
+    }
+    if (event == 'choose_response:laugh' ||
+        event == 'choose_response:laugh_again') {
+      playerEntity.playerAnimationHandler.showLaugh();
+      return;
+    }
+    if (event != 'player_death') {
+      return;
+    }
+    isGameFinished = true;
+    playerEntity.disableActions();
+    activeActor.requestAttack(
+      onComplete: () {
+        game.ap.playSoundFx(Assets.resources.audio.blockHit2);
+        playerEntity.playerAnimationHandler.triggerDie(
+          onComplete: _finishPlayerDeath,
+        );
+      },
+    );
+  }
+
+  void _finishPlayerDeath() {
+    if (!isMounted) {
+      return;
+    }
+    gBoardModel.flipResultOutcome = ActionOutcome.playerKilled;
+    DialogueManager.setTranslations(
+      AppTranslations.translationsFor(game.currentLocale),
+    );
+    showScreenMessage(
+      DialogueManager.message('player_killed'),
+      durationSeconds: null,
+      onDismissed: () {
+        if (isMounted) {
+          _scoreTransitionRequested = true;
+        }
+      },
+    );
   }
 
   @override
   void update(double dt) {
     super.update(dt);
+    if (_scoreTransitionRequested) {
+      _scoreTransitionRequested = false;
+      game.cam.stop();
+      game.cam.viewfinder.position = Vector2.zero();
+      game.gameFsm.gameScore();
+      return;
+    }
     updateUI(dt);
   }
 
@@ -155,7 +228,7 @@ class GameboardView extends World
   }
 
   bool isGameTimeOver() {
-    return !isGameFinished && gameRef.gboard.gBoardModel.levelPlayTime <= 0;
+    return !isGameFinished && game.gboard.gBoardModel.levelPlayTime <= 0;
   }
 
   void handleLevelConclusion(bool isWin) {
@@ -164,14 +237,14 @@ class GameboardView extends World
     isGameStarted = false;
     clickCount = 0;
 
-    gameRef.gboard.onLevelConclusion(isWin);
+    game.gboard.onLevelConclusion(isWin);
   }
 
   void updateCameraMovement() {
     if (clickCount == 0) {
-      gameRef.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
+      game.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
     } else if (clickCount == 1) {
-      gameRef.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
+      game.cam.moveTo(Vector2(playerEntity.x - 100, playerEntity.y - 100));
     }
   }
 
@@ -214,25 +287,23 @@ class GameboardView extends World
 
   @override
   void transitionToNextState() {
-    gameRef.gameFsm.gameScore();
+    game.gameFsm.gameScore();
   }
 
   void onLevelConclusion(bool win) {
     final token = ++_conclusionToken;
     if (win) {
       gBoardModel.flipResultOutcome = ActionOutcome.levelCompleted;
-      gameRef.ap.playSoundFx(Assets.resources.audio.levelup);
+      game.ap.playSoundFx(Assets.resources.audio.levelup);
 
-      gameRef.ap.stopMusic();
-      gameRef.ap.playMusic(Assets.resources.audio.mfxLevelWin);
+      game.ap.playMusic(Assets.resources.audio.mfxLevelWin);
     } else {
       gBoardModel.flipResultOutcome = gBoardModel.levelPlayTime <= 0
           ? ActionOutcome.timeOver
           : ActionOutcome.invalidMove;
-      gameRef.ap.playSoundFx(Assets.resources.audio.explosion2);
+      game.ap.playSoundFx(Assets.resources.audio.explosion2);
 
-      gameRef.ap.stopMusic();
-      gameRef.ap.playMusic(Assets.resources.audio.mfxGameOver);
+      game.ap.playMusic(Assets.resources.audio.mfxGameOver);
     }
 
     Future.delayed(const Duration(milliseconds: 3500), () {
@@ -247,43 +318,110 @@ class GameboardView extends World
     return !isGameFinished && gBoardModel.energyCount <= 0;
   }
 
-  void addPlayer() {
+  void _buildScenario(ScenarioConfig scenario) {
+    PerspectiveConfig.configure(
+      horizonY: scenario.perspective.horizonY,
+      nearestWalkableHorizonY: scenario.perspective.minimumWalkableY,
+      minimumCharacterScale: scenario.perspective.minimumScale,
+      maximumCharacterScale: scenario.perspective.maximumScale,
+    );
+    addBackground(scenario.backgroundId);
+    if (scenario.showPerspectiveGuide) {
+      addPerspectiveGuide();
+    }
+    addWalkingArea(scenario.walkingAreaVertices);
+    addPlayer(scenario.player);
+    for (final entity in scenario.entities) {
+      addScenarioEntity(entity);
+    }
+  }
+
+  void addPlayer(ScenarioPlayerConfig config) {
     PlayerModel playerModel =
         PlayerModel(x: 0, y: 0, status: PlayerModel.WALKING);
     playerEntity = PlayerPosEntity(
-        playerModel: playerModel,
-        position: Vector2(160, 200),
-        size: Vector2(50, 84));
+      playerModel: playerModel,
+      position: config.feetPosition,
+      size: config.size,
+    );
 
     add(playerEntity);
   }
 
-  void addWalkingArea() {
-    walkingAreaView = WalkingAreaEntity(
-      position: Vector2(160, 200),
-      size: Vector2(200, 32),
+  void addBackground(String backgroundId) {
+    add(
+      MarketBackgroundEntity(
+        position: Vector2(160, 100),
+        size: Vector2(320, 200),
+        backgroundId: backgroundId,
+      ),
     );
+  }
+
+  void addPerspectiveGuide() {
+    add(PerspectiveGuideEntity());
+  }
+
+  void addWalkingArea(List<Vector2> vertices) {
+    walkingAreaView = WalkingAreaEntity(vertices: vertices);
     levelEntities.add(walkingAreaView);
     add(walkingAreaView);
   }
 
-  void addNPC() {
-    final npc = SailorNpcEntity(
-      position: Vector2(25, 150),
-      size: Vector2(50, 85),
-    );
-    levelEntities.add(npc);
-    add(npc);
+  void addScenarioEntity(ScenarioEntityConfig config) {
+    final LevelEntity entity;
+    switch (config.type) {
+      case 'npc':
+        if (config.assetId != 'old_sailor' || config.dialogueActorId == null) {
+          throw ArgumentError(
+            'Unsupported NPC configuration: ${config.assetId}',
+          );
+        }
+        entity = SailorNpcEntity(
+          feetPosition: config.feetPosition,
+          size: config.size,
+          interactionId: config.interactionId,
+          dialogueActorId: config.dialogueActorId!,
+          isWalkable: config.isWalkable,
+          scalesWithPerspective: config.scalesWithPerspective,
+          sortsWithDepth: config.sortsWithDepth,
+        );
+      case 'animated_prop':
+        entity = AnimatedScenePropEntity(
+          interactionId: config.interactionId,
+          feetPosition: config.feetPosition,
+          visualSize: config.size,
+          idleAnimation: _propAnimation(config.assetId),
+          isWalkable: config.isWalkable,
+          scalesWithPerspective: config.scalesWithPerspective,
+          sortsWithDepth: config.sortsWithDepth,
+        );
+      default:
+        throw ArgumentError.value(
+          config.type,
+          'type',
+          'Unsupported scenario entity type',
+        );
+    }
+    levelEntities.add(entity);
+    add(entity);
+  }
+
+  SpriteAnimation _propAnimation(String assetId) {
+    switch (assetId) {
+      case 'glowing_gem':
+        return game.entitySpriteCache.glowingGem.animation;
+      default:
+        throw ArgumentError.value(
+          assetId,
+          'assetId',
+          'Unknown animated prop asset ID',
+        );
+    }
   }
 
   Vector2 constrainToWalkingArea(Vector2 requestedPosition) {
-    final halfWidth = walkingAreaView.size.x / 2;
-    final minX = walkingAreaView.position.x - halfWidth;
-    final maxX = walkingAreaView.position.x + halfWidth;
-    return Vector2(
-      requestedPosition.x.clamp(minX, maxX).toDouble(),
-      walkingAreaView.position.y,
-    );
+    return walkingAreaView.constrainWorldPoint(requestedPosition);
   }
 
   Vector2 interactionDestinationFor(LevelEntity actor) {
@@ -308,16 +446,32 @@ class GameboardView extends World
 
   void callRenderDialogueOnError(String dialogId) {
     final message = AppTranslations.getTranslation(
-        gameRef.currentLocale, "dialogues.$dialogId.player_text");
+        game.currentLocale, "dialogues.$dialogId.player_text");
+    showScreenMessage(message);
+  }
+
+  void showScreenMessage(
+    String message, {
+    double? durationSeconds = 15,
+    void Function()? onDismissed,
+  }) {
     // If df exists, remove it first
     if (df == null) {
       df = DialogFrameEntity(
           position: Vector2(160, 80), size: Vector2(256 + 16, 32 + 16));
       add(df!);
-      df?.showScreenMessage(message);
+      df?.showScreenMessage(
+        message,
+        durationSeconds: durationSeconds,
+        onDismissed: onDismissed,
+      );
     } else if (!df!.isDialogActive) {
       add(df!);
-      df?.showScreenMessage(message);
+      df?.showScreenMessage(
+        message,
+        durationSeconds: durationSeconds,
+        onDismissed: onDismissed,
+      );
     } else {
       print("dialog already active");
     }

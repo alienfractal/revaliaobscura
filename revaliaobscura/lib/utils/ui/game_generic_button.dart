@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/utils/image/sprite_animator_cache_service.dart';
 import 'package:flame/components.dart';
 
 import 'package:flame_behaviors/flame_behaviors.dart';
@@ -21,6 +22,7 @@ class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
   final int animationFrames;
   final double animationStepTime;
   final Vector2? animationFrameSize;
+  final CachedAnimatedButtonSprite? cachedAnimation;
   Sprite? idleSprite;
   SpriteAnimation? tapAnimation;
   bool active = true;
@@ -35,7 +37,8 @@ class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
       this.isAnimated = false,
       this.animationFrames = 1,
       this.animationStepTime = 0.12,
-      this.animationFrameSize})
+      this.animationFrameSize,
+      this.cachedAnimation})
       : super(anchor: Anchor.center, size: buttonSize);
 
   @override
@@ -45,23 +48,30 @@ class GenericButton extends PositionedEntity with HasGameRef<RevaliaObs> {
     originalcolorFilter = const ColorFilter.mode(Colors.white, BlendMode.src);
 
     if (isAnimated) {
-      final path = buttonIconPath;
-      if (path == null) {
-        throw ArgumentError('Animated buttons require buttonIconPath.');
+      final cached = cachedAnimation;
+      if (cached != null) {
+        idleSprite = cached.idleSprite;
+        tapAnimation = cached.tapAnimation;
+      } else {
+        final path = buttonIconPath;
+        if (path == null) {
+          throw ArgumentError(
+              'Animated buttons require buttonIconPath or cachedAnimation.');
+        }
+        idleSprite = await gameRef.loadSprite(
+          path,
+          srcSize: animationFrameSize ?? buttonSize,
+        );
+        tapAnimation = await gameRef.loadSpriteAnimation(
+          path,
+          SpriteAnimationData.sequenced(
+            amount: animationFrames,
+            stepTime: animationStepTime,
+            textureSize: animationFrameSize ?? buttonSize,
+            loop: false,
+          ),
+        );
       }
-      idleSprite = await gameRef.loadSprite(
-        path,
-        srcSize: animationFrameSize ?? buttonSize,
-      );
-      tapAnimation = await gameRef.loadSpriteAnimation(
-        path,
-        SpriteAnimationData.sequenced(
-          amount: animationFrames,
-          stepTime: animationStepTime,
-          textureSize: animationFrameSize ?? buttonSize,
-          loop: false,
-        ),
-      );
       animationComponent = SpriteAnimationComponent(
         animation: SpriteAnimation.spriteList(
           [idleSprite!],

@@ -41,10 +41,17 @@ class StoryState {
   void applyEffects(List<Map<String, dynamic>> effects) {
     for (final effect in effects) {
       final flagId = effect['set_flag'] as String?;
-      if (flagId == null) {
-        throw FormatException('Unsupported dialogue effect: $effect');
+      if (flagId != null) {
+        _flags[flagId] = effect['value'] as bool? ?? true;
+        continue;
       }
-      _flags[flagId] = effect['value'] as bool? ?? true;
+
+      // Score awards are forwarded to the game by DialogueManager.
+      if (effect['award_score'] is Map<String, dynamic>) {
+        continue;
+      }
+
+      throw FormatException('Unsupported dialogue effect: $effect');
     }
   }
 

@@ -34,6 +34,7 @@ class DialogueFsm {
   final DialogueActive active = DialogueActive();
   final DialogueCompleted completed = DialogueCompleted();
   final Map<String, DialogueActorProfile> _actorProfiles = {};
+  final Map<String, DialogueObjectProfile> _objectProfiles = {};
   final Map<String, Dialogue> dialogues = {};
 
   late IDialogueState currentState;
@@ -41,6 +42,8 @@ class DialogueFsm {
   ConversationSession? activeSession;
   Map<String, dynamic> _graphNodes = {};
   Map<String, String> _translations = {};
+  Set<String> _messageIds = {};
+  Map<String, String> _fallbackActions = {};
   String actions = '';
 
   DialogueFsm({StoryState? storyState})
@@ -67,7 +70,33 @@ class DialogueFsm {
           ),
         ),
       );
+    final objectGraphs = graph['objects'] as Map<String, dynamic>? ?? {};
+    _objectProfiles
+      ..clear()
+      ..addEntries(
+        objectGraphs.entries.map(
+          (entry) => MapEntry(
+            entry.key,
+            DialogueObjectProfile.fromGraph(
+              entry.key,
+              entry.value as Map<String, dynamic>,
+            ),
+          ),
+        ),
+      );
     _graphNodes = graph['nodes'] as Map<String, dynamic>? ?? {};
+    _messageIds =
+        (graph['messages'] as Map<String, dynamic>? ?? {}).keys.toSet();
+    _fallbackActions = (graph['fallbacks'] as Map<String, dynamic>? ?? {}).map(
+      (action, messageId) {
+        if (messageId is! String || messageId.isEmpty) {
+          throw FormatException(
+            'Fallback action "$action" has an invalid message ID.',
+          );
+        }
+        return MapEntry(action, messageId);
+      },
+    );
     _translations = translations;
     _validateGraph();
     resetProgress();
@@ -80,6 +109,25 @@ class DialogueFsm {
 
   bool canStartConversation(String actorId) {
     return _selectEntrypoint(actorId) != null;
+  }
+
+  String interactionMessage(String targetId, String action) {
+    final messageId = _actorProfiles[targetId]?.actions[action] ??
+        _objectProfiles[targetId]?.actions[action] ??
+        _fallbackActions[action];
+    if (messageId == null) {
+      return '[Missing interaction: $targetId.$action]';
+    }
+    return _translations['messages.$messageId.text'] ??
+        '[Missing message: $messageId]';
+  }
+
+  String message(String messageId) {
+    if (!_messageIds.contains(messageId)) {
+      return '[Unknown message: $messageId]';
+    }
+    return _translations['messages.$messageId.text'] ??
+        '[Missing message: $messageId]';
   }
 
   Dialogue startConversation(String actorId) {
@@ -226,6 +274,28 @@ class DialogueFsm {
           );
         }
       }
+    }
+
+    for (final profile in _actorProfiles.values) {
+      for (final messageId in profile.actions.values) {
+        _validateMessageId(messageId);
+      }
+    }
+    for (final profile in _objectProfiles.values) {
+      for (final messageId in profile.actions.values) {
+        _validateMessageId(messageId);
+      }
+    }
+    for (final messageId in _fallbackActions.values) {
+      _validateMessageId(messageId);
+    }
+  }
+
+  void _validateMessageId(String messageId) {
+    if (!_messageIds.contains(messageId)) {
+      throw FormatException(
+        'Interaction points to missing message "$messageId".',
+      );
     }
   }
 

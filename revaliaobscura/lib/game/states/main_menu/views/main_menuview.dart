@@ -8,7 +8,6 @@ import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/ui/game_button.dart';
 import 'package:revalia/utils/ui/game_generic_button.dart';
 import 'package:revalia/utils/ui/text_component.dart';
-import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/image/image_utils.dart';
 import 'package:revalia/utils/text_utils.dart';
 import 'package:flame/components.dart';
@@ -45,9 +44,7 @@ class MainMenuView extends World
 
     count = 0;
     textComponent.toggleBlinking();
-    gameRef.ap.stopMusic();
-
-    gameRef.ap.playMusic(Assets.resources.audio.mfxcitygates, loop: true);
+    //gameRef.ap.playMusic(Assets.resources.audio.mfxcityouterwalls, loop: true);
   }
 
   @override
@@ -79,43 +76,44 @@ class MainMenuView extends World
 
     textComponentGameVersion.position = ComponentUtils.centerComponent(
         gameRef.camDimension, textComponentGameVersion,
-        offsetX: 2, offsetY: 5);
+        offsetX: 2, offsetY: 2);
 
     buttonStart = GameButton(
         position: Vector2(50, 74),
-        imagePath: Assets.resources.images.buttonstart.path,
+        cachedSpriteComponent:
+            gameRef.uiSpriteCache.startButton.getSpriteComponent(),
         behavior: StartButtonTapHandler(),
-        imgSize: Vector2(100, 22));
+        imgSize: gameRef.uiSpriteCache.startButton.imgSize);
     buttonStart.position = ComponentUtils.centerComponent(
         gameRef.camDimension, buttonStart,
         offsetX: 2, offsetY: 0);
 
     buttonSndFXVolume = GameButton(
         position: Vector2(20, 175),
-        imagePath: Assets.resources.images.soundfxVolume.path,
+        cachedSpriteSheet: gameRef.uiSpriteCache.soundFxVolume,
         behavior: SoundButtonTapHandler(),
-        imgSize: Vector2((34) / 2, (34) / 2),
+        imgSize: gameRef.uiSpriteCache.soundFxVolume.imgSize,
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
     //buttonSndFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.soundfxVolume);
     buttonMscFXVolume = GameButton(
         position: Vector2(40, 175),
-        imagePath: Assets.resources.images.musicfxVolume.path,
+        cachedSpriteSheet: gameRef.uiSpriteCache.musicFxVolume,
         behavior: MusicButtonTapHandler(),
-        imgSize: Vector2((34) / 2, (34) / 2),
+        imgSize: gameRef.uiSpriteCache.musicFxVolume.imgSize,
         isSimpleSpriteSheet: true,
         columns: 4,
         rows: 1);
     buttonCrtShader = GenericButton(
       position: Vector2(60, 175),
-      buttonIconPath: 'resources/images/crton-32x32-8.png',
       behavior: CrtShaderButtonTapHandler(),
-      buttonSize: Vector2(17, 17),
+      buttonSize: gameRef.uiSpriteCache.crtShaderButton.buttonSize,
       isAnimated: true,
       animationFrames: 8,
       animationStepTime: 0.12,
-      animationFrameSize: Vector2(32, 32),
+      animationFrameSize: gameRef.uiSpriteCache.crtShaderButton.frameSize,
+      cachedAnimation: gameRef.uiSpriteCache.crtShaderButton,
     );
     // buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
 
@@ -136,12 +134,14 @@ class MainMenuView extends World
     addAll([
       GameBackgroundTapComponent(
           gameRef.menuCacheService.gameBackground.getSpriteComponent()),
+            gameRef.menuCacheService.gameConverMenu.getSpriteComponent(),
       buttonStart,
-      textComponent,
-      gameTitle,
-      companyTitle,
+     // textComponent,
+     // gameTitle,
+      //companyTitle,
+    
       textComponentGameVersion,
-      gameSubTitle,
+     // gameSubTitle,
       buttonSndFXVolume,
       buttonMscFXVolume,
       buttonCrtShader,

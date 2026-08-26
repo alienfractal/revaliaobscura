@@ -28,6 +28,14 @@ class DialogueManager {
     return fsm.canStartConversation(actorId);
   }
 
+  static String interactionMessage(String targetId, String action) {
+    return fsm.interactionMessage(targetId, action);
+  }
+
+  static String message(String messageId) {
+    return fsm.message(messageId);
+  }
+
   static Dialogue startConversation(String actorId) {
     final dialogue = fsm.startConversation(actorId);
     DialogEventManager.notifycation(event: 'conversation_start:$actorId');
@@ -49,6 +57,20 @@ class DialogueManager {
     if (selection.response.event != null) {
       DialogEventManager.notifycation(event: selection.response.event!);
     }
+    for (final effect in selection.response.effects) {
+      final award = effect['award_score'] as Map<String, dynamic>?;
+      if (award == null) {
+        continue;
+      }
+      final milestoneId = award['id'] as String?;
+      final points = award['points'] as int?;
+      if (milestoneId == null || points == null || points <= 0) {
+        throw FormatException('Invalid score milestone: $award');
+      }
+      DialogEventManager.notifycation(
+        event: 'score_milestone:$milestoneId:$points',
+      );
+    }
     return selection.next;
   }
 
@@ -63,8 +85,5 @@ class DialogueManager {
 
   static void _processDialogue(Dialogue dialogue) {
     DialogueRenderer.showDialogueConsole(dialogue);
-    if (dialogue.event != null) {
-      DialogEventManager.notifycation(event: dialogue.event!);
-    }
   }
 }

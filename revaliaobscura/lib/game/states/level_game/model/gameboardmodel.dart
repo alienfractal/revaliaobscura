@@ -2,6 +2,7 @@ enum ActionOutcome {
   validMove,
   invalidMove,
   timeOver,
+  playerKilled,
   levelCompleted,
 }
 
@@ -17,6 +18,7 @@ class GameBoardModel {
   int coinCount = 0;
 
   int totalScore = 0;
+  final Set<String> _awardedScoreMilestones = {};
 
   ActionOutcome flipResultOutcome = ActionOutcome.validMove;
 
@@ -26,7 +28,20 @@ class GameBoardModel {
   }
 
   void calculateScore() {
+    // Milestone points are already included in totalScore.
+  }
+
+  bool awardScoreMilestone(String milestoneId, int points) {
+    if (points <= 0 || !_awardedScoreMilestones.add(milestoneId)) {
+      return false;
+    }
+    totalScore += points;
+    return true;
+  }
+
+  void resetGameProgress() {
     totalScore = 0;
+    _awardedScoreMilestones.clear();
   }
 
   void initGameBoard(int level) {
