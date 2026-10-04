@@ -1,5 +1,5 @@
-import 'package:revalia/game/states/game/view/actorentity.dart';
 import 'package:revalia/dialoguefsm/dialogue.dart';
+import 'package:revalia/game/states/level_game/view/level_entity.dart';
 import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
 
 class DialogueRenderer {
@@ -12,7 +12,7 @@ class DialogueRenderer {
     }
   }
 
-  static void showDialogonComponent(ActorEntity actor) {
+  static void showDialogonComponent(LevelEntity actor) {
     final dialogueActorId = actor.dialogueActorId;
     if (dialogueActorId != null) {
       DialogueManager.startConversation(dialogueActorId);

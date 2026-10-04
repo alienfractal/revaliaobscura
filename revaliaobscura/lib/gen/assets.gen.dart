@@ -15,6 +15,9 @@ class $ResourcesGen {
   /// Directory path: resources/audio
   $ResourcesAudioGen get audio => const $ResourcesAudioGen();
 
+  /// Directory path: resources/dialogues
+  $ResourcesDialoguesGen get dialogues => const $ResourcesDialoguesGen();
+
   /// Directory path: resources/fonts
   $ResourcesFontsGen get fonts => const $ResourcesFontsGen();
 
@@ -258,6 +261,19 @@ class $ResourcesAudioGen {
       ];
 }
 
+class $ResourcesDialoguesGen {
+  const $ResourcesDialoguesGen();
+
+  /// File path: resources/dialogues/README.md
+  String get readme => 'resources/dialogues/README.md';
+
+  /// File path: resources/dialogues/revalia_dialogues.json
+  String get revaliaDialogues => 'resources/dialogues/revalia_dialogues.json';
+
+  /// List of all assets
+  List<String> get values => [readme, revaliaDialogues];
+}
+
 class $ResourcesFontsGen {
   const $ResourcesFontsGen();
 
@@ -328,6 +344,18 @@ class $ResourcesImagesGen {
   /// File path: resources/images/Rebane-50x84.aseprite
   String get rebane50x84 => 'resources/images/Rebane-50x84.aseprite';
 
+  /// File path: resources/images/Rebane_knocked-84x84-6.png
+  AssetGenImage get rebaneKnocked84x846 =>
+      const AssetGenImage('resources/images/Rebane_knocked-84x84-6.png');
+
+  /// File path: resources/images/Rebane_laught-84x84-6.png
+  AssetGenImage get rebaneLaught84x846 =>
+      const AssetGenImage('resources/images/Rebane_laught-84x84-6.png');
+
+  /// File path: resources/images/Rebane_laughts-50x84-3.png
+  AssetGenImage get rebaneLaughts50x843 =>
+      const AssetGenImage('resources/images/Rebane_laughts-50x84-3.png');
+
   /// File path: resources/images/RevalGates128x91.png
   AssetGenImage get revalGates128x91 =>
       const AssetGenImage('resources/images/RevalGates128x91.png');
@@ -344,8 +372,16 @@ class $ResourcesImagesGen {
   AssetGenImage get revalTowncenter128x91 =>
       const AssetGenImage('resources/images/RevalTowncenter-128x91.png');
 
+  /// File path: resources/images/RevalTowncenter-320x200-day.png
+  AssetGenImage get revalTowncenter320x200Day =>
+      const AssetGenImage('resources/images/RevalTowncenter-320x200-day.png');
+
+  /// File path: resources/images/RevalTowncenter-320x200.aseprite
+  String get revalTowncenter320x200Aseprite =>
+      'resources/images/RevalTowncenter-320x200.aseprite';
+
   /// File path: resources/images/RevalTowncenter-320x200.png
-  AssetGenImage get revalTowncenter320x200 =>
+  AssetGenImage get revalTowncenter320x200Png =>
       const AssetGenImage('resources/images/RevalTowncenter-320x200.png');
 
   /// File path: resources/images/RevalTowncenter-market-animation-320x200.png
@@ -462,6 +498,10 @@ class $ResourcesImagesGen {
   AssetGenImage get cellrockBackground1 =>
       const AssetGenImage('resources/images/cellrock_background1.png');
 
+  /// File path: resources/images/crton-32x32-8.png
+  AssetGenImage get crton32x328 =>
+      const AssetGenImage('resources/images/crton-32x32-8.png');
+
   /// File path: resources/images/dwarf-burns.png
   AssetGenImage get dwarfBurns =>
       const AssetGenImage('resources/images/dwarf-burns.png');
@@ -540,6 +580,10 @@ class $ResourcesImagesGen {
   AssetGenImage get gameCover =>
       const AssetGenImage('resources/images/game-cover.png');
 
+  /// File path: resources/images/gamecover-menu.png
+  AssetGenImage get gamecoverMenu =>
+      const AssetGenImage('resources/images/gamecover-menu.png');
+
   /// File path: resources/images/gamecover-template.aseprite
   String get gamecoverTemplateAseprite =>
       'resources/images/gamecover-template.aseprite';
@@ -604,6 +648,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/guard-distance1-52x74.aseprite
   String get guardDistance152x74 =>
       'resources/images/guard-distance1-52x74.aseprite';
+
+  /// File path: resources/images/mecharcht-sailor-attack_50x85-8.png
+  AssetGenImage get mecharchtSailorAttack50x858 => const AssetGenImage(
+      'resources/images/mecharcht-sailor-attack_50x85-8.png');
 
   /// File path: resources/images/mecharcht-sailor-sheet-50x85.png
   AssetGenImage get mecharchtSailorSheet50x85 =>
@@ -751,11 +799,16 @@ class $ResourcesImagesGen {
         rebane50x84Idle16,
         rebane50x84Talk6,
         rebane50x84,
+        rebaneKnocked84x846,
+        rebaneLaught84x846,
+        rebaneLaughts50x843,
         revalGates128x91,
         revalGates320x200Aseprite,
         revalGates320x200Png,
         revalTowncenter128x91,
-        revalTowncenter320x200,
+        revalTowncenter320x200Day,
+        revalTowncenter320x200Aseprite,
+        revalTowncenter320x200Png,
         revalTowncenterMarketAnimation320x200,
         sprite000556x6336x45,
         actionIconLook24x24,
@@ -785,6 +838,7 @@ class $ResourcesImagesGen {
         cellfireAnimation,
         cellrockAnimation,
         cellrockBackground1,
+        crton32x328,
         dwarfBurns,
         dwarfCombatOnly,
         dwarfCombat,
@@ -806,6 +860,7 @@ class $ResourcesImagesGen {
         flameiconPng,
         flameicon1,
         gameCover,
+        gamecoverMenu,
         gamecoverTemplateAseprite,
         gamecoverTemplatePng,
         gamelogo140x32,
@@ -824,6 +879,7 @@ class $ResourcesImagesGen {
         gravelTombBreak32x328,
         greenZombie,
         guardDistance152x74,
+        mecharchtSailorAttack50x858,
         mecharchtSailorSheet50x85,
         mecharchtSailorSheet750x85,
         mecharchtSailorTalk50x859Sheet,

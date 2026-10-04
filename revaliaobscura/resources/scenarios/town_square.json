@@ -1,0 +1,55 @@
+{
+  "id": "town_square",
+  "background": "town_center",
+  "show_perspective_guide": true,
+  "perspective": {
+    "horizon_y": 90,
+    "minimum_walkable_y": 102,
+    "minimum_scale": 0.2,
+    "maximum_scale": 1.1
+  },
+  "walking_area": {
+    "vertices": [
+      [160, 102],
+      [320, 200],
+      [0, 200]
+    ]
+  },
+  "player": {
+    "feet_position": [160, 200],
+    "size": [50, 84]
+  },
+  "entities": [
+    {
+      "type": "npc",
+      "asset_id": "old_sailor",
+      "interaction_id": "old_sailor",
+      "dialogue_actor_id": "old_sailor",
+      "feet_position": [25, 192.5],
+      "size": [50, 85],
+      "walkable": false,
+      "perspective_scaling": true,
+      "depth_sorting": true
+    },
+    {
+      "type": "animated_prop",
+      "asset_id": "glowing_gem",
+      "interaction_id": "glowing_gem",
+      "feet_position": [220, 170],
+      "size": [32, 32],
+      "walkable": true,
+      "perspective_scaling": true,
+      "depth_sorting": true
+    },
+    {
+      "type": "animated_prop",
+      "asset_id": "glowing_gem",
+      "interaction_id": "glowing_gem",
+      "feet_position": [200, 140],
+      "size": [32, 32],
+      "walkable": true,
+      "perspective_scaling": true,
+      "depth_sorting": true
+    }
+  ]
+}

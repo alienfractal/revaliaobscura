@@ -25,8 +25,8 @@ class Dialogue {
   }) {
     final responses = <DialogueResponse>[];
     final graphResponses = graphNode['responses'] as List<dynamic>? ?? [];
-    for (var index = 0; index < graphResponses.length; index++) {
-      final graphResponse = graphResponses[index] as Map<String, dynamic>;
+    for (final responseData in graphResponses) {
+      final graphResponse = responseData as Map<String, dynamic>;
       final responseId = graphResponse['id'] as String;
       final condition = graphResponse['when'] as Map<String, dynamic>?;
       final once = graphResponse['once'] as bool? ?? false;
@@ -36,8 +36,8 @@ class Dialogue {
       responses.add(
         DialogueResponse(
           id: responseId,
-          text: translations['dialogues.$id.responses[$index].text'] ??
-              '[Missing Response: $id[$index]]',
+          text: translations['dialogues.$id.responses.$responseId.text'] ??
+              '[Missing Response: $id.$responseId]',
           next: graphResponse['next'] as String? ?? 'end',
           event: graphResponse['event'] as String?,
           effects: (graphResponse['effects'] as List<dynamic>? ?? [])

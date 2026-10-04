@@ -1,21 +1,25 @@
+import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/revalia_obs.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 
-class GameBackgroundTapComponent extends SpriteComponent with TapCallbacks,PointerMoveCallbacks, HasGameRef<RevaliaObs>{
+class GameBackgroundTapComponent extends SpriteComponent
+    with TapCallbacks, PointerMoveCallbacks, HasGameRef<RevaliaObs> {
   GameBackgroundTapComponent(SpriteComponent componentSprite)
-      : super(sprite:componentSprite.sprite, size: componentSprite.size) {
-    
+      : super(sprite: componentSprite.sprite, size: componentSprite.size) {
     // Set the size and position if necessary
-   // Adjust to cover the entire game area
+    // Adjust to cover the entire game area
   }
 
   @override
   void onTapDown(TapDownEvent event) {
-     //print('Background tapped');
     super.onTapDown(event);
+    gameRef.ap.playMusic(
+      Assets.resources.audio.mfxcityouterwalls,
+      playCount: 2,
+    );
   }
+
   @override
-  void onPointerMove(PointerMoveEvent event) {
-  }
+  void onPointerMove(PointerMoveEvent event) {}
 }

@@ -1,5 +1,3 @@
-
-
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -28,14 +26,16 @@ class CRTOverlay extends Component with HasGameRef {
   Future<void> captureGameWorld() async {
     // Create a picture recorder to capture the rendered game world
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, camDimension.x, camDimension.y));
+    final canvas =
+        Canvas(recorder, Rect.fromLTWH(0, 0, camDimension.x, camDimension.y));
 
     // Render the game components onto the off-screen canvas
     gameRef.render(canvas);
 
     // Finalize the picture and generate the image texture
     final picture = recorder.endRecording();
-    gameTexture = await picture.toImage(camDimension.x.toInt(), camDimension.y.toInt());
+    gameTexture =
+        await picture.toImage(camDimension.x.toInt(), camDimension.y.toInt());
   }
 
   @override
@@ -43,13 +43,13 @@ class CRTOverlay extends Component with HasGameRef {
     if (shader != null && gameTexture != null) {
       //print("CRTOverlay: render shader $shader gameTexture $gameTexture canvas $canvas");
       // Bind the captured texture to the shader
-        // Set the resolution in the shader
+      // Set the resolution in the shader
       shader!.setFloat(0, camDimension.x); // uResolution.x
       shader!.setFloat(1, camDimension.y); // uResolution.y
       shader!.setImageSampler(0, gameTexture!);
 
       final paint = Paint()..shader = shader;
-      
+
       // Apply the shader effect on the game world texture
       canvas.drawRect(
         Rect.fromLTWH(0, 0, camDimension.x, camDimension.y),
@@ -62,4 +62,3 @@ class CRTOverlay extends Component with HasGameRef {
     return await ui.FragmentProgram.fromAsset(assetKey);
   }
 }
-

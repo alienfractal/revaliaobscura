@@ -6,9 +6,10 @@ import 'package:flame/components.dart';
 
 import 'package:flame_behaviors/flame_behaviors.dart';
 
-class GenericSpriteAnimation extends PositionedEntity with HasGameRef<RevaliaObs> {
+class GenericSpriteAnimation extends PositionedEntity
+    with HasGameRef<RevaliaObs> {
   late SpriteAnimationComponent spriteAnimationComponent;
-   // Path to the sprite sheet or animation image
+  // Path to the sprite sheet or animation image
   late Vector2 animationSize; // Size of the animation component
   late int frames; // Number of frames in the animation
   late double stepTime; // Time between each frame in the animation
@@ -21,13 +22,11 @@ class GenericSpriteAnimation extends PositionedEntity with HasGameRef<RevaliaObs
     required super.behaviors,
     this.stepTime = 0.1,
     this.loop = true,
-
   }) : super(anchor: Anchor.center, size: animationSize);
 
   @override
   Future<void> onLoad() async {
     // Load the sprite animation from the given path
-    
 
     // Create the SpriteAnimationComponent to manage the animation
     spriteAnimationComponent = SpriteAnimationComponent(

@@ -1,4 +1,3 @@
-
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/utils/image/image_utils.dart';
 import 'package:revalia/utils/ui/text_component.dart';
@@ -6,11 +5,9 @@ import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
 class TextUtils {
+  static const Color yellowText = Color(0xffe3d245);
+  static const Color coolblueText = Color(0xff8a8fc4);
 
-  static const Color yellowText =  Color(0xffe3d245);
-  static const Color coolblueText =  Color(0xff8a8fc4);
-
-  
   static String capitalize(String text) {
     return text[0].toUpperCase() + text.substring(1);
   }
@@ -25,25 +22,27 @@ class TextUtils {
     return score.toString().padLeft(6, '0');
   }
 
-    static BlinkingTextComponent addTextToview(RevaliaObs gameRef,String text, Vector2 position, double fontSize, bool isBlinking, Color color, double interval, bool shouldCenter)  {
-    BlinkingTextComponent textComponent = BlinkingTextComponent(
-      text,
-      position,
-      fontSize: fontSize,
-      isBlinking: isBlinking,
-      tcolor: color,
-      interval: interval
-    );
-    
+  static BlinkingTextComponent addTextToview(
+      RevaliaObs gameRef,
+      String text,
+      Vector2 position,
+      double fontSize,
+      bool isBlinking,
+      Color color,
+      double interval,
+      bool shouldCenter) {
+    BlinkingTextComponent textComponent = BlinkingTextComponent(text, position,
+        fontSize: fontSize,
+        isBlinking: isBlinking,
+        tcolor: color,
+        interval: interval);
+
     if (shouldCenter) {
-      
       textComponent.position = ComponentUtils.centerComponent(
-        gameRef.camDimension, textComponent,
-        offsetX: 2, offsetY: 4);
+          gameRef.camDimension, textComponent,
+          offsetX: 2, offsetY: 4);
     }
-    
+
     return textComponent;
   }
-
-
 }

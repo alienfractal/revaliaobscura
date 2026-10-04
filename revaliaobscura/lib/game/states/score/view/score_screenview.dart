@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:revalia/revalia_obs.dart';
-import 'package:revalia/game/states/game/model/gameboardmodel.dart';
+import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
 import 'package:revalia/utils/ui/text_component.dart';
 import 'package:revalia/gen/assets.gen.dart';
 import 'package:revalia/utils/text_utils.dart';
@@ -56,7 +56,7 @@ class GameScoreView extends World
   // Initialization of components
   void init() {
     gameBackground =
-        gameRef.actorCacheService.gameBackground.getSpriteComponent();
+        gameRef.entitySpriteCache.gameBackground.getSpriteComponent();
 
     textComponentLoading = TextUtils.addTextToview(gameRef, 'SCORE SUMMARY',
         Vector2(90, 10), 16, true, Colors.white, 1.0, false);
@@ -113,6 +113,14 @@ class GameScoreView extends World
     coinCount = gameRef.gboard.gBoardModel.coinCount;
     totalScore = gameRef.gboard.gBoardModel.totalScore;
     flipResultOutcome = gameRef.gboard.gBoardModel.flipResultOutcome;
+    viewType = flipResultOutcome == ActionOutcome.playerKilled
+        ? ScoreViewType.gameover
+        : ScoreViewType.levelWon;
+    textComponentLoading.text = viewType == ScoreViewType.gameover
+        ? 'YOU WERE KILLED'
+        : 'SCORE SUMMARY';
+    textComponentLoading.position.x =
+        (gameRef.camDimension.x - textComponentLoading.size.x) / 2;
   }
 
   void scoreSummary(int token) {
@@ -169,6 +177,9 @@ class GameScoreView extends World
         gameRef.gameFsm.gameEnd();
         break;
       case ActionOutcome.timeOver:
+        gameRef.gameFsm.gameEnd();
+        break;
+      case ActionOutcome.playerKilled:
         gameRef.gameFsm.gameEnd();
         break;
       case ActionOutcome.levelCompleted:
