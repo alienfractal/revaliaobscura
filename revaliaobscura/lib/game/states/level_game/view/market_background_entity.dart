@@ -25,6 +25,9 @@ class MarketBackgroundEntity extends PositionedEntity
           'Unknown scenario background ID',
         );
     }
-    //add(game.entitySpriteCache.townCenterMarketAnimation.getSpriteAnimationComponent());
+    add(
+      game.entitySpriteCache.townCenterMarketAnimation
+          .getSpriteAnimationComponent(),
+    );
   }
 }

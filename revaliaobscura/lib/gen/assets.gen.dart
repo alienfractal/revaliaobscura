@@ -24,6 +24,9 @@ class $ResourcesGen {
   /// Directory path: resources/images
   $ResourcesImagesGen get images => const $ResourcesImagesGen();
 
+  /// Directory path: resources/scenarios
+  $ResourcesScenariosGen get scenarios => const $ResourcesScenariosGen();
+
   /// Directory path: resources/translations
   $ResourcesTranslationsGen get translations =>
       const $ResourcesTranslationsGen();
@@ -498,6 +501,30 @@ class $ResourcesImagesGen {
   AssetGenImage get cellrockBackground1 =>
       const AssetGenImage('resources/images/cellrock_background1.png');
 
+  /// File path: resources/images/clothes-trader-export-50x85-1.png
+  AssetGenImage get clothesTraderExport50x851 =>
+      const AssetGenImage('resources/images/clothes-trader-export-50x85-1.png');
+
+  /// File path: resources/images/clothes-trader-female-50x85-1.png
+  AssetGenImage get clothesTraderFemale50x851 =>
+      const AssetGenImage('resources/images/clothes-trader-female-50x85-1.png');
+
+  /// File path: resources/images/clothes-trader.aseprite
+  String get clothesTraderAseprite =>
+      'resources/images/clothes-trader.aseprite';
+
+  /// File path: resources/images/clothes-trader.png
+  AssetGenImage get clothesTraderPng =>
+      const AssetGenImage('resources/images/clothes-trader.png');
+
+  /// File path: resources/images/clothes-trader1.png
+  AssetGenImage get clothesTrader1 =>
+      const AssetGenImage('resources/images/clothes-trader1.png');
+
+  /// File path: resources/images/clothes-trader2.png
+  AssetGenImage get clothesTrader2 =>
+      const AssetGenImage('resources/images/clothes-trader2.png');
+
   /// File path: resources/images/crton-32x32-8.png
   AssetGenImage get crton32x328 =>
       const AssetGenImage('resources/images/crton-32x32-8.png');
@@ -666,7 +693,12 @@ class $ResourcesImagesGen {
       'resources/images/mecharcht-sailor-talk-50x85-9-sheet.png');
 
   /// File path: resources/images/mecharcht-sailor.aseprite
-  String get mecharchtSailor => 'resources/images/mecharcht-sailor.aseprite';
+  String get mecharchtSailorAseprite =>
+      'resources/images/mecharcht-sailor.aseprite';
+
+  /// File path: resources/images/mecharcht-sailor.png
+  AssetGenImage get mecharchtSailorPng =>
+      const AssetGenImage('resources/images/mecharcht-sailor.png');
 
   /// File path: resources/images/miner-attack-sheet-48x48-9.png
   AssetGenImage get minerAttackSheet48x489 =>
@@ -771,6 +803,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/start.png
   AssetGenImage get start => const AssetGenImage('resources/images/start.png');
 
+  /// File path: resources/images/tallin-revalia-128x72-1.png
+  AssetGenImage get tallinRevalia128x721 =>
+      const AssetGenImage('resources/images/tallin-revalia-128x72-1.png');
+
   /// File path: resources/images/timeicon1.png
   AssetGenImage get timeicon1 =>
       const AssetGenImage('resources/images/timeicon1.png');
@@ -838,6 +874,12 @@ class $ResourcesImagesGen {
         cellfireAnimation,
         cellrockAnimation,
         cellrockBackground1,
+        clothesTraderExport50x851,
+        clothesTraderFemale50x851,
+        clothesTraderAseprite,
+        clothesTraderPng,
+        clothesTrader1,
+        clothesTrader2,
         crton32x328,
         dwarfBurns,
         dwarfCombatOnly,
@@ -883,7 +925,8 @@ class $ResourcesImagesGen {
         mecharchtSailorSheet50x85,
         mecharchtSailorSheet750x85,
         mecharchtSailorTalk50x859Sheet,
-        mecharchtSailor,
+        mecharchtSailorAseprite,
+        mecharchtSailorPng,
         minerAttackSheet48x489,
         minerBlockSheet48x487,
         minerHurt1Sheet48x485Sheet,
@@ -911,10 +954,21 @@ class $ResourcesImagesGen {
         soundiconsAseprite,
         soundiconsPng,
         start,
+        tallinRevalia128x721,
         timeicon1,
         tutorial,
         walkingArea
       ];
+}
+
+class $ResourcesScenariosGen {
+  const $ResourcesScenariosGen();
+
+  /// File path: resources/scenarios/town_square.json
+  String get townSquare => 'resources/scenarios/town_square.json';
+
+  /// List of all assets
+  List<String> get values => [townSquare];
 }
 
 class $ResourcesTranslationsGen {

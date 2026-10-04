@@ -5,7 +5,9 @@ import 'package:revalia/game/states/level_game/perspective/perspective_config.da
 import 'package:revalia/game/states/level_game/scenario/scenario_config.dart';
 import 'package:revalia/game/states/level_game/scenario/scenario_loader.dart';
 import 'package:revalia/game/states/level_game/view/animated_scene_prop_entity.dart';
+import 'package:revalia/game/states/level_game/view/clothes_trader_npc_entity.dart';
 import 'package:revalia/game/states/level_game/view/dialog_frame_entity.dart';
+import 'package:revalia/game/states/level_game/view/female_clothes_trader_npc_entity.dart';
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
 import 'package:revalia/game/states/level_game/view/market_background_entity.dart';
 import 'package:revalia/game/states/level_game/view/perspective_guide_entity.dart';
@@ -329,7 +331,10 @@ class GameboardView extends World
     if (scenario.showPerspectiveGuide) {
       addPerspectiveGuide();
     }
-    addWalkingArea(scenario.walkingAreaVertices);
+    addWalkingArea(
+      scenario.walkingAreaVertices,
+      showGuide: scenario.showPerspectiveGuide,
+    );
     addPlayer(scenario.player);
     for (final entity in scenario.entities) {
       addScenarioEntity(entity);
@@ -362,8 +367,11 @@ class GameboardView extends World
     add(PerspectiveGuideEntity());
   }
 
-  void addWalkingArea(List<Vector2> vertices) {
-    walkingAreaView = WalkingAreaEntity(vertices: vertices);
+  void addWalkingArea(List<Vector2> vertices, {bool showGuide = false}) {
+    walkingAreaView = WalkingAreaEntity(
+      vertices: vertices,
+      showGuide: showGuide,
+    );
     levelEntities.add(walkingAreaView);
     add(walkingAreaView);
   }
@@ -372,20 +380,45 @@ class GameboardView extends World
     final LevelEntity entity;
     switch (config.type) {
       case 'npc':
-        if (config.assetId != 'old_sailor' || config.dialogueActorId == null) {
-          throw ArgumentError(
-            'Unsupported NPC configuration: ${config.assetId}',
-          );
+        switch (config.assetId) {
+          case 'old_sailor':
+            if (config.dialogueActorId == null) {
+              throw ArgumentError(
+                'The old sailor needs a dialogue actor ID.',
+              );
+            }
+            entity = SailorNpcEntity(
+              feetPosition: config.feetPosition,
+              size: config.size,
+              interactionId: config.interactionId,
+              dialogueActorId: config.dialogueActorId!,
+              isWalkable: config.isWalkable,
+              scalesWithPerspective: config.scalesWithPerspective,
+              sortsWithDepth: config.sortsWithDepth,
+            );
+          case 'clothes_trader':
+            entity = ClothesTraderNpcEntity(
+              feetPosition: config.feetPosition,
+              size: config.size,
+              interactionId: config.interactionId,
+              isWalkable: config.isWalkable,
+              scalesWithPerspective: config.scalesWithPerspective,
+              sortsWithDepth: config.sortsWithDepth,
+            );
+          case 'female_clothes_trader':
+            entity = FemaleClothesTraderNpcEntity(
+              feetPosition: config.feetPosition,
+              size: config.size,
+              interactionId: config.interactionId,
+              isWalkable: config.isWalkable,
+              scalesWithPerspective: config.scalesWithPerspective,
+              sortsWithDepth: config.sortsWithDepth,
+            );
+          default:
+            throw ArgumentError(
+              'Unsupported NPC configuration: ${config.assetId}',
+            );
         }
-        entity = SailorNpcEntity(
-          feetPosition: config.feetPosition,
-          size: config.size,
-          interactionId: config.interactionId,
-          dialogueActorId: config.dialogueActorId!,
-          isWalkable: config.isWalkable,
-          scalesWithPerspective: config.scalesWithPerspective,
-          sortsWithDepth: config.sortsWithDepth,
-        );
       case 'animated_prop':
         entity = AnimatedScenePropEntity(
           interactionId: config.interactionId,

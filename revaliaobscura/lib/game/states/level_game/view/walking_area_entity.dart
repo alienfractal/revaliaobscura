@@ -8,8 +8,10 @@ import 'package:revalia/game/states/level_game/behaviours/move_action_behaviour.
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
 
 class WalkingAreaEntity extends LevelEntity {
-  WalkingAreaEntity({required List<Vector2> vertices})
-      : assert(
+  WalkingAreaEntity({
+    required List<Vector2> vertices,
+    this.showGuide = false,
+  })  : assert(
             vertices.length >= 3, 'A walking area needs at least 3 vertices.'),
         vertices =
             vertices.map((vertex) => vertex.clone()).toList(growable: false),
@@ -26,6 +28,7 @@ class WalkingAreaEntity extends LevelEntity {
 
   /// World-coordinate corners, connected in this order and closed automatically.
   final List<Vector2> vertices;
+  final bool showGuide;
 
   final Paint _guidePaint = Paint()..color = const Color(0x3000FF80);
 
@@ -83,6 +86,9 @@ class WalkingAreaEntity extends LevelEntity {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
+    if (!showGuide) {
+      return;
+    }
     final first = absoluteToLocal(vertices.first);
     final path = Path()..moveTo(first.x, first.y);
     for (final vertex in vertices.skip(1)) {

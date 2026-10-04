@@ -1,7 +1,7 @@
 {
   "id": "town_square",
   "background": "town_center",
-  "show_perspective_guide": true,
+  "show_perspective_guide": false,
   "perspective": {
     "horizon_y": 90,
     "minimum_walkable_y": 102,
@@ -26,6 +26,26 @@
       "interaction_id": "old_sailor",
       "dialogue_actor_id": "old_sailor",
       "feet_position": [25, 192.5],
+      "size": [50, 85],
+      "walkable": false,
+      "perspective_scaling": true,
+      "depth_sorting": true
+    },
+    {
+      "type": "npc",
+      "asset_id": "clothes_trader",
+      "interaction_id": "clothes_trader",
+      "feet_position": [295, 192.5],
+      "size": [50, 85],
+      "walkable": false,
+      "perspective_scaling": true,
+      "depth_sorting": true
+    },
+    {
+      "type": "npc",
+      "asset_id": "female_clothes_trader",
+      "interaction_id": "female_clothes_trader",
+      "feet_position": [240, 192.5],
       "size": [50, 85],
       "walkable": false,
       "perspective_scaling": true,

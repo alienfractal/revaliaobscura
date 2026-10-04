@@ -131,6 +131,14 @@ void main() {
       fsm.interactionMessage('unknown_object', 'touch'),
       'I cannot touch that.',
     );
+    expect(
+      fsm.interactionMessage('clothes_trader', 'talk'),
+      'The clothes trader silently stares back.',
+    );
+    expect(
+      fsm.interactionMessage('female_clothes_trader', 'talk'),
+      'The female clothes trader silently watches.',
+    );
   });
 }
 
@@ -157,10 +165,18 @@ final Map<String, dynamic> _graph = {
     'walking_area': {
       'actions': {'look': 'walking_area_look'},
     },
+    'clothes_trader': {
+      'actions': {'talk': 'clothes_trader_talk'},
+    },
+    'female_clothes_trader': {
+      'actions': {'talk': 'female_clothes_trader_talk'},
+    },
   },
   'messages': {
     'old_sailor_look': {},
     'walking_area_look': {},
+    'clothes_trader_talk': {},
+    'female_clothes_trader_talk': {},
     'generic_touch': {},
   },
   'fallbacks': {'touch': 'generic_touch'},
@@ -296,5 +312,9 @@ final Map<String, String> _translations = {
   'dialogues.npc_waiting_for_ink.responses.leave.text': 'Goodbye.',
   'messages.old_sailor_look.text': 'An old sailor.',
   'messages.walking_area_look.text': 'A road.',
+  'messages.clothes_trader_talk.text':
+      'The clothes trader silently stares back.',
+  'messages.female_clothes_trader_talk.text':
+      'The female clothes trader silently watches.',
   'messages.generic_touch.text': 'I cannot touch that.',
 };

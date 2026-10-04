@@ -134,6 +134,14 @@ $env:ITCH_API_KEY = '<itch-api-key>'
 python publish_itch.py
 ```
 
+On Windows, the batch launcher can build and publish in one command. Set the
+key in the current Command Prompt first:
+
+```bat
+set "ITCH_API_KEY=your-itch-api-key"
+publish_itch.bat
+```
+
 Rotate any credential that was previously committed before using the
 publishing helper.
 

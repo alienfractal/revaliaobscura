@@ -175,6 +175,30 @@
     "glowing_gem_touch": {
       "text": "The gem feels warm beneath my fingers."
     },
+    "clothes_trader_look": {
+      "text": "A clothes trader watches the square from behind an elaborate mask."
+    },
+    "clothes_trader_touch": {
+      "text": "I should keep my hands off the trader's wares."
+    },
+    "clothes_trader_talk": {
+      "text": "The clothes trader stares back at me without saying a word."
+    },
+    "clothes_trader_walk": {
+      "text": "I can't walk through the clothes trader."
+    },
+    "female_clothes_trader_look": {
+      "text": "A woman in traditional dress tends the clothes stall."
+    },
+    "female_clothes_trader_touch": {
+      "text": "I should keep my hands off the trader's wares."
+    },
+    "female_clothes_trader_talk": {
+      "text": "The clothes trader watches me quietly without saying a word."
+    },
+    "female_clothes_trader_walk": {
+      "text": "I can't walk through the clothes trader."
+    },
     "player_killed": {
       "text": "The navigator strikes you down."
     },

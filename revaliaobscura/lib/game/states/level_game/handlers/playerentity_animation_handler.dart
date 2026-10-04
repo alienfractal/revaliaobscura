@@ -19,7 +19,7 @@ class PlayerAnimationHandler {
   late bool isAlive = true;
   bool _isPlayingOneShot = false;
   late PlayerPosEntity playerEntity;
-  late Vector2 playerSizeView;
+  late Vector2 _unscaledVisualSize;
 
   int bombFrameCount = 28;
 
@@ -30,10 +30,10 @@ class PlayerAnimationHandler {
     this.gameRef = gameRef;
     playerEntity = parent;
 
-    playerSizeView = parent.size;
+    _unscaledVisualSize = parent.size.clone();
     spriteAnimationComponent = SpriteAnimationComponent(
       animation: gameRef.playerSpriteCache.idlePlayer,
-      size: playerSizeView,
+      size: _unscaledVisualSize.clone(),
       anchor: Anchor.bottomCenter,
       position: Vector2(parent.size.x / 2, parent.size.y),
     );
@@ -44,13 +44,17 @@ class PlayerAnimationHandler {
   }
 
   void updatePerspectiveScale(double feetY) {
-    final perspectiveScale = PerspectiveConfig.characterScaleForFeetY(feetY);
+    final perspectiveScale = PerspectiveConfig.steppedCharacterScaleForFeetY(
+      feetY,
+      unscaledHeight: _unscaledVisualSize.y,
+    );
     final facingDirection =
         spriteAnimationComponent.scale.x.isNegative ? -1.0 : 1.0;
-    spriteAnimationComponent.scale.setValues(
-      perspectiveScale * facingDirection,
-      perspectiveScale,
+    spriteAnimationComponent.size.setValues(
+      _unscaledVisualSize.x * perspectiveScale,
+      _unscaledVisualSize.y * perspectiveScale,
     );
+    spriteAnimationComponent.scale.setValues(facingDirection, 1);
   }
 
   void cleanUpAnimations() {
@@ -184,13 +188,14 @@ class PlayerAnimationHandler {
       ..status = PlayerModel.DIE
       ..isAlive = false;
 
+    _unscaledVisualSize = knockedVisualSize.clone();
     spriteAnimationComponent
       ..anchor = Anchor.bottomCenter
       ..position = Vector2(
         playerEntity.size.x / 2,
         playerEntity.size.y,
       )
-      ..size = knockedVisualSize
+      ..size = knockedVisualSize.clone()
       ..animation = gameRef.playerSpriteCache.knockedPlayer;
 
     animationTicker = spriteAnimationComponent.animationTicker;

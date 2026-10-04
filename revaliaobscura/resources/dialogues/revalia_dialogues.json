@@ -39,6 +39,22 @@
         "look": "glowing_gem_look",
         "touch": "glowing_gem_touch"
       }
+    },
+    "clothes_trader": {
+      "actions": {
+        "look": "clothes_trader_look",
+        "touch": "clothes_trader_touch",
+        "talk": "clothes_trader_talk",
+        "walk": "clothes_trader_walk"
+      }
+    },
+    "female_clothes_trader": {
+      "actions": {
+        "look": "female_clothes_trader_look",
+        "touch": "female_clothes_trader_touch",
+        "talk": "female_clothes_trader_talk",
+        "walk": "female_clothes_trader_walk"
+      }
     }
   },
   "messages": {
@@ -49,6 +65,14 @@
     "walking_area_touch": {},
     "glowing_gem_look": {},
     "glowing_gem_touch": {},
+    "clothes_trader_look": {},
+    "clothes_trader_touch": {},
+    "clothes_trader_talk": {},
+    "clothes_trader_walk": {},
+    "female_clothes_trader_look": {},
+    "female_clothes_trader_touch": {},
+    "female_clothes_trader_talk": {},
+    "female_clothes_trader_walk": {},
     "player_killed": {},
     "generic_look": {},
     "generic_touch": {},

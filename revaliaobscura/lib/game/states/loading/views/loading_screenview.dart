@@ -86,8 +86,13 @@ class LoadingView extends World
         0.2,
         false);
 
+    final levelIntroImage = gameRef.loadingCacheService.levelIntroImage
+        .getSpriteComponent()
+      ..position = Vector2(96, 8);
+
     addAll([
       gameRef.loadingCacheService.gameBackground.getSpriteComponent(),
+      levelIntroImage,
       textComponentLoading
     ]);
   }

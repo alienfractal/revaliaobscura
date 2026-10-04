@@ -22,6 +22,8 @@ class EntitySpriteCacheService extends SpriteAnimatorCache {
   late AnimatedSprite npcOldSailorIdle;
   late AnimatedSprite npcOldSailorTalk;
   late AnimatedSprite npcOldSailorAttack;
+  late AnimatedSprite npcClothesTraderIdle;
+  late AnimatedSprite npcFemaleClothesTraderIdle;
   late AnimatedSprite glowingGem;
 
   @override
@@ -109,6 +111,32 @@ class EntitySpriteCacheService extends SpriteAnimatorCache {
           stepTime: 0.12,
           textureSize: Vector2(50, 85),
           loop: false,
+        ),
+      ),
+      Vector2(50, 85),
+    );
+
+    npcClothesTraderIdle = AnimatedSprite(
+      await gameRef.loadSpriteAnimation(
+        Assets.resources.images.clothesTraderExport50x851.path,
+        SpriteAnimationData.sequenced(
+          amount: 1,
+          stepTime: 1,
+          textureSize: Vector2(50, 85),
+          loop: true,
+        ),
+      ),
+      Vector2(50, 85),
+    );
+
+    npcFemaleClothesTraderIdle = AnimatedSprite(
+      await gameRef.loadSpriteAnimation(
+        Assets.resources.images.clothesTraderFemale50x851.path,
+        SpriteAnimationData.sequenced(
+          amount: 1,
+          stepTime: 1,
+          textureSize: Vector2(50, 85),
+          loop: true,
         ),
       ),
       Vector2(50, 85),

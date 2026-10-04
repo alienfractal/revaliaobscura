@@ -5,6 +5,7 @@ import 'package:flame/components.dart';
 
 class LoadingCacheService extends SpriteAnimatorCache {
   late StaticSprite gameBackground;
+  late StaticSprite levelIntroImage;
 
   @override
   SpriteAnimation getAnimation(int modelValue) {
@@ -31,5 +32,11 @@ class LoadingCacheService extends SpriteAnimatorCache {
         await SpriteAnimatorCache.loadSprite(
             path: Assets.resources.images.gameBackground32x32.path),
         gameRef.camDimension);
+    levelIntroImage = StaticSprite(
+      await SpriteAnimatorCache.loadSprite(
+        path: Assets.resources.images.tallinRevalia128x721.path,
+      ),
+      Vector2(128, 72),
+    );
   }
 }

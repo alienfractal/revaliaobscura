@@ -5,6 +5,7 @@ import 'package:revalia/game/states/level_game/perspective/perspective_config.da
 class LevelEntityAnimationHandler {
   late SpriteAnimationComponent spriteAnimationComponent;
   late SpriteAnimation idleAnimation;
+  late final Vector2 _unscaledSize;
   SpriteAnimation? talkAnimation;
   SpriteAnimation? attackAnimation;
   SpriteAnimationTicker? animationTicker;
@@ -18,6 +19,7 @@ class LevelEntityAnimationHandler {
     SpriteAnimation? attackAnimation,
   }) {
     this.idleAnimation = idleAnimation;
+    _unscaledSize = size.clone();
     this.talkAnimation = talkAnimation;
     this.attackAnimation = attackAnimation;
     spriteAnimationComponent = SpriteAnimationComponent(
@@ -30,13 +32,17 @@ class LevelEntityAnimationHandler {
   }
 
   void updatePerspectiveScale(double feetY) {
-    final perspectiveScale = PerspectiveConfig.characterScaleForFeetY(feetY);
+    final perspectiveScale = PerspectiveConfig.steppedCharacterScaleForFeetY(
+      feetY,
+      unscaledHeight: _unscaledSize.y,
+    );
     final facingDirection =
         spriteAnimationComponent.scale.x.isNegative ? -1.0 : 1.0;
-    spriteAnimationComponent.scale.setValues(
-      perspectiveScale * facingDirection,
-      perspectiveScale,
+    spriteAnimationComponent.size.setValues(
+      _unscaledSize.x * perspectiveScale,
+      _unscaledSize.y * perspectiveScale,
     );
+    spriteAnimationComponent.scale.setValues(facingDirection, 1);
   }
 
   void cleanUpAnimations() {
