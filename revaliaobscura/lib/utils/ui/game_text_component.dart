@@ -34,8 +34,12 @@ class GameTextComponent extends PositionedEntity {
       : super(position: position, size: componentSize ?? Vector2(200, 32)) {
     // Adjust size if needed
     final textRenderer = TextPaint(
-        style:
-            TextStyle(fontSize: fontSize, color: tcolor, fontFamily: fontName));
+        style: TextStyle(
+          fontSize: fontSize,
+          color: tcolor,
+          fontFamily: fontName,
+          fontFamilyFallback: const ['press2p'],
+        ));
     textComponent = maxWidth == null
         ? TextComponent(
             text: text,
@@ -58,6 +62,7 @@ class GameTextComponent extends PositionedEntity {
         color: const Color.fromARGB(255, 161, 61, 59),
         fontSize: fontSize,
         fontFamily: fontName,
+        fontFamilyFallback: const ['press2p'],
         backgroundColor: Color.fromARGB(255, 255, 136, 0),
       ),
     );
@@ -67,6 +72,7 @@ class GameTextComponent extends PositionedEntity {
         color: const Color.fromARGB(255, 238, 255, 0),
         fontSize: fontSize,
         fontFamily: fontName,
+        fontFamilyFallback: const ['press2p'],
         backgroundColor: Color.fromARGB(255, 0, 119, 255),
       ),
     );
@@ -76,6 +82,7 @@ class GameTextComponent extends PositionedEntity {
         color: const Color.fromARGB(255, 227, 210, 67),
         fontSize: fontSize,
         fontFamily: fontName,
+        fontFamilyFallback: const ['press2p'],
       ),
     );
 
@@ -84,6 +91,7 @@ class GameTextComponent extends PositionedEntity {
         color: tcolor,
         fontSize: fontSize,
         fontFamily: fontName,
+        fontFamilyFallback: const ['press2p'],
       ),
     );
 

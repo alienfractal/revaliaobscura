@@ -213,7 +213,7 @@ class EntitySpriteCacheService extends SpriteAnimatorCache {
     );
     townCenterBackground = StaticSprite(
       await SpriteAnimatorCache.loadSprite(
-        path: Assets.resources.images.revalTowncenter320x200Png.path,
+        path: Assets.resources.images.revalTowncenter320x200V1.path,
       ),
       gameRef.camDimension,
     );

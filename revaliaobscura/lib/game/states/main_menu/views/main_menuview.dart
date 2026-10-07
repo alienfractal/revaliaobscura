@@ -4,6 +4,7 @@ import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler
 import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/start_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/game_background_taphandler.dart';
+import 'package:revalia/game/states/main_menu/views/language_button.dart';
 import 'package:revalia/utils/translation/app_translations.dart';
 import 'package:revalia/utils/ui/game_button.dart';
 import 'package:revalia/utils/ui/game_generic_button.dart';
@@ -21,6 +22,7 @@ class MainMenuView extends World
   late GameButton buttonSndFXVolume;
   late GameButton buttonMscFXVolume;
   late GenericButton buttonCrtShader;
+  late List<LanguageButton> languageButtons;
 
   late String gameVersion = "v.0.0.0";
 
@@ -56,7 +58,8 @@ class MainMenuView extends World
   void loadlLevel() {
     //String buttonText = gameRef.i18nDelegate.currentLocale.t
     textComponent = BlinkingTextComponent(
-        AppTranslations.getTranslation('en', 'menu.push_button'),
+        AppTranslations.getTranslation(
+            gameRef.currentLocale, 'menu.push_button'),
         Vector2(0, 75),
         fontSize: 6,
         isBlinking: true,
@@ -115,6 +118,26 @@ class MainMenuView extends World
       animationFrameSize: gameRef.uiSpriteCache.crtShaderButton.frameSize,
       cachedAnimation: gameRef.uiSpriteCache.crtShaderButton,
     );
+    languageButtons = [
+      LanguageButton(
+        locale: 'en',
+        label: 'EN',
+        position: Vector2(232, 170),
+        onSelected: selectLanguage,
+      ),
+      LanguageButton(
+        locale: 'es',
+        label: 'ES',
+        position: Vector2(258, 170),
+        onSelected: selectLanguage,
+      ),
+      LanguageButton(
+        locale: 'ee',
+        label: 'EE',
+        position: Vector2(284, 170),
+        onSelected: selectLanguage,
+      ),
+    ];
     // buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
 
     // Game Tiele sprite
@@ -145,7 +168,22 @@ class MainMenuView extends World
       buttonSndFXVolume,
       buttonMscFXVolume,
       buttonCrtShader,
+      ...languageButtons,
     ]);
+  }
+
+  void selectLanguage(String locale) {
+    gameRef.setLocale(locale);
+    textComponent.text = AppTranslations.getTranslation(
+      gameRef.currentLocale,
+      'menu.push_button',
+    );
+    textComponent.position = ComponentUtils.centerComponent(
+      gameRef.camDimension,
+      textComponent,
+      offsetX: 2,
+      offsetY: 4,
+    );
   }
 
   @override

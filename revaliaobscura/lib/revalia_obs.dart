@@ -197,6 +197,21 @@ class RevaliaObs extends FlameGame {
     }
   }
 
+  void setLocale(String locale) {
+    if (!AppTranslations.allTranslations.containsKey(locale)) {
+      throw ArgumentError.value(locale, 'locale', 'Unsupported locale');
+    }
+    if (currentLocale == locale) {
+      return;
+    }
+
+    currentLocale = locale;
+    DialogueManager.setTranslations(
+      AppTranslations.translationsFor(currentLocale),
+    );
+    RevaliaObs.logger.d('Locale changed to $currentLocale');
+  }
+
   // Method to switch worlds
   void switchToWorld(World newWorld) {
     final transitionToken = ++_screenTransitionToken;

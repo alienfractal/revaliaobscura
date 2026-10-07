@@ -23,6 +23,7 @@ class DialogueTextComponent extends TextBoxComponent {
         fontSize: fontSize,
         color: textColor,
         fontFamily: fontName,
+        fontFamilyFallback: const ['press2p'],
       ),
     );
   }
@@ -43,7 +44,11 @@ class DialogueTextComponent extends TextBoxComponent {
     final painter = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(fontSize: fontSize, fontFamily: fontName),
+        style: TextStyle(
+          fontSize: fontSize,
+          fontFamily: fontName,
+          fontFamilyFallback: const ['press2p'],
+        ),
       ),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: maxTextWidth - textMargins.horizontal);

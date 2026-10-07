@@ -31,6 +31,7 @@ class BlinkingTextComponent extends TextComponent {
         fontSize: fontSize,
         color: tcolor,
         fontFamily: "scumm",
+        fontFamilyFallback: const ['press2p'],
       ),
     ); // Default idle renderer
     _textRendererBlinking = TextPaint(
@@ -38,6 +39,7 @@ class BlinkingTextComponent extends TextComponent {
         fontSize: fontSize,
         color: const Color(0xFFFFFFFF), // White color
         fontFamily: "scumm",
+        fontFamilyFallback: const ['press2p'],
       ),
     );
 
@@ -75,6 +77,7 @@ class BlinkingTextComponent extends TextComponent {
               fontSize: fontSize,
               color: color,
               fontFamily: "scumm",
+              fontFamilyFallback: const ['press2p'],
             ),
           ),
         )
