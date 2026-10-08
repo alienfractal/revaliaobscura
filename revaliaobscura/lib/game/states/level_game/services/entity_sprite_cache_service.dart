@@ -18,6 +18,7 @@ class EntitySpriteCacheService extends SpriteAnimatorCache {
   late StaticSprite lookAtButtonSprite;
   late StaticSprite talkToButtonSprite;
   late StaticSprite touchButtonSprite;
+  late StaticSprite ladyOfLakeObservation;
 
   late AnimatedSprite npcOldSailorIdle;
   late AnimatedSprite npcOldSailorTalk;
@@ -240,6 +241,12 @@ class EntitySpriteCacheService extends SpriteAnimatorCache {
         path: Assets.resources.images.actionIconTouch24x24.path,
       ),
       Vector2(24, 24),
+    );
+    ladyOfLakeObservation = StaticSprite(
+      await SpriteAnimatorCache.loadSprite(
+        path: Assets.resources.images.ladyoflake128x911.path,
+      ),
+      Vector2(128, 91),
     );
   }
 }

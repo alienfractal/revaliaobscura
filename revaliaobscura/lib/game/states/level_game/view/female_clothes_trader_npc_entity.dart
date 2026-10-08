@@ -4,6 +4,7 @@ import 'package:revalia/game/states/level_game/behaviours/look_action_behaviour.
 import 'package:revalia/game/states/level_game/behaviours/talk_action_behaviour.dart';
 import 'package:revalia/game/states/level_game/view/entity_tap_behaviour.dart';
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
+import 'package:revalia/utils/components/actionable_entitty_component.dart';
 
 class FemaleClothesTraderNpcEntity extends LevelEntity {
   FemaleClothesTraderNpcEntity({
@@ -26,12 +27,31 @@ class FemaleClothesTraderNpcEntity extends LevelEntity {
 
   final bool scalesWithPerspective;
   final bool sortsWithDepth;
+  bool _hasAttemptedTalk = false;
+
+  bool get hasAttemptedTalk => _hasAttemptedTalk;
 
   @override
   bool get usesPerspectiveScaling => scalesWithPerspective;
 
   @override
   bool get usesDepthSorting => sortsWithDepth;
+
+  @override
+  void performAction(ActionableType actionType) {
+    if (actionType == ActionableType.talk) {
+      _hasAttemptedTalk = true;
+    } else if (actionType == ActionableType.look && _hasAttemptedTalk) {
+      game.gboard.showObservation(
+        image:
+            game.entitySpriteCache.ladyOfLakeObservation.getSpriteComponent(),
+        message: interactionReaction(actionType),
+      );
+      return;
+    }
+
+    super.performAction(actionType);
+  }
 
   @override
   void onLoad() {
