@@ -3,14 +3,15 @@ setlocal
 
 cd /d "%~dp0"
 
-if not defined ITCH_API_KEY (
-    echo ERROR: ITCH_API_KEY is not set.
+if "%~1"=="" (
+    echo ERROR: Missing itch.io API key.
     echo.
-    echo In Command Prompt, run:
-    echo   set "ITCH_API_KEY=your-itch-api-key"
-    echo   publish_itch.bat
+    echo Usage:
+    echo   publish_itch.bat YOUR_ITCH_API_KEY
     exit /b 1
 )
+
+set "ITCH_API_KEY=%~1"
 
 where flutter >nul 2>nul
 if errorlevel 1 (
