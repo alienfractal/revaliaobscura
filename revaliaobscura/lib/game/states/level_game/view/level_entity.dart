@@ -114,13 +114,16 @@ abstract class LevelEntity extends PositionedEntity
   }
 
   void showInteractionReaction(ActionableType actionType) {
+    game.gboard.showScreenMessage(interactionReaction(actionType));
+  }
+
+  String interactionReaction(ActionableType actionType) {
     DialogueManager.setTranslations(
       AppTranslations.translationsFor(game.currentLocale),
     );
-    final message = DialogueManager.interactionMessage(
+    return DialogueManager.interactionMessage(
       interactionId,
       actionType == ActionableType.move ? 'walk' : actionType.name,
     );
-    game.gboard.showScreenMessage(message);
   }
 }

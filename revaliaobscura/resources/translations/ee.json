@@ -1,20 +1,221 @@
 {
-    "game": {
-      "title": "Cool or Burn",
-      "start_message": "Welcome to Cool or Burn!",
-      "pause_message": "Game paused. Tap to continue.",
-      "over_message": "Game over! Try again?"
+  "game": {
+    "title": "Revalia Obscura",
+    "subtitles": {
+      "sub_title1": "Külm",
+      "sub_title2": "Põlenud"
     },
-    "menu": {
-      "play_button": "Play",
-      "settings_button": "Settings",
-      "exit_button": "Exit"
+    "start_message": "Tere tulemast Revalia Obscurasse!",
+    "pause_message": "Mäng on peatatud. Jätkamiseks puuduta ekraani.",
+    "over_message": "Mäng läbi! Kas proovid uuesti?"
+  },
+  "menu": {
+    "play_button": "Mängi",
+    "settings_button": "Seaded",
+    "exit_button": "Välju",
+    "push_button": "Vajuta nuppu"
+  },
+  "settings": {
+    "title": "Seaded",
+    "language": "Keel",
+    "sound": "Heli",
+    "music": "Muusika"
+  },
+  "actors": {
+    "old_sailor": {
+      "name": "Navigaator"
+    }
+  },
+  "loading": {
+    "title": "EESTIMAA, Issanda aastal 1343",
+    "context_intro": [
+      "Rebane Molder saabub Revalisse.",
+      "EESTIMAA, 1343"
+    ],
+    "exit_button": "Välju"
+  },
+  "dialogues": {
+    "npc_intro": {
+      "player_text": "Sa näed välja nagu mees, kes tunneb seda paika.",
+      "text": "Tunnen Läänemere-äärseid teid.",
+      "responses": {
+        "ask_identity": {
+          "text": "Kes sa oled?"
+        },
+        "leave": {
+          "text": "Hüvasti."
+        }
+      }
     },
-    "settings": {
-      "title": "Settings",
-      "language": "Language",
-      "sound": "Sound",
-      "music": "Music"
+    "npc_identity": {
+      "player_text": "Kes sa oled?",
+      "text": "Olen navigaator. Tunnen Läänemere rannikut ja vanu teid.",
+      "responses": {
+        "mock_outfit": {
+          "text": "Sul peab küll palju isikupära olema."
+        },
+        "ask_if_comedian": {
+          "text": "Kas sa oled juhuslikult koomik, navigaator?"
+        },
+        "leave": {
+          "text": "Jätan su oma tegemiste juurde."
+        }
+      }
+    },
+    "npc_silent_stare": {
+      "player_text": "Sul peab küll palju isikupära olema.",
+      "text": "Kelleks sa ennast pead?",
+      "responses": {
+        "laugh": {
+          "text": "Hahahahahahahahahahahahahahahahahahaha."
+        },
+        "ask_if_comedian": {
+          "text": "Palun vabandust."
+        }
+      }
+    },
+    "npc_defend_honor": {
+      "player_text": "Hahahaa.",
+      "text": "Nõuan austust.",
+      "responses": {
+        "apologize": {
+          "text": "Palun vabandust."
+        },
+        "laugh_again": {
+          "text": "Hahahaa."
+        },
+        "leave": {
+          "text": "Siis jätan su oma au kaitsma."
+        }
+      }
+    },
+    "npc_final_insult": {
+      "player_text": "Hahahaa.",
+      "text": "Sa solvasid mind viimast korda.",
+      "responses": {
+        "face_consequence": {
+          "text": "..."
+        }
+      }
+    },
+    "npc_hendrik_identity": {
+      "player_text": "Kas sa oled koomik, navigaator?",
+      "text": "Ei ole. Ja minu nimi on Hendrik.",
+      "responses": {
+        "ask_need": {
+          "text": "Mida sul vaja on?"
+        },
+        "leave": {
+          "text": "Jätan su oma tegemiste juurde."
+        }
+      }
+    },
+    "npc_ask_name": {
+      "player_text": "Mida sul vaja on?",
+      "text": "Huvitav, et küsid. Enne kui asume äriasju arutama, mis su nimi on?",
+      "responses": {
+        "answer_rebane": {
+          "text": "Rebane."
+        },
+        "leave": {
+          "text": "Ehk mõni teine kord."
+        }
+      }
+    },
+    "npc_ink_request": {
+      "player_text": "Rebane.",
+      "text": "Hästi, Rebane. Mu tint on otsa saanud ja ilma tindita on mu kaardid kasutud. Too mulle tinti ning ehk otsustan, et oled mu aega väärt.",
+      "responses": {
+        "accept_ink_quest": {
+          "text": "Ma leian sulle tinti."
+        }
+      }
+    },
+    "npc_after_identity": {
+      "player_text": "Tere jälle.",
+      "text": "Jälle tagasi? Kui tahad navigaatori aega, näita, et märkad, mida vaja on.",
+      "responses": {
+        "ask_need": {
+          "text": "Mida sul vaja on?"
+        },
+        "leave": {
+          "text": "Praegu mitte. Hüvasti."
+        }
+      }
+    },
+    "npc_waiting_for_ink": {
+      "player_text": "Sellest tindist...",
+      "text": "Too mulle kaartide jaoks tinti, Rebane. Siis võime võimalustest rääkida.",
+      "responses": {
+        "leave": {
+          "text": "Ma alles otsin."
+        }
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {
+      "text": "Minu ees seisab vana meremees."
+    },
+    "old_sailor_touch": {
+      "text": "Parem hoian käed enda juures."
+    },
+    "old_sailor_walk": {
+      "text": "Ma ei saa temast läbi kõndida."
+    },
+    "walking_area_look": {
+      "text": "Tee jätkub läbi linnaväljaku."
+    },
+    "walking_area_touch": {
+      "text": "Tolm ja kulunud kivi."
+    },
+    "glowing_gem_look": {
+      "text": "Väike kalliskivi kiirgab pulseerivat ebaloomulikku valgust."
+    },
+    "glowing_gem_touch": {
+      "text": "Kalliskivi tundub mu sõrmede all soe."
+    },
+    "clothes_trader_look": {
+      "text": "Keeruka maski tagant jälgib väljakut rõivakaupmees."
+    },
+    "clothes_trader_touch": {
+      "text": "Parem hoian käed kaupmehe kaubast eemal."
+    },
+    "clothes_trader_talk": {
+      "text": "Rõivakaupmees vaatab mulle sõnagi lausumata vastu."
+    },
+    "clothes_trader_walk": {
+      "text": "Ma ei saa rõivakaupmehest läbi kõndida."
+    },
+    "female_clothes_trader_look": {
+      "text": "Rahvarõivais naine hoolitseb rõivaleti eest."
+    },
+    "female_clothes_trader_touch": {
+      "text": "Parem hoian käed kaupmehe kaubast eemal."
+    },
+    "female_clothes_trader_talk": {
+      "text": "Rõivakaupmees jälgib mind vaikides ega lausu sõnagi."
+    },
+    "female_clothes_trader_walk": {
+      "text": "Ma ei saa rõivakaupmehest läbi kõndida."
+    },
+    "player_killed": {
+      "text": "Navigaator lööb su maha."
+    },
+    "generic_look": {
+      "text": "Ma ei näe midagi huvitavat."
+    },
+    "generic_touch": {
+      "text": "Ma ei saa sellega midagi teha."
+    },
+    "generic_talk": {
+      "text": "Siin pole kedagi, kellega rääkida."
+    },
+    "generic_walk": {
+      "text": "Ma ei saa sinna kõndida."
+    },
+    "generic_use": {
+      "text": "Ma ei saa seda siin kasutada."
     }
   }
-  
+}

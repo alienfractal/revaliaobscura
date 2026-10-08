@@ -48,6 +48,7 @@ class GameboardView extends World
   bool _scoreTransitionRequested = false;
 
   DialogFrameEntity? df;
+  SpriteComponent? _observationImage;
 
   ActionableType actionType = ActionableType.move;
   int _conclusionToken = 0;
@@ -121,6 +122,7 @@ class GameboardView extends World
     clickCount = 0;
     levelEntities.clear();
     df = null;
+    _observationImage = null;
   }
 
   void _handleDialogueEvent(String event) {
@@ -488,10 +490,49 @@ class GameboardView extends World
     double? durationSeconds = 15,
     void Function()? onDismissed,
   }) {
+    _showScreenMessageAt(
+      message,
+      position: Vector2(160, 80),
+      durationSeconds: durationSeconds,
+      onDismissed: onDismissed,
+    );
+  }
+
+  void showObservation({
+    required SpriteComponent image,
+    required String message,
+  }) {
+    if (df?.isDialogActive ?? false) {
+      return;
+    }
+
+    _removeObservationImage();
+    image
+      ..anchor = Anchor.topLeft
+      ..position = Vector2(96, 32)
+      ..priority = 1999;
+    _observationImage = image;
+    add(image);
+
+    _showScreenMessageAt(
+      message,
+      position: Vector2(160, 152),
+      onDismissed: _removeObservationImage,
+    );
+  }
+
+  void _showScreenMessageAt(
+    String message, {
+    required Vector2 position,
+    double? durationSeconds = 15,
+    void Function()? onDismissed,
+  }) {
     // If df exists, remove it first
     if (df == null) {
       df = DialogFrameEntity(
-          position: Vector2(160, 80), size: Vector2(256 + 16, 32 + 16));
+        position: position,
+        size: Vector2(256 + 16, 32 + 16),
+      );
       add(df!);
       df?.showScreenMessage(
         message,
@@ -499,6 +540,7 @@ class GameboardView extends World
         onDismissed: onDismissed,
       );
     } else if (!df!.isDialogActive) {
+      df!.position = position;
       add(df!);
       df?.showScreenMessage(
         message,
@@ -510,7 +552,13 @@ class GameboardView extends World
     }
   }
 
+  void _removeObservationImage() {
+    _observationImage?.removeFromParent();
+    _observationImage = null;
+  }
+
   void removeDialogFrame() {
+    _removeObservationImage();
     df?.clearDialogText();
     df?.removeFromParent();
   }

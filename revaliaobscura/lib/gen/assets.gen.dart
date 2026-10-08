@@ -1,5 +1,3 @@
-// dart format width=80
-
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -7,7 +5,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
+// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
 
 import 'package:flutter/widgets.dart';
 
@@ -682,6 +680,10 @@ class $ResourcesImagesGen {
   String get guardDistance152x74 =>
       'resources/images/guard-distance1-52x74.aseprite';
 
+  /// File path: resources/images/ladyoflake-128x91-1.png
+  AssetGenImage get ladyoflake128x911 =>
+      const AssetGenImage('resources/images/ladyoflake-128x91-1.png');
+
   /// File path: resources/images/mecharcht-sailor-attack_50x85-8.png
   AssetGenImage get mecharchtSailorAttack50x858 => const AssetGenImage(
       'resources/images/mecharcht-sailor-attack_50x85-8.png');
@@ -928,6 +930,7 @@ class $ResourcesImagesGen {
         gravelTombBreak32x328,
         greenZombie,
         guardDistance152x74,
+        ladyoflake128x911,
         mecharchtSailorAttack50x858,
         mecharchtSailorSheet50x85,
         mecharchtSailorSheet750x85,
@@ -995,7 +998,7 @@ class $ResourcesTranslationsGen {
 }
 
 class Assets {
-  const Assets._();
+  Assets._();
 
   static const $ResourcesGen resources = $ResourcesGen();
 }
@@ -1005,14 +1008,12 @@ class AssetGenImage {
     this._assetName, {
     this.size,
     this.flavors = const {},
-    this.animation,
   });
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
-  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -1035,7 +1036,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.medium,
+    FilterQuality filterQuality = FilterQuality.low,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -1081,16 +1082,4 @@ class AssetGenImage {
   String get path => _assetName;
 
   String get keyName => _assetName;
-}
-
-class AssetGenImageAnimation {
-  const AssetGenImageAnimation({
-    required this.isAnimation,
-    required this.duration,
-    required this.frames,
-  });
-
-  final bool isAnimation;
-  final Duration duration;
-  final int frames;
 }

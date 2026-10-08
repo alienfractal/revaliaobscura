@@ -1,6 +1,5 @@
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/game/states/main_menu/behaviours/crt_shader_button_taphandler.dart';
-import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/start_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/game_background_taphandler.dart';
@@ -20,9 +19,8 @@ class MainMenuView extends World
   late BlinkingTextComponent textComponentGameVersion;
   late GameButton buttonStart;
   late GameButton buttonSndFXVolume;
-  late GameButton buttonMscFXVolume;
   late GenericButton buttonCrtShader;
-  late List<LanguageButton> languageButtons;
+  late LanguageButton languageButton;
 
   late String gameVersion = "v.0.0.0";
 
@@ -100,14 +98,11 @@ class MainMenuView extends World
         columns: 4,
         rows: 1);
     //buttonSndFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.soundfxVolume);
-    buttonMscFXVolume = GameButton(
-        position: Vector2(40, 175),
-        cachedSpriteSheet: gameRef.uiSpriteCache.musicFxVolume,
-        behavior: MusicButtonTapHandler(),
-        imgSize: gameRef.uiSpriteCache.musicFxVolume.imgSize,
-        isSimpleSpriteSheet: true,
-        columns: 4,
-        rows: 1);
+    languageButton = LanguageButton(
+      position: Vector2(40, 175),
+      locales: const ['en', 'es', 'ee'],
+      onSelected: selectLanguage,
+    );
     buttonCrtShader = GenericButton(
       position: Vector2(60, 175),
       behavior: CrtShaderButtonTapHandler(),
@@ -118,28 +113,6 @@ class MainMenuView extends World
       animationFrameSize: gameRef.uiSpriteCache.crtShaderButton.frameSize,
       cachedAnimation: gameRef.uiSpriteCache.crtShaderButton,
     );
-    languageButtons = [
-      LanguageButton(
-        locale: 'en',
-        label: 'EN',
-        position: Vector2(232, 170),
-        onSelected: selectLanguage,
-      ),
-      LanguageButton(
-        locale: 'es',
-        label: 'ES',
-        position: Vector2(258, 170),
-        onSelected: selectLanguage,
-      ),
-      LanguageButton(
-        locale: 'ee',
-        label: 'EE',
-        position: Vector2(284, 170),
-        onSelected: selectLanguage,
-      ),
-    ];
-    // buttonMscFXVolume.currentFrameIndex = gameRef.ap.volumeLevels.indexOf(GameAudioPlayer.musicfxVolume);
-
     // Game Tiele sprite
 
     final gameTitle = gameRef.menuCacheService.gameTitle.getSpriteComponent();
@@ -157,18 +130,17 @@ class MainMenuView extends World
     addAll([
       GameBackgroundTapComponent(
           gameRef.menuCacheService.gameBackground.getSpriteComponent()),
-            gameRef.menuCacheService.gameConverMenu.getSpriteComponent(),
+      gameRef.menuCacheService.gameConverMenu.getSpriteComponent(),
       buttonStart,
-     // textComponent,
-     // gameTitle,
+      // textComponent,
+      // gameTitle,
       //companyTitle,
-    
+
       textComponentGameVersion,
-     // gameSubTitle,
+      // gameSubTitle,
       buttonSndFXVolume,
-      buttonMscFXVolume,
+      languageButton,
       buttonCrtShader,
-      ...languageButtons,
     ]);
   }
 

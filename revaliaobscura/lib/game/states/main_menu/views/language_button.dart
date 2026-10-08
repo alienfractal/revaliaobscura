@@ -7,37 +7,29 @@ import 'package:revalia/revalia_obs.dart';
 
 class LanguageButton extends PositionComponent
     with TapCallbacks, HasGameRef<RevaliaObs> {
-  static final Vector2 buttonSize = Vector2.all(20);
+  static final Vector2 buttonSize = Vector2.all(17);
 
-  final String locale;
-  final String label;
+  final List<String> locales;
   final void Function(String locale) onSelected;
 
   late final TextComponent _labelComponent;
-  late final TextPaint _activeTextPaint;
-  late final TextPaint _inactiveTextPaint;
+  late final TextPaint _textPaint;
 
   LanguageButton({
-    required this.locale,
-    required this.label,
+    required this.locales,
     required this.onSelected,
     required super.position,
-  }) : super(size: buttonSize, priority: 10);
+  })  : assert(locales.length > 1),
+        super(anchor: Anchor.center, size: buttonSize, priority: 10);
 
-  bool get isSelected => gameRef.currentLocale == locale;
+  String get currentLocale => gameRef.currentLocale;
+
+  String get currentLabel => currentLocale.toUpperCase();
 
   @override
   void onLoad() {
     super.onLoad();
-    _activeTextPaint = TextPaint(
-      style: const TextStyle(
-        fontSize: 6,
-        color: Colors.black,
-        fontFamily: 'scumm',
-        fontFamilyFallback: ['press2p'],
-      ),
-    );
-    _inactiveTextPaint = TextPaint(
+    _textPaint = TextPaint(
       style: const TextStyle(
         fontSize: 6,
         color: Colors.white,
@@ -46,10 +38,10 @@ class LanguageButton extends PositionComponent
       ),
     );
     _labelComponent = TextComponent(
-      text: label,
+      text: currentLabel,
       anchor: Anchor.center,
       position: size / 2,
-      textRenderer: isSelected ? _activeTextPaint : _inactiveTextPaint,
+      textRenderer: _textPaint,
     );
     add(_labelComponent);
   }
@@ -57,26 +49,19 @@ class LanguageButton extends PositionComponent
   @override
   void update(double dt) {
     super.update(dt);
-    _labelComponent.textRenderer =
-        isSelected ? _activeTextPaint : _inactiveTextPaint;
+    _labelComponent.text = currentLabel;
   }
 
   @override
   void render(Canvas canvas) {
-    final selected = isSelected;
     canvas.drawRect(
       size.toRect(),
-      Paint()
-        ..color = selected
-            ? const Color(0xffe3d245)
-            : const Color(0xff191919),
+      Paint()..color = const Color(0xff191919),
     );
     canvas.drawRect(
       size.toRect().deflate(0.5),
       Paint()
-        ..color = selected
-            ? const Color(0xffffffff)
-            : const Color(0xff8a8fc4)
+        ..color = const Color(0xff8a8fc4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1,
     );
@@ -85,7 +70,10 @@ class LanguageButton extends PositionComponent
 
   @override
   void onTapDown(TapDownEvent event) {
-    onSelected(locale);
+    final currentIndex = locales.indexOf(currentLocale);
+    final nextIndex =
+        currentIndex < 0 ? 0 : (currentIndex + 1) % locales.length;
+    onSelected(locales[nextIndex]);
     super.onTapDown(event);
   }
 }
