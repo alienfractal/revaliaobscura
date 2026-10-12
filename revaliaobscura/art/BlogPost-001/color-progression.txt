@@ -1,0 +1,13 @@
+13: Dark forest silhouettes
+14: Forest midtones and foliage
+15: Dark forest floor
+16: Ground vegetation and forest light
+17: Leaf cape shadows
+18: Cape leaves and shoulder mushrooms
+19: Hair and beard
+20: Face shading
+21: Arms, trousers and feet
+22: Bird, hat, nest and gnomes
+23: Final dark contours
+24: Final highlights; exact copy of color8-detailed
+These files are progressive regional transitions into the detailed reference, not a record of manual painting.

@@ -1,0 +1,34 @@
+[
+  {
+    "title": "01 Your original",
+    "note": "Your untouched 320x179 drawing. Keep a duplicate before experimenting."
+  },
+  {
+    "title": "02 Group values",
+    "note": "Reduce the ground to broad shapes, mute the purple grass strip, and separate cool distant trees from warm near trunks. Texture can wait."
+  },
+  {
+    "title": "03 Build distant depth",
+    "note": "Place faint, overlapping tree shapes behind the existing foreground trunks. Work on a background layer; keep the near silhouettes visible."
+  },
+  {
+    "title": "04 Rebuild large shapes",
+    "note": "Repaint larger tapering trunks and asymmetric branches. Block foliage as masses. This is the largest composition change: a reference study, not a hidden automatic cleanup."
+  },
+  {
+    "title": "05 Refine distant trees",
+    "note": "Add variation to far tree edges. Their small value differences should stay quieter than foreground shapes. Avoid outlining every distant tree."
+  },
+  {
+    "title": "06 Shade trunks and ground",
+    "note": "Use broad shadow planes and a few broken vertical bark marks. Give the forest floor a continuous base instead of repeating bright plants everywhere."
+  },
+  {
+    "title": "07 Shade foliage masses",
+    "note": "Shade leaf masses with dark interiors and small lit clusters. Place clusters around branch tips, varying their density and leaving irregular gaps."
+  },
+  {
+    "title": "08 Restrained highlights",
+    "note": "Use sparse olive highlights on leaf tops, herbs, and the ground edge. The final frame is the supplied reference resized, mapped to the game palette, and simplified to reduce isolated texture pixels."
+  }
+]

@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Irregular woodland tree small",
+    "category": "Organic trees",
+    "w": 76,
+    "h": 108,
+    "file": "tree-244035-small.png",
+    "source": "https://openclipart.org/detail/244035/tree-silhouette",
+    "artist": "mazeo",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Spreading leafy tree small",
+    "category": "Organic trees",
+    "w": 76,
+    "h": 53,
+    "file": "tree-328207-small.png",
+    "source": "https://openclipart.org/detail/328207/highly-detailed-tree-silhouette",
+    "artist": "GDJ",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Gnarled bare oak small",
+    "category": "Organic trees",
+    "w": 76,
+    "h": 87,
+    "file": "tree-188718-small.png",
+    "source": "https://openclipart.org/detail/188718/oak-tree",
+    "artist": "IggyOblomov",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Umbrella pine small",
+    "category": "Organic trees",
+    "w": 76,
+    "h": 97,
+    "file": "tree-174787-small.png",
+    "source": "https://openclipart.org/detail/174787/pinus-pinea",
+    "artist": "waielbi",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Old broad oak small",
+    "category": "Organic trees",
+    "w": 76,
+    "h": 55,
+    "file": "tree-286758-small.png",
+    "source": "https://openclipart.org/detail/286758/detailed-large-oak-tree-silhouette",
+    "artist": "GDJ",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Irregular woodland tree large",
+    "category": "Organic trees",
+    "w": 152,
+    "h": 216,
+    "file": "tree-244035-large.png",
+    "source": "https://openclipart.org/detail/244035/tree-silhouette",
+    "artist": "mazeo",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Spreading leafy tree large",
+    "category": "Organic trees",
+    "w": 152,
+    "h": 107,
+    "file": "tree-328207-large.png",
+    "source": "https://openclipart.org/detail/328207/highly-detailed-tree-silhouette",
+    "artist": "GDJ",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Gnarled bare oak large",
+    "category": "Organic trees",
+    "w": 152,
+    "h": 174,
+    "file": "tree-188718-large.png",
+    "source": "https://openclipart.org/detail/188718/oak-tree",
+    "artist": "IggyOblomov",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Umbrella pine large",
+    "category": "Organic trees",
+    "w": 152,
+    "h": 194,
+    "file": "tree-174787-large.png",
+    "source": "https://openclipart.org/detail/174787/pinus-pinea",
+    "artist": "waielbi",
+    "license": "CC0 1.0 via Openclipart"
+  },
+  {
+    "name": "Old broad oak large",
+    "category": "Organic trees",
+    "w": 152,
+    "h": 109,
+    "file": "tree-286758-large.png",
+    "source": "https://openclipart.org/detail/286758/detailed-large-oak-tree-silhouette",
+    "artist": "GDJ",
+    "license": "CC0 1.0 via Openclipart"
+  }
+]
