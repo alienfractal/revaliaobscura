@@ -90,11 +90,26 @@ abstract class LevelEntity extends PositionedEntity
 
   @override
   bool shouldApproachFor(ActionableType actionType) {
+    if (actionType == ActionableType.touch &&
+        (game.gboard.selectedInventoryItem != null ||
+            DialogueManager.fsm.storyState.adventure.isPickup(interactionId))) {
+      return true;
+    }
     return _actionBehaviourFor(actionType)?.requiresInteractionRange ?? false;
   }
 
   @override
   void performAction(ActionableType actionType) {
+    if (actionType == ActionableType.touch) {
+      if (game.gboard.useInventoryItemOn(this)) return;
+      if (DialogueManager.fsm.storyState.adventure
+          .collectPickup(interactionId)) {
+        removeFromParent();
+        game.gboard.showScreenMessage(
+            game.gboard.adventureText('inventory.picked_up'));
+        return;
+      }
+    }
     final behaviour = _actionBehaviourFor(actionType);
     if (behaviour != null) {
       behaviour.execute();

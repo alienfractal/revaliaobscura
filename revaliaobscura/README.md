@@ -73,8 +73,8 @@ Run automated tests:
 flutter test
 ```
 
-Note: `test/widget_test.dart` is currently the obsolete Flutter counter
-template and must be replaced before the test suite can pass.
+The tests cover dialogue progression, inventory and quest delivery, scenario
+configuration, perspective scaling, and inventory popup interactions.
 
 ## Build
 
@@ -85,6 +85,12 @@ flutter build web --release
 ```
 
 The output is written to `build/web/`.
+
+The web bootstrap serves CanvasKit from the build's own `canvaskit/` directory,
+and the default Roboto font is bundled. A local web launch does not need an
+internet connection for those startup resources. Keep the entire build folder
+when serving or uploading it. This does not make an unvisited hosted page
+available offline; the app files still need to come from a reachable server.
 
 Create a Windows release build:
 

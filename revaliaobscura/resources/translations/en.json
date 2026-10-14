@@ -46,7 +46,7 @@
           "text": "Goodbye."
         }
       }
-    },                    
+    },
     "npc_identity": {
       "player_text": "Who are you?",
       "text": "A navigator. I know the Baltic coasts and the old roads.",
@@ -149,6 +149,18 @@
       "responses": {
         "leave": {
           "text": "I am still looking."
+        },
+        "give_ink": {
+          "text": "Here is the ink you asked for."
+        }
+      }
+    },
+    "npc_ink_thanks": {
+      "player_text": "About the ink for your charts...",
+      "text": "Just what I needed. Thank you, Rebane.",
+      "responses": {
+        "leave": {
+          "text": "Safe travels, Hendrik."
         }
       }
     }
@@ -216,6 +228,51 @@
     },
     "generic_use": {
       "text": "I can't use that here."
+    },
+    "ink_bottle_look": {
+      "text": "A bottle of dark ink. It might be useful for drawing charts."
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "using": "Using:",
+    "look": "Look",
+    "touch": "Touch / Use",
+    "no_tasks": "Current tasks\n\nNo tasks yet. Talk to people to discover how you can help.",
+    "active": "In progress",
+    "ready": "Ready to deliver",
+    "completed": "Completed",
+    "use_hint": "Touch the person or object you want to use this item on. Choose another HUD action to cancel.",
+    "cannot_use": "That does not help here.",
+    "picked_up": "Added to my inventory.",
+    "cannot_talk": "It does not have much to say.",
+    "cannot_walk": "I cannot walk on this.",
+    "click_hint": "Choose an action in the HUD, then click an item.",
+    "actions": {
+      "look": "Look at",
+      "touch": "Touch / Use",
+      "talk": "Talk to",
+      "move": "Walk to",
+      "use": "Use"
+    }
+  },
+  "items": {
+    "task_scroll": {
+      "name": "Tasks",
+      "look": "A yellow scroll containing my current tasks.",
+      "touch": "I unroll the scroll and read my tasks."
+    },
+    "ink_bottle": {
+      "name": "Ink",
+      "look": "A bottle of dark ink. Hendrik needs this for his charts.",
+      "touch": "The stopper is firmly in place."
+    }
+  },
+  "quests": {
+    "navigator_ink": {
+      "title": "Ink for Hendrik",
+      "description": "Find a bottle of ink and bring it to Hendrik, the old sailor.",
+      "completed": "Hendrik takes the ink. Task completed: Ink for Hendrik."
     }
   }
 }

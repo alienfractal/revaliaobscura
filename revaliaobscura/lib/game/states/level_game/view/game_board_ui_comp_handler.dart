@@ -1,6 +1,7 @@
 import 'package:revalia/revalia_obs.dart';
 import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
 import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
+import 'package:revalia/game/states/level_game/view/inventory_popup.dart';
 import 'package:revalia/game/states/main_menu/behaviours/crt_shader_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/music_button_taphandler.dart';
 import 'package:revalia/game/states/main_menu/behaviours/sound_button_taphandler.dart';
@@ -39,6 +40,7 @@ class UIGameBoardComponents {
   late GenericButton bombIcon;
   late GenericSpriteAnimation scoreIcon;
   late EnergyBar energyBar;
+  late InventoryButton inventoryButton;
 
   late GameButton buttonSndFXVolume;
 
@@ -58,6 +60,8 @@ class UIGameBoardComponents {
   }
 
   void removeGameUIComponents() {
+    inventoryButton.removeFromParent();
+    gameActionGroup.buttons.clear();
     // Add the game UI components here
     touchButton.removeFromParent();
     talkButton.removeFromParent();
@@ -73,6 +77,16 @@ class UIGameBoardComponents {
   }
 
   void loadUIComponents(RevaliaObs gameRef) {
+    // Logical viewport units; FixedResolutionViewport scales the whole HUD.
+    final actionButtonSize = Vector2(24, 24);
+    final actionButtonCenterY = actionButtonSize.y / 2;
+    inventoryButton = InventoryButton(
+      gameboardView,
+      position: Vector2(gameRef.camDimension.x - actionButtonSize.x / 2 - 2,
+          actionButtonCenterY),
+      buttonSize: actionButtonSize,
+    );
+    gameRef.cam.viewport.add(inventoryButton);
     blinkTextComponentScore = TextUtils.addTextToview(
         gameRef,
         'SCORE : ${gBoardModel.totalScore.toString().padLeft(6, '0')}',
@@ -103,20 +117,20 @@ class UIGameBoardComponents {
         false);*/
     gameRef.cam.viewport.add(textComponentTime);
 
-    Vector2 horizontalArrowButtonSize = Vector2(24, 24);
     //Vector2 verticalArrowButtonSize = Vector2(14, 28);
 
-    int actoionBarXposition = horizontalArrowButtonSize.x.toInt() + 2;
+    int actoionBarXposition = actionButtonSize.x.toInt() + 2;
     int gapx = 32;
-    double gapy = 12;
+    double gapy = actionButtonCenterY;
     wallkButton = GenericButton(
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition, gapy),
         spriteComponent:
-            gameRef.entitySpriteCache.walkButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.walkButtonSprite.getSpriteComponent()
+              ..size = actionButtonSize.clone(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.move, buttonManager: gameActionGroup),
-        buttonSize: horizontalArrowButtonSize,
+        buttonSize: actionButtonSize,
         isTiled: false);
     gameRef.cam.viewport.add(wallkButton);
     gameActionGroup.buttons.add(wallkButton);
@@ -125,10 +139,11 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 2, gapy),
         spriteComponent:
-            gameRef.entitySpriteCache.lookAtButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.lookAtButtonSprite.getSpriteComponent()
+              ..size = actionButtonSize.clone(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.look, buttonManager: gameActionGroup),
-        buttonSize: horizontalArrowButtonSize,
+        buttonSize: actionButtonSize,
         isTiled: false);
     gameRef.cam.viewport.add(lookButton);
     gameActionGroup.buttons.add(lookButton);
@@ -136,10 +151,11 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 3, gapy),
         spriteComponent:
-            gameRef.entitySpriteCache.touchButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.touchButtonSprite.getSpriteComponent()
+              ..size = actionButtonSize.clone(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.touch, buttonManager: gameActionGroup),
-        buttonSize: horizontalArrowButtonSize,
+        buttonSize: actionButtonSize,
         isTiled: false);
     gameRef.cam.viewport.add(touchButton);
     gameActionGroup.buttons.add(touchButton);
@@ -148,10 +164,11 @@ class UIGameBoardComponents {
         position: Vector2(
             gapx + gameRef.camDimension.x / 2 - actoionBarXposition * 4, gapy),
         spriteComponent:
-            gameRef.entitySpriteCache.talkToButtonSprite.getSpriteComponent(),
+            gameRef.entitySpriteCache.talkToButtonSprite.getSpriteComponent()
+              ..size = actionButtonSize.clone(),
         behavior: EntityActionTapHandler(
             actionType: ActionableType.talk, buttonManager: gameActionGroup),
-        buttonSize: horizontalArrowButtonSize,
+        buttonSize: actionButtonSize,
         isTiled: false);
     gameRef.cam.viewport.add(talkButton);
     gameActionGroup.buttons.add(talkButton);
@@ -164,7 +181,8 @@ class UIGameBoardComponents {
         buttonSize: Vector2(14, 14));
     gameRef.cam.viewport.add(flameIcon);*/
     energyBar = EnergyBar(
-        position: Vector2(248, 2),
+        position:
+            Vector2(inventoryButton.x - actionButtonSize.x / 2 - 2 - 50, 2),
         currentEnergy: gBoardModel.energyCount.toDouble(),
         energyBarSize: Vector2(14, 14),
         maxEnergy: 50,

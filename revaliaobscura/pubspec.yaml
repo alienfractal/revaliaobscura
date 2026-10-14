@@ -42,6 +42,10 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   fonts:
+    # CanvasKit otherwise downloads its default font during web startup.
+    - family: Roboto
+      fonts:
+        - asset: resources/fonts/Roboto-Regular.ttf
     - family: arcade
       fonts:
         - asset: resources/fonts/arcade.ttf

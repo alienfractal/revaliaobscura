@@ -56,6 +56,7 @@ class DialogueFsm {
     required Map<String, dynamic> graph,
     required Map<String, String> translations,
   }) {
+    storyState.adventure.configure(graph);
     final actorGraphs = graph['actors'] as Map<String, dynamic>? ?? {};
     _actorProfiles
       ..clear()

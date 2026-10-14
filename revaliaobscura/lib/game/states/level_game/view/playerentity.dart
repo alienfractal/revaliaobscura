@@ -170,6 +170,14 @@ class PlayerPosEntity extends PositionedEntity with HasGameRef<RevaliaObs> {
     playerAnimationHandler.showIdle(position);
   }
 
+  void cancelMovement() {
+    _clearPendingInteraction();
+    if (actionState == PlayerActionState.walking) {
+      destination = position.clone();
+      _enterIdle();
+    }
+  }
+
   void lockForDialogue() {
     actionState = PlayerActionState.dialogueLocked;
     playerAnimationHandler.showIdle(position);

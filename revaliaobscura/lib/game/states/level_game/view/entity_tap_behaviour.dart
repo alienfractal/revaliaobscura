@@ -20,6 +20,7 @@ class EntityTapBehaviour extends Behavior<LevelEntity>
 
   @override
   void onTapDown(TapDownEvent event) {
+    if (gameRef.gboard.isInventoryOpen || gameRef.gboard.isGameFinished) return;
     super.onTapDown(event);
     RevaliaObs.logger.d("TAP DOWN");
     tapCount++;

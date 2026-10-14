@@ -10,6 +10,13 @@
       },
       "entrypoints": [
         {
+          "dialogue": "npc_ink_thanks",
+          "when": {
+            "quest": "navigator_ink",
+            "status": "completed"
+          }
+        },
+        {
           "dialogue": "npc_waiting_for_ink",
           "when": {
             "flag": "navigator_ink_quest_started"
@@ -55,6 +62,11 @@
         "talk": "female_clothes_trader_talk",
         "walk": "female_clothes_trader_walk"
       }
+    },
+    "ink_bottle_pickup": {
+      "actions": {
+        "look": "ink_bottle_look"
+      }
     }
   },
   "messages": {
@@ -78,7 +90,8 @@
     "generic_touch": {},
     "generic_talk": {},
     "generic_walk": {},
-    "generic_use": {}
+    "generic_use": {},
+    "ink_bottle_look": {}
   },
   "fallbacks": {
     "look": "generic_look",
@@ -216,6 +229,9 @@
           "effects": [
             {
               "set_flag": "navigator_ink_quest_started"
+            },
+            {
+              "start_quest": "navigator_ink"
             }
           ],
           "next": "end"
@@ -237,10 +253,51 @@
     "npc_waiting_for_ink": {
       "responses": [
         {
+          "id": "give_ink",
+          "when": {
+            "quest": "navigator_ink",
+            "status": "ready"
+          },
+          "effects": [
+            {
+              "complete_quest": "navigator_ink"
+            }
+          ],
+          "next": "npc_ink_thanks"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ink_thanks": {
+      "responses": [
+        {
           "id": "leave",
           "next": "end"
         }
       ]
     }
+  },
+  "inventory_items": {
+    "task_scroll": {
+      "permanent": true,
+      "usable": false
+    },
+    "ink_bottle": {
+      "usable": true
+    }
+  },
+  "quests": {
+    "navigator_ink": {
+      "recipient": "old_sailor",
+      "required_items": {
+        "ink_bottle": 1
+      }
+    }
+  },
+  "pickups": {
+    "ink_bottle_pickup": "ink_bottle"
   }
 }

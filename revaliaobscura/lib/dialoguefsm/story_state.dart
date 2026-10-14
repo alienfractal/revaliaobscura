@@ -1,4 +1,7 @@
+import 'package:revalia/dialoguefsm/adventure_state.dart';
+
 class StoryState {
+  final AdventureState adventure = AdventureState();
   final Map<String, bool> _flags = {};
   final Set<String> _consumedResponses = {};
 
@@ -14,6 +17,15 @@ class StoryState {
     final flagId = condition['flag'] as String?;
     if (flagId != null) {
       return flag(flagId) == (condition['equals'] as bool? ?? true);
+    }
+
+    final itemId = condition['has_item'] as String?;
+    if (itemId != null) {
+      return adventure.hasItem(itemId, condition['quantity'] as int? ?? 1);
+    }
+    final questId = condition['quest'] as String?;
+    if (questId != null) {
+      return adventure.status(questId).name == condition['status'];
     }
 
     final all = condition['all'] as List<dynamic>?;
@@ -40,6 +52,23 @@ class StoryState {
 
   void applyEffects(List<Map<String, dynamic>> effects) {
     for (final effect in effects) {
+      final startQuest = effect['start_quest'] as String?;
+      if (startQuest != null) {
+        adventure.startQuest(startQuest);
+        continue;
+      }
+      final completeQuest = effect['complete_quest'] as String?;
+      if (completeQuest != null) {
+        if (!adventure.completeQuest(completeQuest)) {
+          throw StateError('Quest is not ready: $completeQuest');
+        }
+        continue;
+      }
+      final item = effect['add_item'] as String?;
+      if (item != null) {
+        adventure.addItem(item, effect['quantity'] as int? ?? 1);
+        continue;
+      }
       final flagId = effect['set_flag'] as String?;
       if (flagId != null) {
         _flags[flagId] = effect['value'] as bool? ?? true;
@@ -62,5 +91,6 @@ class StoryState {
   void clear() {
     _flags.clear();
     _consumedResponses.clear();
+    adventure.reset();
   }
 }

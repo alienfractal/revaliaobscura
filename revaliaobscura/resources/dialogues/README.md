@@ -1,5 +1,8 @@
 # Dialogue Graphs
 
+See [Inventory and quests](INVENTORY_AND_QUESTS.md) for item definitions,
+pickup placement, journal UI, and delivery quest effects/conditions.
+
 Dialogue graph JSON files define conversation structure independently from
 translated text.
 

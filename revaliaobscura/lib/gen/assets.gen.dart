@@ -1,3 +1,5 @@
+// dart format width=80
+
 /// GENERATED CODE - DO NOT MODIFY BY HAND
 /// *****************************************************
 ///  FlutterGen
@@ -5,7 +7,7 @@
 
 // coverage:ignore-file
 // ignore_for_file: type=lint
-// ignore_for_file: directives_ordering,unnecessary_import,implicit_dynamic_list_literal,deprecated_member_use
+// ignore_for_file: deprecated_member_use,directives_ordering,implicit_dynamic_list_literal,unnecessary_import
 
 import 'package:flutter/widgets.dart';
 
@@ -267,6 +269,10 @@ class $ResourcesAudioGen {
 class $ResourcesDialoguesGen {
   const $ResourcesDialoguesGen();
 
+  /// File path: resources/dialogues/INVENTORY_AND_QUESTS.md
+  String get inventoryAndQuests =>
+      'resources/dialogues/INVENTORY_AND_QUESTS.md';
+
   /// File path: resources/dialogues/README.md
   String get readme => 'resources/dialogues/README.md';
 
@@ -274,7 +280,7 @@ class $ResourcesDialoguesGen {
   String get revaliaDialogues => 'resources/dialogues/revalia_dialogues.json';
 
   /// List of all assets
-  List<String> get values => [readme, revaliaDialogues];
+  List<String> get values => [inventoryAndQuests, readme, revaliaDialogues];
 }
 
 class $ResourcesFontsGen {
@@ -399,6 +405,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/Sprite-0005-56x63-36x45.aseprite
   String get sprite000556x6336x45 =>
       'resources/images/Sprite-0005-56x63-36x45.aseprite';
+
+  /// File path: resources/images/action-icon-inventory-24x24.png
+  AssetGenImage get actionIconInventory24x24 =>
+      const AssetGenImage('resources/images/action-icon-inventory-24x24.png');
 
   /// File path: resources/images/action-icon-look-24x24.png
   AssetGenImage get actionIconLook24x24 =>
@@ -856,6 +866,7 @@ class $ResourcesImagesGen {
         revalTowncenter320x200Png,
         revalTowncenterMarketAnimation320x200,
         sprite000556x6336x45,
+        actionIconInventory24x24,
         actionIconLook24x24,
         actionIconTalk24x24,
         actionIconTouch24x24,
@@ -998,7 +1009,7 @@ class $ResourcesTranslationsGen {
 }
 
 class Assets {
-  Assets._();
+  const Assets._();
 
   static const $ResourcesGen resources = $ResourcesGen();
 }
@@ -1008,12 +1019,14 @@ class AssetGenImage {
     this._assetName, {
     this.size,
     this.flavors = const {},
+    this.animation,
   });
 
   final String _assetName;
 
   final Size? size;
   final Set<String> flavors;
+  final AssetGenImageAnimation? animation;
 
   Image image({
     Key? key,
@@ -1036,7 +1049,7 @@ class AssetGenImage {
     bool gaplessPlayback = true,
     bool isAntiAlias = false,
     String? package,
-    FilterQuality filterQuality = FilterQuality.low,
+    FilterQuality filterQuality = FilterQuality.medium,
     int? cacheWidth,
     int? cacheHeight,
   }) {
@@ -1082,4 +1095,16 @@ class AssetGenImage {
   String get path => _assetName;
 
   String get keyName => _assetName;
+}
+
+class AssetGenImageAnimation {
+  const AssetGenImageAnimation({
+    required this.isAnimation,
+    required this.duration,
+    required this.frames,
+  });
+
+  final bool isAnimation;
+  final Duration duration;
+  final int frames;
 }

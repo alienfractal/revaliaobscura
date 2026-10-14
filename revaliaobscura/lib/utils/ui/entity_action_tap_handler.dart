@@ -21,6 +21,7 @@ class EntityActionTapHandler extends Behavior<GenericButton>
 
   @override
   void onTapDown(TapDownEvent event) {
+    gameRef.gboard.selectedInventoryItem = null;
     // Example: Scale the button as an animation effect
     super.onTapDown(event);
     gameRef.gboard.actionType = actionType;

@@ -9,10 +9,12 @@ import 'package:revalia/game/states/level_game/view/clothes_trader_npc_entity.da
 import 'package:revalia/game/states/level_game/view/dialog_frame_entity.dart';
 import 'package:revalia/game/states/level_game/view/female_clothes_trader_npc_entity.dart';
 import 'package:revalia/game/states/level_game/view/level_entity.dart';
+import 'package:revalia/game/states/level_game/view/inventory_popup.dart';
 import 'package:revalia/game/states/level_game/view/market_background_entity.dart';
 import 'package:revalia/game/states/level_game/view/perspective_guide_entity.dart';
 import 'package:revalia/game/states/level_game/view/playerentity.dart';
 import 'package:revalia/game/states/level_game/view/sailor_npc_entity.dart';
+import 'package:revalia/game/states/level_game/view/static_scene_prop_entity.dart';
 import 'package:revalia/game/states/level_game/view/walking_area_entity.dart';
 import 'package:revalia/revalia_obs.dart';
 
@@ -49,6 +51,50 @@ class GameboardView extends World
 
   DialogFrameEntity? df;
   SpriteComponent? _observationImage;
+  InventoryPopup? _inventoryPopup;
+  String? selectedInventoryItem;
+  bool get isInventoryOpen => _inventoryPopup != null;
+
+  String adventureText(String key) =>
+      AppTranslations.translationsFor(game.currentLocale)[key] ?? key;
+
+  void toggleInventory() {
+    if (isInventoryOpen) {
+      closeInventory();
+    } else if (isBoardLoaded &&
+        !isGameFinished &&
+        !(df?.isDialogActive ?? false)) {
+      playerEntity.cancelMovement();
+      _inventoryPopup = InventoryPopup(this);
+      game.cam.viewport.add(_inventoryPopup!);
+    }
+  }
+
+  void closeInventory() {
+    _inventoryPopup?.removeFromParent();
+    _inventoryPopup = null;
+  }
+
+  void selectInventoryItem(String itemId) {
+    selectedInventoryItem = itemId;
+    actionType = ActionableType.touch;
+    uiGameBoardComponents.gameActionGroup
+        .onButtonTapped(uiGameBoardComponents.touchButton);
+    closeInventory();
+    showScreenMessage(adventureText('inventory.use_hint'));
+  }
+
+  bool useInventoryItemOn(LevelEntity target) {
+    final item = selectedInventoryItem;
+    if (item == null) return false;
+    selectedInventoryItem = null;
+    final quest = DialogueManager.fsm.storyState.adventure
+        .deliverItem(item, target.interactionId);
+    showScreenMessage(quest == null
+        ? adventureText('inventory.cannot_use')
+        : adventureText('quests.${quest.id}.completed'));
+    return true;
+  }
 
   ActionableType actionType = ActionableType.move;
   int _conclusionToken = 0;
@@ -111,6 +157,8 @@ class GameboardView extends World
   @override
   void onRemove() {
     DialogEventManager.removeListener(_dialogueEventListener);
+    closeInventory();
+    selectedInventoryItem = null;
     super.onRemove();
     _conclusionToken++;
     game.cam.moveTo(Vector2(0, 0));
@@ -176,6 +224,11 @@ class GameboardView extends World
         }
       },
     );
+  }
+
+  @override
+  void updateTree(double dt) {
+    if (!isInventoryOpen) super.updateTree(dt);
   }
 
   @override
@@ -379,6 +432,8 @@ class GameboardView extends World
   }
 
   void addScenarioEntity(ScenarioEntityConfig config) {
+    if (DialogueManager.fsm.storyState.adventure
+        .wasCollected(config.interactionId)) return;
     final LevelEntity entity;
     switch (config.type) {
       case 'npc':
@@ -421,6 +476,16 @@ class GameboardView extends World
               'Unsupported NPC configuration: ${config.assetId}',
             );
         }
+      case 'static_prop':
+        entity = StaticScenePropEntity(
+          assetPath: config.assetId,
+          interactionId: config.interactionId,
+          feetPosition: config.feetPosition,
+          visualSize: config.size,
+          isWalkable: config.isWalkable,
+          scalesWithPerspective: config.scalesWithPerspective,
+          sortsWithDepth: config.sortsWithDepth,
+        );
       case 'animated_prop':
         entity = AnimatedScenePropEntity(
           interactionId: config.interactionId,

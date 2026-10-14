@@ -43,5 +43,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/web/
+/web/*
+!/web/flutter_bootstrap.js
 /windows/
