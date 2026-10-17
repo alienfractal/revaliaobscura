@@ -24,6 +24,18 @@
   "actors": {
     "old_sailor": {
       "name": "Navigator"
+    },
+    "female_clothes_trader": {
+      "name": "Clothes trader"
+    },
+    "city_guard": {
+      "name": "City guard"
+    },
+    "forest_mushroom": {
+      "name": "Forest mushroom"
+    },
+    "inkcap": {
+      "name": "Inkcap"
     }
   },
   "loading": {
@@ -157,10 +169,124 @@
     },
     "npc_ink_thanks": {
       "player_text": "About the ink for your charts...",
-      "text": "Just what I needed. Thank you, Rebane.",
+      "text": "Just what I needed. Here is your reward: a map of the trading route from Tallinn to Tartu. Your first journey starts here.",
       "responses": {
         "leave": {
           "text": "Safe travels, Hendrik."
+        }
+      }
+    },
+    "lady_hendrik": {
+      "player_text": "Excuse me.",
+      "text": "Oh, I see you got acquainted with Hendrik. What did he tell you?",
+      "responses": {
+        "explain_ink": {
+          "text": "He needs ink. I am new here; where should I look?"
+        },
+        "leave": {
+          "text": "Perhaps another time."
+        }
+      }
+    },
+    "lady_directions": {
+      "player_text": "Hendrik sent me to find ink.",
+      "text": "Ink is expensive here. Try asking the guard by the city gate. He might know where to look.",
+      "responses": {
+        "thank_lady": {
+          "text": "Thank you. I will ask him."
+        }
+      }
+    },
+    "lady_after_ink": {
+      "player_text": "I found ink for Hendrik.",
+      "text": "Then you are finding your way around already.",
+      "responses": {
+        "leave": {
+          "text": "Thanks for your help."
+        }
+      }
+    },
+    "guard_idle": {
+      "player_text": "Good day.",
+      "text": "Keep the gate clear, traveller. If you need directions, ask someone in the square first.",
+      "responses": {
+        "leave": {
+          "text": "Of course."
+        }
+      }
+    },
+    "guard_forest": {
+      "player_text": "Where can I find ink around here?",
+      "text": "Ink? Could not say. Try outside the walls, across the river and into the forest, if you know what to look for. You may pass.",
+      "responses": {
+        "follow_directions": {
+          "text": "Thank you. I will go through the gate."
+        },
+        "leave": {
+          "text": "I will think about it."
+        }
+      }
+    },
+    "mushroom_idle": {
+      "player_text": "Did you just move?",
+      "text": "Everything in this forest moves eventually.",
+      "responses": {
+        "leave": {
+          "text": "Right..."
+        }
+      }
+    },
+    "mushroom_ink": {
+      "player_text": "I need black ink. Does the big fellow know where to find it?",
+      "text": "Metsavana is busy. I do the talking. See that inkcap beside me? Its black goo is ready to write with. You could bottle it. Or perhaps you were thinking of licking it?",
+      "responses": {
+        "collect_ink": {
+          "text": "Collect the black goo in my bottle."
+        },
+        "need_bottle": {
+          "text": "I have nothing to carry it in."
+        },
+        "lick_goo": {
+          "text": "Lick it."
+        },
+        "leave": {
+          "text": "I will come back."
+        }
+      }
+    },
+    "mushroom_need_bottle": {
+      "player_text": "Could I put it in a cup?",
+      "text": "A bottle with a stopper would be wiser. Someone in town must have emptied one by now.",
+      "responses": {
+        "leave": {
+          "text": "I will look in town."
+        }
+      }
+    },
+    "mushroom_collected": {
+      "player_text": "That should do for ink.",
+      "text": "Keep the stopper in. Hendrik needs ink on his maps, not on your insides.",
+      "responses": {
+        "leave": {
+          "text": "Back to Hendrik, then."
+        }
+      }
+    },
+    "inkcap_choices": {
+      "player_text": "This mushroom is oozing black liquid.",
+      "text": "The talking mushroom calls it ink. It looks ready to bottle.",
+      "responses": {
+        "collect_ink": {
+          "text": "Collect the goo in my bottle."
+        },
+        "need_bottle": {
+          "text": "I need a container."
+        },
+        "lick_goo": {
+          "text": "Lick it."
+        },
+        "leave": {
+          "text": "Leave it alone."
         }
       }
     }
@@ -231,6 +357,42 @@
     },
     "ink_bottle_look": {
       "text": "A bottle of dark ink. It might be useful for drawing charts."
+    },
+    "city_exit_locked": {
+      "text": "I should speak to Hendrik, ask the lady for directions, and get the guard's permission first."
+    },
+    "city_guard_look": {
+      "text": "A guard keeps watch beside the city gate."
+    },
+    "empty_bottle_look": {
+      "text": "An empty bottle beside the drunken count. It could hold ink."
+    },
+    "sleeping_drunk_look": {
+      "text": "A count, thoroughly drunk in the street beside the city gates. His bottle is empty."
+    },
+    "sleeping_drunk_talk": {
+      "text": "“...õh... hrr... ...” The count slurs something in Livonian, then loses his train of thought."
+    },
+    "metsavana_silent": {
+      "text": "Metsavana does not reply. The gnomes keep scraping. A nearby mushroom seems to be watching me."
+    },
+    "metsavana_look": {
+      "text": "Gnomes are carefully scraping and cleaning the huge forest figure."
+    },
+    "mushroom_look": {
+      "text": "A mushroom that looks as though it has something to say."
+    },
+    "inkcap_look": {
+      "text": "A mushroom oozes a thick black liquid."
+    },
+    "gnome_look": {
+      "text": "A gnome scrapes away, pausing now and then to catch his breath."
+    },
+    "mushroom_poisoned": {
+      "text": "The goo is poisonous. You turn green and collapse. Click to retry before tasting it; your quest progress is safe."
+    },
+    "exit_look": {
+      "text": "The road continues. Walk here to travel."
     }
   },
   "inventory": {
@@ -266,13 +428,35 @@
       "name": "Ink",
       "look": "A bottle of dark ink. Hendrik needs this for his charts.",
       "touch": "The stopper is firmly in place."
+    },
+    "empty_bottle": {
+      "name": "Empty bottle",
+      "look": "An empty bottle from beside the drunken count at the city gates. It could hold ink.",
+      "touch": "I could fill this with the black mushroom goo."
+    },
+    "tartu_route_map": {
+      "name": "Tallinn-Tartu route",
+      "look": "Hendrik's map of the trading route from Tallinn to Tartu. My first route!",
+      "touch": "I carefully unfold the map. The road leads to Tartu."
     }
   },
   "quests": {
     "navigator_ink": {
       "title": "Ink for Hendrik",
-      "description": "Find a bottle of ink and bring it to Hendrik, the old sailor.",
-      "completed": "Hendrik takes the ink. Task completed: Ink for Hendrik."
+      "description": "Find a container, find ink, and bring it to Hendrik.",
+      "completed": "Hendrik takes the ink and gives me the Tallinn-Tartu trading-route map. Demo complete!"
     }
+  },
+  "scene": {
+    "empty_bottle_pickup": "Bottle",
+    "sleeping_drunk": "Drunk count",
+    "forest_mushroom": "Mushroom",
+    "inkcap": "Inkcap",
+    "gnome_worker": "Gnome",
+    "city_exit": "City exit",
+    "to_town": "To town",
+    "to_forest": "To forest",
+    "to_river": "To river",
+    "to_gates": "To gates"
   }
 }

@@ -1,0 +1,218 @@
+[
+  {
+    "frame": 1,
+    "action": "scrape high",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 2,
+    "action": "scrape down",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 3,
+    "action": "lower brush",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 4,
+    "action": "set brush down",
+    "duration_ms": 200,
+    "head_offset": [
+      11,
+      7
+    ]
+  },
+  {
+    "frame": 5,
+    "action": "release and rest",
+    "duration_ms": 280,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 6,
+    "action": "heavy inhale 1",
+    "duration_ms": 180,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 7,
+    "action": "chest expanded 1",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 8,
+    "action": "heavy exhale 1",
+    "duration_ms": 220,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 9,
+    "action": "shoulders slump 1",
+    "duration_ms": 180,
+    "head_offset": [
+      11,
+      6
+    ]
+  },
+  {
+    "frame": 10,
+    "action": "heavy inhale 2",
+    "duration_ms": 180,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 11,
+    "action": "chest expanded 2",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 12,
+    "action": "heavy exhale 2",
+    "duration_ms": 220,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 13,
+    "action": "shoulders slump 2",
+    "duration_ms": 180,
+    "head_offset": [
+      11,
+      6
+    ]
+  },
+  {
+    "frame": 14,
+    "action": "heavy inhale 3",
+    "duration_ms": 180,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 15,
+    "action": "chest expanded 3",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 16,
+    "action": "heavy exhale 3",
+    "duration_ms": 220,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 17,
+    "action": "shoulders slump 3",
+    "duration_ms": 180,
+    "head_offset": [
+      11,
+      6
+    ]
+  },
+  {
+    "frame": 18,
+    "action": "turn attention to brush",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 19,
+    "action": "reach down",
+    "duration_ms": 180,
+    "head_offset": [
+      11,
+      7
+    ]
+  },
+  {
+    "frame": 20,
+    "action": "grasp brush",
+    "duration_ms": 240,
+    "head_offset": [
+      11,
+      7
+    ]
+  },
+  {
+    "frame": 21,
+    "action": "pick brush off floor",
+    "duration_ms": 160,
+    "head_offset": [
+      11,
+      6
+    ]
+  },
+  {
+    "frame": 22,
+    "action": "lift brush",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 23,
+    "action": "resume brushing",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 24,
+    "action": "scrape high loop",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  }
+]

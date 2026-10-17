@@ -15,8 +15,10 @@ class QuestDefinition {
   final String id;
   final String recipient;
   final Map<String, int> requiredItems;
+  final Map<String, int> rewards;
 
-  const QuestDefinition(this.id, this.recipient, this.requiredItems);
+  const QuestDefinition(this.id, this.recipient, this.requiredItems,
+      [this.rewards = const {}]);
 }
 
 /// Shared playthrough state. Definitions come from the dialogue graph; no UI
@@ -58,8 +60,18 @@ class AdventureState {
               e.value <= 0)) {
         throw FormatException('Invalid required items for quest ${entry.key}');
       }
+      final rewards = (data['rewards'] as Map<String, dynamic>? ?? {})
+          .map((id, quantity) => MapEntry(id, quantity as int));
+      for (final reward in rewards.entries) {
+        if (!_items.containsKey(reward.key) || reward.value <= 0) {
+          throw FormatException('Invalid reward for quest ${entry.key}');
+        }
+      }
       _quests[entry.key] = QuestDefinition(
-          entry.key, data['recipient'] as String, Map.unmodifiable(required));
+          entry.key,
+          data['recipient'] as String,
+          Map.unmodifiable(required),
+          Map.unmodifiable(rewards));
     }
     _pickups
       ..clear()
@@ -114,6 +126,9 @@ class AdventureState {
       removeItem(entry.key, entry.value);
     }
     _completed.add(questId);
+    for (final reward in quest.rewards.entries) {
+      addItem(reward.key, reward.value);
+    }
     return true;
   }
 

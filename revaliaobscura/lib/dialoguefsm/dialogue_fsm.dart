@@ -165,6 +165,20 @@ class DialogueFsm {
     }
 
     final response = dialogue.responses[index];
+    if (activeSession?.currentNodeId != dialogue.id) {
+      throw StateError('This dialogue is no longer active.');
+    }
+    final rawResponses = (_graphNodes[dialogue.id]
+        as Map<String, dynamic>)['responses'] as List<dynamic>;
+    final raw = rawResponses
+        .cast<Map<String, dynamic>>()
+        .firstWhere((r) => r['id'] == response.id);
+    if (!storyState.matches(raw['when'] as Map<String, dynamic>?) ||
+        (response.once &&
+            storyState.isResponseConsumed(
+                _responseStateId(dialogue.id, response.id)))) {
+      throw StateError('This response is no longer available.');
+    }
     storyState.applyEffects(response.effects);
     if (response.once) {
       storyState.consumeResponse(_responseStateId(dialogue.id, response.id));

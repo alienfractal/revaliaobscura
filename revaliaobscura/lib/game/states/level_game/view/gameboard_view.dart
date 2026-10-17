@@ -1,4 +1,9 @@
 import 'dart:async';
+import 'package:flame/text.dart';
+import 'package:flutter/painting.dart';
+import 'package:revalia/dialoguefsm/adventure_state.dart';
+import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
+import 'package:revalia/game/states/level_game/view/quest_scene_entity.dart';
 
 import 'package:revalia/game/states/level_game/model/player_model.dart';
 import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
@@ -31,6 +36,15 @@ import 'package:flame/components.dart';
 class GameboardView extends World
     with HasGameReference<RevaliaObs>
     implements ViewTransitionInterface {
+  final String locationId;
+  final String? arrivedFrom;
+  bool _travelRequested = false;
+  bool _poisoning = false;
+  bool _retryPoisoningRequested = false;
+  double _poisonSeconds = 0;
+  int? _scorePopupPoints;
+  String? _pendingLocation;
+  String? _dialogueTravelDestination;
   late GameBoardModel gBoardModel;
   int horizontalCells = 0;
   int verticalCells = 0;
@@ -88,8 +102,17 @@ class GameboardView extends World
     final item = selectedInventoryItem;
     if (item == null) return false;
     selectedInventoryItem = null;
+    if (item == 'empty_bottle' &&
+        (target.interactionId == 'inkcap' ||
+            target.interactionId == 'forest_mushroom') &&
+        target.canTalk) {
+      callRenderDialogue(target);
+      return true;
+    }
     final quest = DialogueManager.fsm.storyState.adventure
         .deliverItem(item, target.interactionId);
+    if (quest != null) _awardQuestCompletion();
+    if (quest == null) selectedInventoryItem = item;
     showScreenMessage(quest == null
         ? adventureText('inventory.cannot_use')
         : adventureText('quests.${quest.id}.completed'));
@@ -101,7 +124,10 @@ class GameboardView extends World
   late final DialogueEventListener _dialogueEventListener;
 
   late LevelEntity activeActor;
-  GameboardView({GameBoardModel? model}) {
+  GameboardView(
+      {GameBoardModel? model,
+      this.locationId = QuestLocations.town,
+      this.arrivedFrom}) {
     gBoardModel = model ?? GameBoardModel();
     uiGameBoardComponents = UIGameBoardComponents(gameboardView: this);
     _dialogueEventListener = _handleDialogueEvent;
@@ -114,8 +140,23 @@ class GameboardView extends World
     levelEntities = <LevelEntity>[];
     uiGameBoardComponents.gameRef = game;
     scenario = await ScenarioLoader.load(
-      'resources/scenarios/town_square.json',
+      QuestLocations.paths[locationId]!,
     );
+    final foregroundPath = scenario.foregroundAssetPath;
+    if (foregroundPath != null) {
+      final sprite = await game.loadSprite(foregroundPath);
+      add(SpriteComponent(
+        sprite: sprite,
+        size: sprite.srcSize.clone(),
+        position: Vector2(
+          (game.camDimension.x - sprite.srcSize.x) / 2,
+          game.camDimension.y - sprite.srcSize.y,
+        ),
+        // Above all depth-sorted actors; below observations and dialogue.
+        // No tap handlers: the scenery does not intercept world interactions.
+        priority: 1000,
+      ));
+    }
   }
 
   @override
@@ -174,6 +215,21 @@ class GameboardView extends World
   }
 
   void _handleDialogueEvent(String event) {
+    if (event == 'guard_passage') {
+      _dialogueTravelDestination = QuestLocations.gates;
+      return;
+    }
+    if (event == 'mushroom_poisoning') {
+      // Defer until the response handler has closed the dialogue frame.
+      _poisoning = true;
+      _poisonSeconds = 0;
+      return;
+    }
+    if (event == 'conversation_end' &&
+        DialogueManager.fsm.storyState.adventure.status('navigator_ink') ==
+            QuestStatus.completed) {
+      _awardQuestCompletion();
+    }
     if (event.startsWith('score_milestone:')) {
       final parts = event.split(':');
       if (parts.length == 3) {
@@ -183,6 +239,7 @@ class GameboardView extends World
           game.ap.playSoundFx(Assets.resources.audio.blipSelect2);
           updateUIComponents();
           uiGameBoardComponents.flashScoreChange();
+          _scorePopupPoints = points;
         }
       }
       return;
@@ -234,6 +291,42 @@ class GameboardView extends World
   @override
   void update(double dt) {
     super.update(dt);
+    if (_dialogueTravelDestination != null && !(df?.isDialogActive ?? false)) {
+      final destination = _dialogueTravelDestination!;
+      _dialogueTravelDestination = null;
+      travelTo(destination);
+    }
+    if (_pendingLocation != null) {
+      final next = _pendingLocation!;
+      _pendingLocation = null;
+      game.openLocation(next, arrivedFrom: locationId);
+      return;
+    }
+    if (_retryPoisoningRequested) {
+      _retryPoisoningRequested = false;
+      game.openLocation(QuestLocations.forest);
+      return;
+    }
+    if (_scorePopupPoints != null) {
+      final points = _scorePopupPoints!;
+      _scorePopupPoints = null;
+      final popup = TextComponent(
+          text: '+$points',
+          position: Vector2(40, 30),
+          priority: 3000,
+          textRenderer: TextPaint(
+              style: const TextStyle(
+                  fontFamily: 'scumm',
+                  fontSize: 12,
+                  color: Color(0xffffdb69))));
+      add(popup);
+      popup.add(TimerComponent(
+          period: 2, removeOnFinish: true, onTick: popup.removeFromParent));
+    }
+    if (_poisoning) {
+      _updatePoisoning(dt);
+      return;
+    }
     if (_scoreTransitionRequested) {
       _scoreTransitionRequested = false;
       game.cam.stop();
@@ -306,9 +399,7 @@ class GameboardView extends World
   }
 
   void updateGameStats(double dt) {
-    if (clickCount > 2) {
-      gBoardModel.levelPlayTime -= dt;
-    }
+    // The quest demo allows time to explore and read dialogue.
   }
 
   void updateUIComponents() {
@@ -390,7 +481,11 @@ class GameboardView extends World
       scenario.walkingAreaVertices,
       showGuide: scenario.showPerspectiveGuide,
     );
-    addPlayer(scenario.player);
+    final arrival = scenario.arrivals[arrivedFrom];
+    addPlayer(arrival == null
+        ? scenario.player
+        : ScenarioPlayerConfig(
+            feetPosition: arrival, size: scenario.player.size));
     for (final entity in scenario.entities) {
       addScenarioEntity(entity);
     }
@@ -464,6 +559,7 @@ class GameboardView extends World
             );
           case 'female_clothes_trader':
             entity = FemaleClothesTraderNpcEntity(
+              dialogueActorId: config.dialogueActorId,
               feetPosition: config.feetPosition,
               size: config.size,
               interactionId: config.interactionId,
@@ -476,6 +572,10 @@ class GameboardView extends World
               'Unsupported NPC configuration: ${config.assetId}',
             );
         }
+      case 'quest_prop':
+      case 'decoration':
+      case 'exit':
+        entity = QuestSceneEntity(config);
       case 'static_prop':
         entity = StaticScenePropEntity(
           assetPath: config.assetId,
@@ -526,6 +626,64 @@ class GameboardView extends World
 
   Vector2 interactionDestinationFor(LevelEntity actor) {
     return constrainToWalkingArea(actor.interactionPoint);
+  }
+
+  void travelTo(String destination) {
+    if (_travelRequested || isGameFinished || (df?.isDialogActive ?? false))
+      return;
+    if (!QuestLocations.canTravel(locationId, destination,
+        gateUnlocked:
+            DialogueManager.fsm.storyState.flag('city_exit_unlocked'))) {
+      showScreenMessage(adventureText('messages.city_exit_locked.text'));
+      return;
+    }
+    _travelRequested = true;
+    playerEntity.cancelMovement();
+    playerEntity.disableActions();
+    closeInventory();
+    selectedInventoryItem = null;
+    _pendingLocation = destination;
+  }
+
+  bool handleQuestAction(LevelEntity target, ActionableType action) {
+    if (target.interactionId == 'inkcap' &&
+        action == ActionableType.touch &&
+        target.canTalk) {
+      callRenderDialogue(target);
+      return true;
+    }
+    if (target.interactionId == 'metsavana' && action == ActionableType.talk) {
+      showScreenMessage(adventureText('messages.metsavana_silent.text'));
+      return true;
+    }
+    return false;
+  }
+
+  void _awardQuestCompletion() {
+    _handleDialogueEvent('score_milestone:deliver_hendrik_ink:500');
+  }
+
+  void _updatePoisoning(double dt) {
+    if (_poisonSeconds == 0) {
+      removeDialogFrame();
+      isGameFinished = true;
+      playerEntity.cancelMovement();
+      playerEntity.disableActions();
+      playerEntity.playerAnimationHandler.spriteAnimationComponent.paint
+              .colorFilter =
+          const ColorFilter.mode(Color(0xff59bb45), BlendMode.modulate);
+      game.ap.playSoundFx(Assets.resources.audio.death);
+    }
+    _poisonSeconds += dt;
+    if (_poisonSeconds < 1.0) return;
+    _poisoning = false;
+    playerEntity.playerAnimationHandler.triggerDie(onComplete: () {
+      if (!isMounted) return;
+      showScreenMessage(adventureText('messages.mushroom_poisoned.text'),
+          durationSeconds: null, onDismissed: () {
+        if (isMounted) _retryPoisoningRequested = true;
+      });
+    });
   }
 
   void callRenderDialogue(LevelEntity actorEntity) {

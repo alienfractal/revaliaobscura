@@ -64,6 +64,13 @@ class StoryState {
         }
         continue;
       }
+      final removed = effect['remove_item'] as String?;
+      if (removed != null) {
+        if (!adventure.removeItem(removed, effect['quantity'] as int? ?? 1)) {
+          throw StateError('Cannot consume item: $removed');
+        }
+        continue;
+      }
       final item = effect['add_item'] as String?;
       if (item != null) {
         adventure.addItem(item, effect['quantity'] as int? ?? 1);

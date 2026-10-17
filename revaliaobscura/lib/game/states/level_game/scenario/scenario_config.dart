@@ -9,6 +9,8 @@ class ScenarioConfig {
     required this.walkingAreaVertices,
     required this.player,
     required this.entities,
+    this.arrivals = const {},
+    this.foregroundAssetPath,
   });
 
   factory ScenarioConfig.fromJson(Map<String, dynamic> json) {
@@ -23,8 +25,11 @@ class ScenarioConfig {
     }
 
     return ScenarioConfig(
+      arrivals: (json['arrivals'] as Map<String, dynamic>? ?? {})
+          .map((id, point) => MapEntry(id, _vector(point, 'arrivals.$id'))),
       id: _string(json, 'id'),
       backgroundId: _string(json, 'background'),
+      foregroundAssetPath: json['foreground'] as String?,
       showPerspectiveGuide: json['show_perspective_guide'] as bool? ?? false,
       perspective: ScenarioPerspectiveConfig.fromJson(
         _map(json, 'perspective'),
@@ -41,8 +46,10 @@ class ScenarioConfig {
     );
   }
 
+  final Map<String, Vector2> arrivals;
   final String id;
   final String backgroundId;
+  final String? foregroundAssetPath;
   final bool showPerspectiveGuide;
   final ScenarioPerspectiveConfig perspective;
   final List<Vector2> walkingAreaVertices;
@@ -103,10 +110,30 @@ class ScenarioEntityConfig {
     required this.isWalkable,
     required this.scalesWithPerspective,
     required this.sortsWithDepth,
+    this.destination,
+    this.animation,
+    this.talkAsset,
+    this.talkAnimation,
+    this.motion,
   });
 
   factory ScenarioEntityConfig.fromJson(Map<String, dynamic> json) {
+    final motion = json['motion'] as Map<String, dynamic>?;
+    if (motion != null) {
+      final from = _number(motion, 'from_x');
+      final to = _number(motion, 'to_x');
+      final speed = _number(motion, 'speed');
+      if (!from.isFinite || !to.isFinite || !speed.isFinite ||
+          to <= from || speed <= 0) {
+        throw const FormatException('Invalid left-to-right decoration motion.');
+      }
+    }
     return ScenarioEntityConfig(
+      motion: motion,
+      destination: json['destination'] as String?,
+      animation: json['animation'] as Map<String, dynamic>?,
+      talkAsset: json['talk_asset'] as String?,
+      talkAnimation: json['talk_animation'] as Map<String, dynamic>?,
       type: _string(json, 'type'),
       assetId: _string(json, 'asset_id'),
       interactionId: _string(json, 'interaction_id'),
@@ -119,6 +146,11 @@ class ScenarioEntityConfig {
     );
   }
 
+  final String? destination;
+  final Map<String, dynamic>? motion;
+  final Map<String, dynamic>? animation;
+  final String? talkAsset;
+  final Map<String, dynamic>? talkAnimation;
   final String type;
   final String assetId;
   final String interactionId;

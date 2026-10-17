@@ -11,6 +11,7 @@ class FemaleClothesTraderNpcEntity extends LevelEntity {
     required Vector2 feetPosition,
     required Vector2 size,
     required super.interactionId,
+    super.dialogueActorId,
     super.isWalkable = false,
     this.scalesWithPerspective = true,
     this.sortsWithDepth = true,
@@ -56,11 +57,15 @@ class FemaleClothesTraderNpcEntity extends LevelEntity {
   @override
   void onLoad() {
     super.onLoad();
+    final visualSize = game.entitySpriteCache.npcFemaleClothesTraderIdle.imgSize * (size.y / 85);
     animationHandler.init(
       idleAnimation:
           game.entitySpriteCache.npcFemaleClothesTraderIdle.animation,
-      size: size,
+      talkAnimation:
+          game.entitySpriteCache.npcFemaleClothesTraderTalk.animation,
+      size: visualSize,
       parent: this,
     );
+    animationHandler.spriteAnimationComponent.position = Vector2(size.x / 2, size.y);
   }
 }

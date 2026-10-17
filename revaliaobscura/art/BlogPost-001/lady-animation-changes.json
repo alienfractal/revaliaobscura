@@ -1,0 +1,12 @@
+[
+  {
+    "path": "lib/game/states/level_game/services/entity_sprite_cache_service.dart",
+    "before": "f65e66747860abff4f83502024c5c4f69dc64428793a5c27a7e4b13703b117db",
+    "after": "b043ea283671125e6cac5520d19f02c69945d812a57e86257aaef3316bb21ce0"
+  },
+  {
+    "path": "lib/game/states/level_game/view/female_clothes_trader_npc_entity.dart",
+    "before": "2d2bcb84fbfc231a3745e567c79ff8be5737829994495b2345fddbf3ea978c34",
+    "after": "a984a5c028f9c4b793c79604f86600e60385d9c4af1adad7b1c5036373e781f3"
+  }
+]

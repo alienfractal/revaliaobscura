@@ -10,14 +10,29 @@
   },
   "walking_area": {
     "vertices": [
-      [160, 102],
-      [320, 200],
-      [0, 200]
+      [
+        160,
+        102
+      ],
+      [
+        320,
+        200
+      ],
+      [
+        0,
+        200
+      ]
     ]
   },
   "player": {
-    "feet_position": [160, 200],
-    "size": [50, 84]
+    "feet_position": [
+      160,
+      200
+    ],
+    "size": [
+      50,
+      84
+    ]
   },
   "entities": [
     {
@@ -25,8 +40,14 @@
       "asset_id": "old_sailor",
       "interaction_id": "old_sailor",
       "dialogue_actor_id": "old_sailor",
-      "feet_position": [25, 192.5],
-      "size": [50, 85],
+      "feet_position": [
+        25,
+        192.5
+      ],
+      "size": [
+        50,
+        85
+      ],
       "walkable": false,
       "perspective_scaling": true,
       "depth_sorting": true
@@ -35,8 +56,14 @@
       "type": "npc",
       "asset_id": "clothes_trader",
       "interaction_id": "clothes_trader",
-      "feet_position": [295, 192.5],
-      "size": [50, 85],
+      "feet_position": [
+        295,
+        192.5
+      ],
+      "size": [
+        50,
+        85
+      ],
       "walkable": false,
       "perspective_scaling": true,
       "depth_sorting": true
@@ -45,18 +72,31 @@
       "type": "npc",
       "asset_id": "female_clothes_trader",
       "interaction_id": "female_clothes_trader",
-      "feet_position": [240, 192.5],
-      "size": [50, 85],
+      "feet_position": [
+        240,
+        192.5
+      ],
+      "size": [
+        50,
+        85
+      ],
       "walkable": false,
       "perspective_scaling": true,
-      "depth_sorting": true
+      "depth_sorting": true,
+      "dialogue_actor_id": "female_clothes_trader"
     },
     {
       "type": "animated_prop",
       "asset_id": "glowing_gem",
       "interaction_id": "glowing_gem",
-      "feet_position": [220, 170],
-      "size": [32, 32],
+      "feet_position": [
+        220,
+        170
+      ],
+      "size": [
+        32,
+        32
+      ],
       "walkable": true,
       "perspective_scaling": true,
       "depth_sorting": true
@@ -65,11 +105,55 @@
       "type": "animated_prop",
       "asset_id": "glowing_gem",
       "interaction_id": "glowing_gem",
-      "feet_position": [200, 140],
-      "size": [32, 32],
+      "feet_position": [
+        200,
+        140
+      ],
+      "size": [
+        32,
+        32
+      ],
       "walkable": true,
       "perspective_scaling": true,
       "depth_sorting": true
+    },
+    {
+      "type": "npc",
+      "asset_id": "old_sailor",
+      "interaction_id": "city_guard",
+      "feet_position": [
+        180,
+        135
+      ],
+      "size": [
+        50,
+        85
+      ],
+      "perspective_scaling": true,
+      "depth_sorting": true,
+      "dialogue_actor_id": "city_guard"
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:city_exit",
+      "interaction_id": "city_exit",
+      "feet_position": [
+        160,
+        111
+      ],
+      "size": [
+        46,
+        16
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "city_gates"
     }
-  ]
+  ],
+  "arrivals": {
+    "city_gates": [
+      160,
+      125
+    ]
+  }
 }

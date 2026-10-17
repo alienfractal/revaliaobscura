@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:revalia/game/states/level_game/view/city_gates_view.dart';
+import 'package:revalia/game/states/level_game/view/river_crossing_view.dart';
+import 'package:revalia/game/states/level_game/view/forest_view.dart';
+import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
 import 'dart:ui' as ui;
 
 import 'package:revalia/game/states/level_game/services/entity_sprite_cache_service.dart';
@@ -238,6 +242,24 @@ class RevaliaObs extends FlameGame {
     );
     _screenOpeningCurtain = curtain;
     cam.viewport.add(curtain);
+  }
+
+  void openLocation(String id, {String? arrivedFrom}) {
+    final model = gboard.gBoardModel;
+    gboard = switch (id) {
+      QuestLocations.gates =>
+        CityGatesView(model: model, arrivedFrom: arrivedFrom),
+      QuestLocations.river =>
+        RiverCrossingView(model: model, arrivedFrom: arrivedFrom),
+      QuestLocations.forest =>
+        ForestView(model: model, arrivedFrom: arrivedFrom),
+      QuestLocations.town =>
+        GameboardView(model: model, arrivedFrom: arrivedFrom),
+      _ => throw ArgumentError.value(id, 'id', 'Unknown location'),
+    };
+    cam.stop();
+    cam.viewfinder.position = Vector2.zero();
+    switchToWorld(gboard);
   }
 
   void loadFreshGameboard() {

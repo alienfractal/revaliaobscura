@@ -1,0 +1,27 @@
+[
+  {
+    "path": "lib/game/states/level_game/view/gameboard_view.dart",
+    "before": "87235e6a458356bd99dc9986decaeb9b2946568810610fc96be50293e0831202",
+    "after": "555390f5ab2a266dd38614401b6008c68dcdf57d580a5d088b69da7bf1a7ae38"
+  },
+  {
+    "path": "lib/game/states/level_game/scenario/scenario_config.dart",
+    "before": "f71c1023cf19e8e3a120deaea17050fc3619cdfe1d78ccc59b4cc059726d1082",
+    "after": "1e4434c05738654dc78a2af9974f3a06800cc346d3620d8084f8b109ff823b9d"
+  },
+  {
+    "path": "resources/dialogues/INK_DEMO.md",
+    "before": "34d3ae8efea9cc5b7b832a5d2319b708fa3b499d27fe11703273e35c6ab4ba37",
+    "after": "fa8c6c38dddebfbeba06e0ecaffd8762eef5e96f0d502f4897a78e7e49899baf"
+  },
+  {
+    "path": "test/quest_views_test.dart",
+    "before": "7b81860ace795ea761ac2e476be5dbd846b088b7a7181cc6c025654a181b4b9e",
+    "after": "d398ee8561018d291efd9389770814f75fd631c3a62e81571fcac534de99d727"
+  },
+  {
+    "path": "resources/scenarios/forest.json",
+    "before": "a466778e731a2375ba34d265df53ccf1593dc5b7e16a51537921e533ef6dc71a",
+    "after": "2d83aaa38c2fb0f45019923dc7c2460dc4793bb4ab571ddd73b68e3dd32232ad"
+  }
+]

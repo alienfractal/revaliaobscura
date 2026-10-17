@@ -59,9 +59,10 @@ class InventoryButton extends PositionComponent with TapCallbacks {
 class InventoryPopup extends PositionComponent with TapCallbacks {
   static const int columns = 5;
   static const int rows = 2;
-  static const Rect gridBounds = Rect.fromLTWH(10, 48, 300, 108);
+  // Compact item rows leave six lines for descriptions and the task journal.
+  static const Rect gridBounds = Rect.fromLTWH(10, 48, 300, 64);
   static const Rect _modalBounds = Rect.fromLTWH(0, 26, 320, 174);
-  static const Rect _messageBounds = Rect.fromLTWH(18, 161, 284, 19.2);
+  static const Rect _messageBounds = Rect.fromLTWH(18, 120, 284, 57.6);
 
   final GameboardView board;
   final List<({Rect rect, void Function() action})> _targets = [];
@@ -162,20 +163,23 @@ class InventoryPopup extends PositionComponent with TapCallbacks {
       _slot(canvas, rect, selected: selected);
       if (id == null) continue;
       final iconRect =
-          Rect.fromCenter(center: rect.center, width: 30, height: 30);
+          Rect.fromCenter(center: rect.center, width: 24, height: 24);
       if (_icons.containsKey(id)) {
         _icons[id]!.render(canvas,
             position: Vector2(iconRect.left, iconRect.top),
             size: Vector2(iconRect.width, iconRect.height));
       } else if (id == 'task_scroll') {
+        final scrollScale = iconRect.height / 17;
         canvas.save();
-        canvas.translate(iconRect.left + 2, iconRect.top);
-        canvas.scale(1.8);
+        canvas.translate(
+            iconRect.center.dx - 14 * scrollScale / 2, iconRect.top);
+        canvas.scale(scrollScale);
         _drawScroll(canvas, Offset.zero);
         canvas.restore();
       } else {
-        _box(canvas, iconRect.deflate(3), const Color(0xff57678b));
-        _text(canvas, tr('items.$id.name'), rect.left + 3, rect.bottom - 12,
+        _box(canvas, Rect.fromLTWH(rect.center.dx - 8, rect.top + 3, 16, 16),
+            const Color(0xff57678b));
+        _text(canvas, tr('items.$id.name'), rect.left + 3, rect.bottom - 10,
             rect.width - 6,
             fontSize: 7, maxLines: 1);
       }

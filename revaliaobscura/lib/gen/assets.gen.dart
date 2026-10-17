@@ -269,6 +269,9 @@ class $ResourcesAudioGen {
 class $ResourcesDialoguesGen {
   const $ResourcesDialoguesGen();
 
+  /// File path: resources/dialogues/INK_DEMO.md
+  String get inkDemo => 'resources/dialogues/INK_DEMO.md';
+
   /// File path: resources/dialogues/INVENTORY_AND_QUESTS.md
   String get inventoryAndQuests =>
       'resources/dialogues/INVENTORY_AND_QUESTS.md';
@@ -280,7 +283,8 @@ class $ResourcesDialoguesGen {
   String get revaliaDialogues => 'resources/dialogues/revalia_dialogues.json';
 
   /// List of all assets
-  List<String> get values => [inventoryAndQuests, readme, revaliaDialogues];
+  List<String> get values =>
+      [inkDemo, inventoryAndQuests, readme, revaliaDialogues];
 }
 
 class $ResourcesFontsGen {
@@ -289,6 +293,12 @@ class $ResourcesFontsGen {
   /// File path: resources/fonts/PressStart2P-Regular.ttf
   String get pressStart2PRegular => 'resources/fonts/PressStart2P-Regular.ttf';
 
+  /// File path: resources/fonts/Roboto-LICENSE.txt
+  String get robotoLICENSE => 'resources/fonts/Roboto-LICENSE.txt';
+
+  /// File path: resources/fonts/Roboto-Regular.ttf
+  String get robotoRegular => 'resources/fonts/Roboto-Regular.ttf';
+
   /// File path: resources/fonts/SCUMM-Font.ttf
   String get sCUMMFont => 'resources/fonts/SCUMM-Font.ttf';
 
@@ -296,7 +306,8 @@ class $ResourcesFontsGen {
   String get arcade => 'resources/fonts/arcade.ttf';
 
   /// List of all assets
-  List<String> get values => [pressStart2PRegular, sCUMMFont, arcade];
+  List<String> get values =>
+      [pressStart2PRegular, robotoLICENSE, robotoRegular, sCUMMFont, arcade];
 }
 
 class $ResourcesImagesGen {
@@ -368,6 +379,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/RevalGates128x91.png
   AssetGenImage get revalGates128x91 =>
       const AssetGenImage('resources/images/RevalGates128x91.png');
+
+  /// File path: resources/images/RevalGates320x200-1.png
+  AssetGenImage get revalGates320x2001 =>
+      const AssetGenImage('resources/images/RevalGates320x200-1.png');
 
   /// File path: resources/images/RevalGates320x200.aseprite
   String get revalGates320x200Aseprite =>
@@ -523,6 +538,18 @@ class $ResourcesImagesGen {
   AssetGenImage get clothesTraderFemale50x851 =>
       const AssetGenImage('resources/images/clothes-trader-female-50x85-1.png');
 
+  /// File path: resources/images/clothes-trader-lady-50x85-7.png
+  AssetGenImage get clothesTraderLady50x857 =>
+      const AssetGenImage('resources/images/clothes-trader-lady-50x85-7.png');
+
+  /// File path: resources/images/clothes-trader-lady-idle-50x85-7.png
+  AssetGenImage get clothesTraderLadyIdle50x857 => const AssetGenImage(
+      'resources/images/clothes-trader-lady-idle-50x85-7.png');
+
+  /// File path: resources/images/clothes-trader-lady-talking-50x85-7.png
+  AssetGenImage get clothesTraderLadyTalking50x857 => const AssetGenImage(
+      'resources/images/clothes-trader-lady-talking-50x85-7.png');
+
   /// File path: resources/images/clothes-trader.aseprite
   String get clothesTraderAseprite =>
       'resources/images/clothes-trader.aseprite';
@@ -542,6 +569,17 @@ class $ResourcesImagesGen {
   /// File path: resources/images/crton-32x32-8.png
   AssetGenImage get crton32x328 =>
       const AssetGenImage('resources/images/crton-32x32-8.png');
+
+  /// File path: resources/images/drunk-count-reduced-57x84-7.png
+  AssetGenImage get drunkCountReduced57x847 =>
+      const AssetGenImage('resources/images/drunk-count-reduced-57x84-7.png');
+
+  /// File path: resources/images/drunk-count-reduced.aseprite
+  String get drunkCountReduced =>
+      'resources/images/drunk-count-reduced.aseprite';
+
+  /// File path: resources/images/drunk-count.aseprite
+  String get drunkCount => 'resources/images/drunk-count.aseprite';
 
   /// File path: resources/images/dwarf-burns.png
   AssetGenImage get dwarfBurns =>
@@ -674,6 +712,10 @@ class $ResourcesImagesGen {
   /// File path: resources/images/gems-sheet.aseprite
   String get gemsSheet => 'resources/images/gems-sheet.aseprite';
 
+  /// File path: resources/images/gnome-walk-52x52-5.png
+  AssetGenImage get gnomeWalk52x525 =>
+      const AssetGenImage('resources/images/gnome-walk-52x52-5.png');
+
   /// File path: resources/images/grave_still-32x32-1.png
   AssetGenImage get graveStill32x321 =>
       const AssetGenImage('resources/images/grave_still-32x32-1.png');
@@ -759,6 +801,18 @@ class $ResourcesImagesGen {
   /// File path: resources/images/potion-sheet.png
   AssetGenImage get potionSheet =>
       const AssetGenImage('resources/images/potion-sheet.png');
+
+  /// File path: resources/images/quest-forest-background.png
+  AssetGenImage get questForestBackground =>
+      const AssetGenImage('resources/images/quest-forest-background.png');
+
+  /// File path: resources/images/quest-gnome-work.png
+  AssetGenImage get questGnomeWork =>
+      const AssetGenImage('resources/images/quest-gnome-work.png');
+
+  /// File path: resources/images/quest-metsavana.png
+  AssetGenImage get questMetsavana =>
+      const AssetGenImage('resources/images/quest-metsavana.png');
 
   /// File path: resources/images/render.png
   AssetGenImage get render =>
@@ -857,6 +911,7 @@ class $ResourcesImagesGen {
         rebaneLaught84x846,
         rebaneLaughts50x843,
         revalGates128x91,
+        revalGates320x2001,
         revalGates320x200Aseprite,
         revalGates320x200Png,
         revalTowncenter128x91,
@@ -896,11 +951,17 @@ class $ResourcesImagesGen {
         cellrockBackground1,
         clothesTraderExport50x851,
         clothesTraderFemale50x851,
+        clothesTraderLady50x857,
+        clothesTraderLadyIdle50x857,
+        clothesTraderLadyTalking50x857,
         clothesTraderAseprite,
         clothesTraderPng,
         clothesTrader1,
         clothesTrader2,
         crton32x328,
+        drunkCountReduced57x847,
+        drunkCountReduced,
+        drunkCount,
         dwarfBurns,
         dwarfCombatOnly,
         dwarfCombat,
@@ -937,6 +998,7 @@ class $ResourcesImagesGen {
         gem3Aseprite,
         gem3Png,
         gemsSheet,
+        gnomeWalk52x525,
         graveStill32x321,
         gravelTombBreak32x328,
         greenZombie,
@@ -959,6 +1021,9 @@ class $ResourcesImagesGen {
         patternAseprite,
         patternPng,
         potionSheet,
+        questForestBackground,
+        questGnomeWork,
+        questMetsavana,
         render,
         roadvillage128x91,
         sandclockSheet,
@@ -985,11 +1050,20 @@ class $ResourcesImagesGen {
 class $ResourcesScenariosGen {
   const $ResourcesScenariosGen();
 
+  /// File path: resources/scenarios/city_gates.json
+  String get cityGates => 'resources/scenarios/city_gates.json';
+
+  /// File path: resources/scenarios/forest.json
+  String get forest => 'resources/scenarios/forest.json';
+
+  /// File path: resources/scenarios/river_crossing.json
+  String get riverCrossing => 'resources/scenarios/river_crossing.json';
+
   /// File path: resources/scenarios/town_square.json
   String get townSquare => 'resources/scenarios/town_square.json';
 
   /// List of all assets
-  List<String> get values => [townSquare];
+  List<String> get values => [cityGates, forest, riverCrossing, townSquare];
 }
 
 class $ResourcesTranslationsGen {

@@ -1,5 +1,8 @@
 # Inventory and quests
 
+See [Ink quest demo](INK_DEMO.md) for the connected town, gates, river, and forest
+VIEWs, the empty-bottle-to-ink interaction, poisoning retry, and art slots.
+
 The HUD inventory button opens a modal popup. World movement, animations, and
 the level timer pause while it is open. Opening it cancels queued walking or
 interactions. Finish the current dialogue before opening inventory.
@@ -61,7 +64,7 @@ The top-level lists in `revalia_dialogues.json` are the source of truth:
     }
   },
   "pickups": {
-    "ink_bottle_pickup": "ink_bottle"
+    "empty_bottle_pickup": "empty_bottle"
   }
 }
 ```
@@ -104,17 +107,17 @@ ready, his waiting dialogue offers **Here is the ink you asked for**. Delivery
 through dialogue and delivery through inventory use the same quest state.
 After completion his entrypoint selects a thank-you dialogue.
 
-## Placing the ink
+## Placing the bottle
 
-The ink location and artwork are deliberately left for scene authoring. After
-adding `resources/images/ink-bottle.png`, add a scene entity to
-`resources/scenarios/town_square.json`, choosing its position and size:
+The city-gates scenario places an empty-bottle pickup beside the drunken count.
+Replace its temporary marker with final artwork in the scenario JSON, keeping
+its interaction ID. A static prop example is:
 
 ```json
 {
   "type": "static_prop",
-  "asset_id": "resources/images/ink-bottle.png",
-  "interaction_id": "ink_bottle_pickup",
+  "asset_id": "resources/images/empty-bottle.png",
+  "interaction_id": "empty_bottle_pickup",
   "feet_position": [160, 160],
   "size": [16, 16],
   "walkable": false,
@@ -124,10 +127,13 @@ adding `resources/images/ink-bottle.png`, add a scene entity to
 ```
 
 The coordinates above are an example. The `pickups` mapping already connects
-this interaction ID to `ink_bottle`. Touching a pickup approaches it, adds one
+this interaction ID to `empty_bottle`. Touching a pickup approaches it, adds one
 item, and removes the prop. Collected props stay absent after rebuilding the
 scene, including after delivering their item. Use unique interaction IDs for
 separate pickup sources. Existing animated props can also serve as pickups.
+The forest dialogue consumes this bottle and awards `ink_bottle` once. There
+is no loose ink pickup in town. Quest completion awards `tartu_route_map` through
+the quest definition's `rewards`, both for dialogue and inventory delivery.
 
 To award an item from other game logic, call:
 

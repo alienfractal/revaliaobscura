@@ -1,0 +1,74 @@
+name: revalia
+description: "A flutter game."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 0.2.1
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+
+
+  
+dependencies:
+  flutter:
+    sdk: flutter
+  
+
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.6
+  flutter_gen_runner: 5.8.0
+  flame: ^1.23.0
+  flame_behaviors: ^1.2.0
+  logger: ^2.5.0
+  flame_audio: ^2.10.2
+  audioplayers: ^6.0.0
+  package_info_plus: ^4.0.0
+  flutter_shaders: ^0.1.0
+  flutter_sound: ^9.4.13
+   
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: 2.4.11 
+  flutter_lints: ^4.0.0
+  build_web_compilers: ^4.0.10
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+# The following section is specific to Flutter packages.
+flutter:
+  fonts:
+    # CanvasKit otherwise downloads its default font during web startup.
+    - family: Roboto
+      fonts:
+        - asset: resources/fonts/Roboto-Regular.ttf
+    - family: arcade
+      fonts:
+        - asset: resources/fonts/arcade.ttf
+        
+    - family: scumm        
+      fonts:  
+        - asset: resources/fonts/SCUMM-Font.ttf
+    - family: press2p        
+      fonts:  
+        - asset: resources/fonts/PressStart2P-Regular.ttf   
+
+  assets:
+    - resources/images/
+    - resources/fonts/
+    - resources/audio/
+    - resources/dialogues/
+    - resources/translations/
+    - resources/scenarios/
+    
+    
+  shaders:
+
+    - resources/shaders/crt_effect2.frag
+    - resources/shaders/test.frag
+    
+ 

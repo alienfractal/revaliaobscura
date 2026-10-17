@@ -1,0 +1,6 @@
+Starting
+Indexed
+RGB
+Background
+Hidden layers / average centers
+PASS: indexed mode, index-order invariance, palette compaction, duplicate swatches, nonzero transparency, copy safety, animation, exact alpha, budget validation, background, Undo

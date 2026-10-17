@@ -1,0 +1,110 @@
+[
+  {
+    "frame": 1,
+    "action": "scrape high",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 2,
+    "action": "scrape down",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 3,
+    "action": "lower brush",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 4,
+    "action": "set brush down",
+    "duration_ms": 200,
+    "head_offset": [
+      11,
+      7
+    ]
+  },
+  {
+    "frame": 5,
+    "action": "release and rest",
+    "duration_ms": 300,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 6,
+    "action": "inhale",
+    "duration_ms": 300,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 7,
+    "action": "hold deep breath",
+    "duration_ms": 450,
+    "head_offset": [
+      12,
+      5
+    ]
+  },
+  {
+    "frame": 8,
+    "action": "exhale",
+    "duration_ms": 400,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 9,
+    "action": "reach for brush",
+    "duration_ms": 200,
+    "head_offset": [
+      11,
+      7
+    ]
+  },
+  {
+    "frame": 10,
+    "action": "lift brush",
+    "duration_ms": 160,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 11,
+    "action": "resume brushing",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  },
+  {
+    "frame": 12,
+    "action": "scrape high loop",
+    "duration_ms": 140,
+    "head_offset": [
+      12,
+      6
+    ]
+  }
+]

@@ -1,0 +1,2229 @@
+--- a/lib/dialoguefsm/adventure_state.dart
++++ b/lib/dialoguefsm/adventure_state.dart
+@@ -15,8 +15,10 @@
+   final String id;
+   final String recipient;
+   final Map<String, int> requiredItems;
++  final Map<String, int> rewards;
+ 
+-  const QuestDefinition(this.id, this.recipient, this.requiredItems);
++  const QuestDefinition(this.id, this.recipient, this.requiredItems,
++      [this.rewards = const {}]);
+ }
+ 
+ /// Shared playthrough state. Definitions come from the dialogue graph; no UI
+@@ -58,8 +60,18 @@
+               e.value <= 0)) {
+         throw FormatException('Invalid required items for quest ${entry.key}');
+       }
++      final rewards = (data['rewards'] as Map<String, dynamic>? ?? {})
++          .map((id, quantity) => MapEntry(id, quantity as int));
++      for (final reward in rewards.entries) {
++        if (!_items.containsKey(reward.key) || reward.value <= 0) {
++          throw FormatException('Invalid reward for quest ${entry.key}');
++        }
++      }
+       _quests[entry.key] = QuestDefinition(
+-          entry.key, data['recipient'] as String, Map.unmodifiable(required));
++          entry.key,
++          data['recipient'] as String,
++          Map.unmodifiable(required),
++          Map.unmodifiable(rewards));
+     }
+     _pickups
+       ..clear()
+@@ -114,6 +126,9 @@
+       removeItem(entry.key, entry.value);
+     }
+     _completed.add(questId);
++    for (final reward in quest.rewards.entries) {
++      addItem(reward.key, reward.value);
++    }
+     return true;
+   }
+ 
+--- a/lib/dialoguefsm/dialogue_fsm.dart
++++ b/lib/dialoguefsm/dialogue_fsm.dart
+@@ -165,6 +165,20 @@
+     }
+ 
+     final response = dialogue.responses[index];
++    if (activeSession?.currentNodeId != dialogue.id) {
++      throw StateError('This dialogue is no longer active.');
++    }
++    final rawResponses = (_graphNodes[dialogue.id]
++        as Map<String, dynamic>)['responses'] as List<dynamic>;
++    final raw = rawResponses
++        .cast<Map<String, dynamic>>()
++        .firstWhere((r) => r['id'] == response.id);
++    if (!storyState.matches(raw['when'] as Map<String, dynamic>?) ||
++        (response.once &&
++            storyState.isResponseConsumed(
++                _responseStateId(dialogue.id, response.id)))) {
++      throw StateError('This response is no longer available.');
++    }
+     storyState.applyEffects(response.effects);
+     if (response.once) {
+       storyState.consumeResponse(_responseStateId(dialogue.id, response.id));
+--- a/lib/dialoguefsm/story_state.dart
++++ b/lib/dialoguefsm/story_state.dart
+@@ -64,6 +64,13 @@
+         }
+         continue;
+       }
++      final removed = effect['remove_item'] as String?;
++      if (removed != null) {
++        if (!adventure.removeItem(removed, effect['quantity'] as int? ?? 1)) {
++          throw StateError('Cannot consume item: $removed');
++        }
++        continue;
++      }
+       final item = effect['add_item'] as String?;
+       if (item != null) {
+         adventure.addItem(item, effect['quantity'] as int? ?? 1);
+--- a/lib/game/states/level_game/scenario/quest_locations.dart
++++ b/lib/game/states/level_game/scenario/quest_locations.dart
+@@ -0,0 +1,18 @@
++/// Location IDs stay independent of artwork and of the global game FSM.
++class QuestLocations {
++  static const town = 'town_square';
++  static const river = 'river_crossing';
++  static const forest = 'forest';
++  static const paths = {
++    town: 'resources/scenarios/town_square.json',
++    river: 'resources/scenarios/river_crossing.json',
++    forest: 'resources/scenarios/forest.json',
++  };
++
++  static bool canTravel(String from, String to, {required bool gateUnlocked}) {
++    if (!gateUnlocked) return false;
++    return (from == town && to == river) ||
++        (from == river && (to == town || to == forest)) ||
++        (from == forest && to == river);
++  }
++}
+--- a/lib/game/states/level_game/scenario/scenario_config.dart
++++ b/lib/game/states/level_game/scenario/scenario_config.dart
+@@ -9,6 +9,7 @@
+     required this.walkingAreaVertices,
+     required this.player,
+     required this.entities,
++    this.arrivals = const {},
+   });
+ 
+   factory ScenarioConfig.fromJson(Map<String, dynamic> json) {
+@@ -23,6 +24,8 @@
+     }
+ 
+     return ScenarioConfig(
++      arrivals: (json['arrivals'] as Map<String, dynamic>? ?? {})
++          .map((id, point) => MapEntry(id, _vector(point, 'arrivals.$id'))),
+       id: _string(json, 'id'),
+       backgroundId: _string(json, 'background'),
+       showPerspectiveGuide: json['show_perspective_guide'] as bool? ?? false,
+@@ -41,6 +44,7 @@
+     );
+   }
+ 
++  final Map<String, Vector2> arrivals;
+   final String id;
+   final String backgroundId;
+   final bool showPerspectiveGuide;
+@@ -103,10 +107,18 @@
+     required this.isWalkable,
+     required this.scalesWithPerspective,
+     required this.sortsWithDepth,
++    this.destination,
++    this.animation,
++    this.talkAsset,
++    this.talkAnimation,
+   });
+ 
+   factory ScenarioEntityConfig.fromJson(Map<String, dynamic> json) {
+     return ScenarioEntityConfig(
++      destination: json['destination'] as String?,
++      animation: json['animation'] as Map<String, dynamic>?,
++      talkAsset: json['talk_asset'] as String?,
++      talkAnimation: json['talk_animation'] as Map<String, dynamic>?,
+       type: _string(json, 'type'),
+       assetId: _string(json, 'asset_id'),
+       interactionId: _string(json, 'interaction_id'),
+@@ -119,6 +131,10 @@
+     );
+   }
+ 
++  final String? destination;
++  final Map<String, dynamic>? animation;
++  final String? talkAsset;
++  final Map<String, dynamic>? talkAnimation;
+   final String type;
+   final String assetId;
+   final String interactionId;
+--- a/lib/game/states/level_game/view/female_clothes_trader_npc_entity.dart
++++ b/lib/game/states/level_game/view/female_clothes_trader_npc_entity.dart
+@@ -11,6 +11,7 @@
+     required Vector2 feetPosition,
+     required Vector2 size,
+     required super.interactionId,
++    super.dialogueActorId,
+     super.isWalkable = false,
+     this.scalesWithPerspective = true,
+     this.sortsWithDepth = true,
+--- a/lib/game/states/level_game/view/forest_view.dart
++++ b/lib/game/states/level_game/view/forest_view.dart
+@@ -0,0 +1,11 @@
++import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
++import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
++
++class ForestView extends GameboardView {
++  ForestView({required GameBoardModel model, String? arrivedFrom})
++      : super(
++            model: model,
++            locationId: QuestLocations.forest,
++            arrivedFrom: arrivedFrom);
++}
+--- a/lib/game/states/level_game/view/gameboard_view.dart
++++ b/lib/game/states/level_game/view/gameboard_view.dart
+@@ -1,4 +1,9 @@
+ import 'dart:async';
++import 'package:flame/text.dart';
++import 'package:flutter/painting.dart';
++import 'package:revalia/dialoguefsm/adventure_state.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
++import 'package:revalia/game/states/level_game/view/quest_scene_entity.dart';
+ 
+ import 'package:revalia/game/states/level_game/model/player_model.dart';
+ import 'package:revalia/game/states/level_game/perspective/perspective_config.dart';
+@@ -31,6 +36,14 @@
+ class GameboardView extends World
+     with HasGameReference<RevaliaObs>
+     implements ViewTransitionInterface {
++  final String locationId;
++  final String? arrivedFrom;
++  bool _travelRequested = false;
++  bool _poisoning = false;
++  bool _retryPoisoningRequested = false;
++  double _poisonSeconds = 0;
++  int? _scorePopupPoints;
++  String? _pendingLocation;
+   late GameBoardModel gBoardModel;
+   int horizontalCells = 0;
+   int verticalCells = 0;
+@@ -88,8 +101,17 @@
+     final item = selectedInventoryItem;
+     if (item == null) return false;
+     selectedInventoryItem = null;
++    if (item == 'empty_bottle' &&
++        (target.interactionId == 'inkcap' ||
++            target.interactionId == 'forest_mushroom') &&
++        target.canTalk) {
++      callRenderDialogue(target);
++      return true;
++    }
+     final quest = DialogueManager.fsm.storyState.adventure
+         .deliverItem(item, target.interactionId);
++    if (quest != null) _awardQuestCompletion();
++    if (quest == null) selectedInventoryItem = item;
+     showScreenMessage(quest == null
+         ? adventureText('inventory.cannot_use')
+         : adventureText('quests.${quest.id}.completed'));
+@@ -101,7 +123,10 @@
+   late final DialogueEventListener _dialogueEventListener;
+ 
+   late LevelEntity activeActor;
+-  GameboardView({GameBoardModel? model}) {
++  GameboardView(
++      {GameBoardModel? model,
++      this.locationId = QuestLocations.town,
++      this.arrivedFrom}) {
+     gBoardModel = model ?? GameBoardModel();
+     uiGameBoardComponents = UIGameBoardComponents(gameboardView: this);
+     _dialogueEventListener = _handleDialogueEvent;
+@@ -114,7 +139,7 @@
+     levelEntities = <LevelEntity>[];
+     uiGameBoardComponents.gameRef = game;
+     scenario = await ScenarioLoader.load(
+-      'resources/scenarios/town_square.json',
++      QuestLocations.paths[locationId]!,
+     );
+   }
+ 
+@@ -174,6 +199,17 @@
+   }
+ 
+   void _handleDialogueEvent(String event) {
++    if (event == 'mushroom_poisoning') {
++      // Defer until the response handler has closed the dialogue frame.
++      _poisoning = true;
++      _poisonSeconds = 0;
++      return;
++    }
++    if (event == 'conversation_end' &&
++        DialogueManager.fsm.storyState.adventure.status('navigator_ink') ==
++            QuestStatus.completed) {
++      _awardQuestCompletion();
++    }
+     if (event.startsWith('score_milestone:')) {
+       final parts = event.split(':');
+       if (parts.length == 3) {
+@@ -183,6 +219,7 @@
+           game.ap.playSoundFx(Assets.resources.audio.blipSelect2);
+           updateUIComponents();
+           uiGameBoardComponents.flashScoreChange();
++          _scorePopupPoints = points;
+         }
+       }
+       return;
+@@ -234,6 +271,37 @@
+   @override
+   void update(double dt) {
+     super.update(dt);
++    if (_pendingLocation != null) {
++      final next = _pendingLocation!;
++      _pendingLocation = null;
++      game.openLocation(next, arrivedFrom: locationId);
++      return;
++    }
++    if (_retryPoisoningRequested) {
++      _retryPoisoningRequested = false;
++      game.openLocation(QuestLocations.forest);
++      return;
++    }
++    if (_scorePopupPoints != null) {
++      final points = _scorePopupPoints!;
++      _scorePopupPoints = null;
++      final popup = TextComponent(
++          text: '+$points',
++          position: Vector2(40, 30),
++          priority: 3000,
++          textRenderer: TextPaint(
++              style: const TextStyle(
++                  fontFamily: 'scumm',
++                  fontSize: 12,
++                  color: Color(0xffffdb69))));
++      add(popup);
++      popup.add(TimerComponent(
++          period: 2, removeOnFinish: true, onTick: popup.removeFromParent));
++    }
++    if (_poisoning) {
++      _updatePoisoning(dt);
++      return;
++    }
+     if (_scoreTransitionRequested) {
+       _scoreTransitionRequested = false;
+       game.cam.stop();
+@@ -306,9 +374,7 @@
+   }
+ 
+   void updateGameStats(double dt) {
+-    if (clickCount > 2) {
+-      gBoardModel.levelPlayTime -= dt;
+-    }
++    // The quest demo allows time to explore and read dialogue.
+   }
+ 
+   void updateUIComponents() {
+@@ -390,7 +456,11 @@
+       scenario.walkingAreaVertices,
+       showGuide: scenario.showPerspectiveGuide,
+     );
+-    addPlayer(scenario.player);
++    final arrival = scenario.arrivals[arrivedFrom];
++    addPlayer(arrival == null
++        ? scenario.player
++        : ScenarioPlayerConfig(
++            feetPosition: arrival, size: scenario.player.size));
+     for (final entity in scenario.entities) {
+       addScenarioEntity(entity);
+     }
+@@ -464,6 +534,7 @@
+             );
+           case 'female_clothes_trader':
+             entity = FemaleClothesTraderNpcEntity(
++              dialogueActorId: config.dialogueActorId,
+               feetPosition: config.feetPosition,
+               size: config.size,
+               interactionId: config.interactionId,
+@@ -476,6 +547,9 @@
+               'Unsupported NPC configuration: ${config.assetId}',
+             );
+         }
++      case 'quest_prop':
++      case 'exit':
++        entity = QuestSceneEntity(config);
+       case 'static_prop':
+         entity = StaticScenePropEntity(
+           assetPath: config.assetId,
+@@ -526,6 +600,64 @@
+ 
+   Vector2 interactionDestinationFor(LevelEntity actor) {
+     return constrainToWalkingArea(actor.interactionPoint);
++  }
++
++  void travelTo(String destination) {
++    if (_travelRequested || isGameFinished || (df?.isDialogActive ?? false))
++      return;
++    if (!QuestLocations.canTravel(locationId, destination,
++        gateUnlocked:
++            DialogueManager.fsm.storyState.flag('city_exit_unlocked'))) {
++      showScreenMessage(adventureText('messages.city_exit_locked.text'));
++      return;
++    }
++    _travelRequested = true;
++    playerEntity.cancelMovement();
++    playerEntity.disableActions();
++    closeInventory();
++    selectedInventoryItem = null;
++    _pendingLocation = destination;
++  }
++
++  bool handleQuestAction(LevelEntity target, ActionableType action) {
++    if (target.interactionId == 'inkcap' &&
++        action == ActionableType.touch &&
++        target.canTalk) {
++      callRenderDialogue(target);
++      return true;
++    }
++    if (target.interactionId == 'metsavana' && action == ActionableType.talk) {
++      showScreenMessage(adventureText('messages.metsavana_silent.text'));
++      return true;
++    }
++    return false;
++  }
++
++  void _awardQuestCompletion() {
++    _handleDialogueEvent('score_milestone:deliver_hendrik_ink:500');
++  }
++
++  void _updatePoisoning(double dt) {
++    if (_poisonSeconds == 0) {
++      removeDialogFrame();
++      isGameFinished = true;
++      playerEntity.cancelMovement();
++      playerEntity.disableActions();
++      playerEntity.playerAnimationHandler.spriteAnimationComponent.paint
++              .colorFilter =
++          const ColorFilter.mode(Color(0xff59bb45), BlendMode.modulate);
++      game.ap.playSoundFx(Assets.resources.audio.death);
++    }
++    _poisonSeconds += dt;
++    if (_poisonSeconds < 1.0) return;
++    _poisoning = false;
++    playerEntity.playerAnimationHandler.triggerDie(onComplete: () {
++      if (!isMounted) return;
++      showScreenMessage(adventureText('messages.mushroom_poisoned.text'),
++          durationSeconds: null, onDismissed: () {
++        if (isMounted) _retryPoisoningRequested = true;
++      });
++    });
+   }
+ 
+   void callRenderDialogue(LevelEntity actorEntity) {
+--- a/lib/game/states/level_game/view/level_entity.dart
++++ b/lib/game/states/level_game/view/level_entity.dart
+@@ -86,7 +86,9 @@
+   @override
+   Vector2 get interactionPoint => Vector2(position.x, position.y + size.y / 2);
+ 
+-  bool get canTalk => dialogueActorId != null;
++  bool get canTalk =>
++      dialogueActorId != null &&
++      DialogueManager.canStartConversation(dialogueActorId!);
+ 
+   @override
+   bool shouldApproachFor(ActionableType actionType) {
+@@ -110,6 +112,7 @@
+         return;
+       }
+     }
++    if (game.gboard.handleQuestAction(this, actionType)) return;
+     final behaviour = _actionBehaviourFor(actionType);
+     if (behaviour != null) {
+       behaviour.execute();
+--- a/lib/game/states/level_game/view/market_background_entity.dart
++++ b/lib/game/states/level_game/view/market_background_entity.dart
+@@ -1,3 +1,4 @@
++import 'dart:ui';
+ import 'package:flame/components.dart';
+ import 'package:flame_behaviors/flame_behaviors.dart';
+ import 'package:revalia/revalia_obs.dart';
+@@ -13,17 +14,30 @@
+   final String backgroundId;
+ 
+   @override
+-  void onLoad() {
+-    super.onLoad();
++  Future<void> onLoad() async {
++    await super.onLoad();
+     switch (backgroundId) {
+       case 'town_center':
+         add(game.entitySpriteCache.townCenterBackground.getSpriteComponent());
+       default:
+-        throw ArgumentError.value(
+-          backgroundId,
+-          'backgroundId',
+-          'Unknown scenario background ID',
+-        );
++        final sprite = await game.loadSprite(backgroundId);
++        // Preserve authored pixel proportions; pad rather than stretch artwork.
++        final factor = (size.x / sprite.srcSize.x < size.y / sprite.srcSize.y
++                ? size.x / sprite.srcSize.x
++                : size.y / sprite.srcSize.y)
++            .floor();
++        final displaySize =
++            sprite.srcSize * (factor < 1 ? 1.0 : factor.toDouble());
++        add(RectangleComponent(
++            size: size.clone(),
++            paint: Paint()..color = const Color(0xff171721)));
++        add(SpriteComponent(
++            sprite: sprite,
++            size: displaySize,
++            position:
++                Vector2((size.x - displaySize.x) / 2, size.y - displaySize.y),
++            paint: Paint()..filterQuality = FilterQuality.none));
++        return;
+     }
+     add(
+       game.entitySpriteCache.townCenterMarketAnimation
+--- a/lib/game/states/level_game/view/quest_scene_entity.dart
++++ b/lib/game/states/level_game/view/quest_scene_entity.dart
+@@ -0,0 +1,103 @@
++import 'dart:ui';
++import 'package:flame/components.dart';
++import 'package:flame/text.dart';
++import 'package:flutter/painting.dart';
++import 'package:revalia/game/states/level_game/scenario/scenario_config.dart';
++import 'package:revalia/game/states/level_game/behaviours/look_action_behaviour.dart';
++import 'package:revalia/game/states/level_game/behaviours/grab_action_behaviour.dart';
++import 'package:revalia/game/states/level_game/behaviours/talk_action_behaviour.dart';
++import 'package:revalia/game/states/level_game/view/entity_tap_behaviour.dart';
++import 'package:revalia/game/states/level_game/view/level_entity.dart';
++import 'package:revalia/utils/components/actionable_entitty_component.dart';
++
++/// JSON-defined art slots. Missing art is explicitly represented by a labelled
++/// block; replacing the asset path needs no interaction-code changes.
++class QuestSceneEntity extends LevelEntity {
++  final ScenarioEntityConfig config;
++  QuestSceneEntity(this.config)
++      : super(
++            position: config.feetPosition - Vector2(0, config.size.y / 2),
++            size: config.size.clone(),
++            interactionId: config.interactionId,
++            dialogueActorId: config.dialogueActorId,
++            behaviors: [
++              LookActionBehaviour(),
++              GrabActionBehaviour(),
++              TalkActionBehaviour(),
++              EntityTapBehaviour()
++            ]);
++
++  @override
++  bool get usesPerspectiveScaling =>
++      !config.assetId.startsWith('placeholder:') &&
++      config.scalesWithPerspective;
++  @override
++  bool get usesDepthSorting => config.sortsWithDepth;
++
++  @override
++  Future<void> onLoad() async {
++    await super.onLoad();
++    if (config.assetId.startsWith('placeholder:')) {
++      // Deliberately simple temporary markers, not replacement character art.
++      add(RectangleComponent(
++          size: size.clone(), paint: Paint()..color = const Color(0xdd342f42)));
++      add(TextComponent(
++          text: game.gboard.adventureText('scene.${config.interactionId}'),
++          position: size / 2,
++          anchor: Anchor.center,
++          textRenderer: TextPaint(
++              style: const TextStyle(
++                  fontFamily: 'scumm',
++                  fontSize: 7,
++                  color: Color(0xffffdb69)))));
++      // LevelEntity's idle handling still expects an animation component.
++      final sprite = await game.loadSprite('resources/images/walking_area.png');
++      animationHandler.init(
++          idleAnimation: SpriteAnimation.spriteList([sprite], stepTime: 1),
++          size: Vector2.zero(),
++          parent: this);
++      return;
++    }
++    final idle = await _animation(config.assetId, config.animation);
++    final talk = config.talkAsset == null
++        ? null
++        : await _animation(config.talkAsset!, config.talkAnimation);
++    animationHandler.init(
++        idleAnimation: idle, talkAnimation: talk, size: size, parent: this);
++  }
++
++  Future<SpriteAnimation> _animation(
++      String asset, Map<String, dynamic>? spec) async {
++    if (spec == null) {
++      return SpriteAnimation.spriteList([await game.loadSprite(asset)],
++          stepTime: 1);
++    }
++    return game.loadSpriteAnimation(
++        asset,
++        SpriteAnimationData.sequenced(
++            amount: spec['frames'] as int,
++            stepTime: (spec['step_time'] as num).toDouble(),
++            textureSize: Vector2((spec['width'] as num).toDouble(),
++                (spec['height'] as num).toDouble())));
++  }
++
++  @override
++  bool shouldApproachFor(
++          ActionableType actionType) =>
++      config.destination != null &&
++              (actionType == ActionableType.move ||
++                  actionType == ActionableType.touch)
++          ? true
++          : super.shouldApproachFor(actionType);
++
++  @override
++  void performAction(ActionableType actionType) {
++    if (config.destination != null &&
++        (actionType == ActionableType.move ||
++            actionType == ActionableType.touch)) {
++      game.gboard.travelTo(config.destination!);
++      return;
++    }
++    super.performAction(actionType);
++  }
++}
+--- a/lib/game/states/level_game/view/river_crossing_view.dart
++++ b/lib/game/states/level_game/view/river_crossing_view.dart
+@@ -0,0 +1,11 @@
++import 'package:revalia/game/states/level_game/view/gameboard_view.dart';
++import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
++
++class RiverCrossingView extends GameboardView {
++  RiverCrossingView({required GameBoardModel model, String? arrivedFrom})
++      : super(
++            model: model,
++            locationId: QuestLocations.river,
++            arrivedFrom: arrivedFrom);
++}
+--- a/lib/revalia_obs.dart
++++ b/lib/revalia_obs.dart
+@@ -1,4 +1,7 @@
+ import 'dart:async';
++import 'package:revalia/game/states/level_game/view/river_crossing_view.dart';
++import 'package:revalia/game/states/level_game/view/forest_view.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
+ import 'dart:ui' as ui;
+ 
+ import 'package:revalia/game/states/level_game/services/entity_sprite_cache_service.dart';
+@@ -240,6 +243,22 @@
+     cam.viewport.add(curtain);
+   }
+ 
++  void openLocation(String id, {String? arrivedFrom}) {
++    final model = gboard.gBoardModel;
++    gboard = switch (id) {
++      QuestLocations.river =>
++        RiverCrossingView(model: model, arrivedFrom: arrivedFrom),
++      QuestLocations.forest =>
++        ForestView(model: model, arrivedFrom: arrivedFrom),
++      QuestLocations.town =>
++        GameboardView(model: model, arrivedFrom: arrivedFrom),
++      _ => throw ArgumentError.value(id, 'id', 'Unknown location'),
++    };
++    cam.stop();
++    cam.viewfinder.position = Vector2.zero();
++    switchToWorld(gboard);
++  }
++
+   void loadFreshGameboard() {
+     gboard = GameboardView(model: gboard.gBoardModel);
+     switchToWorld(gboard);
+--- a/resources/dialogues/INK_DEMO.md
++++ b/resources/dialogues/INK_DEMO.md
+@@ -0,0 +1,81 @@
++# Ink quest demo
++
++The demo uses the existing game state and `GameboardView`. Two location VIEWs,
++`RiverCrossingView` and `ForestView`, share its gameplay and HUD. Changing VIEW
++preserves `StoryState`, inventory, pickup history, and `GameBoardModel` scores.
++A new game still starts in town and clears progress through the existing menu.
++
++## Playthrough
++
++1. Talk to Hendrik, learn his name, ask what he needs, and accept the ink quest.
++2. The lady now answers. Explain the ink request; she recommends the city guard.
++3. Touch the bottle next to the sleeping drunk. It enters inventory once.
++4. Talk to the guard and choose to follow his directions. The city exit unlocks.
++5. Walk to (or touch) City exit, then To forest in the river-crossing VIEW.
++6. Talking to Metsavana gives silence and a hint toward the talking mushroom.
++7. Talk to the mushroom or touch/talk to the inkcap. Choose to collect the goo.
++   This consumes the empty bottle, adds usable ink, and awards 250 points once.
++   Without a bottle, the dialogue instead suggests looking in town. Return travel
++   is always possible once the guard has unlocked the route.
++8. Choosing Lick it turns Remy green, plays the existing collapse animation, and
++   shows a death message. Click to retry in the forest with progress preserved.
++9. Return via To river, To town. Give Hendrik the ink through dialogue or by
++   using it from inventory. Both paths consume ink and award one Tallinn-Tartu
++   map. Completion awards 500 points once. The map remains in inventory; its
++   Look/Touch descriptions explain the reward while its final drawing is pending.
++
++There is no countdown during this exploration quest. Existing energy, combat
++death, and other game screens are otherwise retained.
++
++## Artwork handoff
++
++Scene placement, clickable sizes, walking polygons, and arrivals are in:
++
++- `resources/scenarios/town_square.json`
++- `resources/scenarios/river_crossing.json`
++- `resources/scenarios/forest.json`
++
++The guard reuses the sailor sprite and talking animation, but has a separate
++actor ID (`city_guard`) and independent dialogue. The forest background and
++Metsavana are copies of existing artwork, used as temporary scene art. The
++background renderer uses whole-number scaling with padding to preserve pixels.
++
++The drunk, bottle, and mushrooms use labelled temporary markers. Replace their
++`asset_id` values (`placeholder:...`) with a PNG path under `resources/images/`.
++Keep `interaction_id` and `dialogue_actor_id` unchanged. Set `size` to the
++desired logical dimensions and adjust `feet_position` to position the art.
++The bottle has its own marker beside the drunk so only the bottle disappears.
++
++`quest_prop` supports a static PNG or an animation strip, including an optional
++separate talking strip. For example, to connect your mushroom animation:
++
++```json
++{
++  "asset_id": "resources/images/mushroom-idle.png",
++  "talk_asset": "resources/images/mushroom-talk.png",
++  "talk_animation": {"frames": 4, "width": 32, "height": 30, "step_time": 0.15}
++}
++```
++
++Use the same `animation` structure for an idle animation, including Metsavana's
++blink or the gnome's work/breath cycle. All strips run left to right. The current
++gnome slot uses the existing 32 x 30 work/breath strip at its authored pixel size.
++The mushroom talk strip was not found among the current exported assets.
++
++Inventory definitions are in `revalia_dialogues.json` under `inventory_items`.
++Add an `icon` PNG path to `empty_bottle`, `ink_bottle`, and `tartu_route_map` when
++those drawings are ready. Until then the existing inventory placeholders apply.
++
++New dialogue wording is in English translations; the current fallback supplies
++it for other languages. Existing translated Hendrik lines may need updating
++later to mention the Tartu map.
++
++## Verification
++
++`flutter test --no-pub` covers dialogue gates, the full successful route, missing
++bottle, stale/double collection, inventory delivery, one-time rewards, reset,
++connected travel, and actual mounted VIEW travel/death/retry/delivery.
++The VIEW test writes rendered checks to `build/quest-previews/`.
++
++The final bottle, drunk, mushroom, blink and map artwork still need an artist's
++pass before this is a finished visual demo. Existing sound assets are reused.
+--- a/resources/dialogues/INVENTORY_AND_QUESTS.md
++++ b/resources/dialogues/INVENTORY_AND_QUESTS.md
+@@ -1,4 +1,7 @@
+ # Inventory and quests
++
++See [Ink quest demo](INK_DEMO.md) for the connected town, river, and forest
++VIEWs, the empty-bottle-to-ink interaction, poisoning retry, and art slots.
+ 
+ The HUD inventory button opens a modal popup. World movement, animations, and
+ the level timer pause while it is open. Opening it cancels queued walking or
+@@ -61,7 +64,7 @@
+     }
+   },
+   "pickups": {
+-    "ink_bottle_pickup": "ink_bottle"
++    "empty_bottle_pickup": "empty_bottle"
+   }
+ }
+ ```
+@@ -104,17 +107,17 @@
+ through dialogue and delivery through inventory use the same quest state.
+ After completion his entrypoint selects a thank-you dialogue.
+ 
+-## Placing the ink
++## Placing the bottle
+ 
+-The ink location and artwork are deliberately left for scene authoring. After
+-adding `resources/images/ink-bottle.png`, add a scene entity to
+-`resources/scenarios/town_square.json`, choosing its position and size:
++The town scenario places an empty-bottle pickup beside the sleeping drunk.
++Replace its temporary marker with final artwork in the scenario JSON, keeping
++its interaction ID. A static prop example is:
+ 
+ ```json
+ {
+   "type": "static_prop",
+-  "asset_id": "resources/images/ink-bottle.png",
+-  "interaction_id": "ink_bottle_pickup",
++  "asset_id": "resources/images/empty-bottle.png",
++  "interaction_id": "empty_bottle_pickup",
+   "feet_position": [160, 160],
+   "size": [16, 16],
+   "walkable": false,
+@@ -124,10 +127,13 @@
+ ```
+ 
+ The coordinates above are an example. The `pickups` mapping already connects
+-this interaction ID to `ink_bottle`. Touching a pickup approaches it, adds one
++this interaction ID to `empty_bottle`. Touching a pickup approaches it, adds one
+ item, and removes the prop. Collected props stay absent after rebuilding the
+ scene, including after delivering their item. Use unique interaction IDs for
+ separate pickup sources. Existing animated props can also serve as pickups.
++The forest dialogue consumes this bottle and awards `ink_bottle` once. There
++is no loose ink pickup in town. Quest completion awards `tartu_route_map` through
++the quest definition's `rewards`, both for dialogue and inventory delivery.
+ 
+ To award an item from other game logic, call:
+ 
+--- a/resources/dialogues/revalia_dialogues.json
++++ b/resources/dialogues/revalia_dialogues.json
+@@ -32,6 +32,100 @@
+           "dialogue": "npc_intro"
+         }
+       ]
++    },
++    "female_clothes_trader": {
++      "id": "female_clothes_trader",
++      "name_key": "actors.female_clothes_trader.name",
++      "actions": {
++        "look": "female_clothes_trader_look",
++        "touch": "female_clothes_trader_touch",
++        "talk": "female_clothes_trader_talk",
++        "walk": "female_clothes_trader_walk"
++      },
++      "entrypoints": [
++        {
++          "dialogue": "lady_after_ink",
++          "when": {
++            "quest": "navigator_ink",
++            "status": "completed"
++          }
++        },
++        {
++          "dialogue": "lady_directions",
++          "when": {
++            "flag": "lady_ink_directions"
++          }
++        },
++        {
++          "dialogue": "lady_hendrik",
++          "when": {
++            "flag": "navigator_ink_quest_started"
++          }
++        }
++      ]
++    },
++    "city_guard": {
++      "id": "city_guard",
++      "name_key": "actors.city_guard.name",
++      "actions": {
++        "look": "city_guard_look"
++      },
++      "entrypoints": [
++        {
++          "dialogue": "guard_forest",
++          "when": {
++            "flag": "navigator_ink_quest_started"
++          }
++        },
++        {
++          "dialogue": "guard_idle"
++        }
++      ]
++    },
++    "forest_mushroom": {
++      "id": "forest_mushroom",
++      "name_key": "actors.forest_mushroom.name",
++      "actions": {
++        "look": "mushroom_look"
++      },
++      "entrypoints": [
++        {
++          "dialogue": "mushroom_collected",
++          "when": {
++            "flag": "forest_ink_collected"
++          }
++        },
++        {
++          "dialogue": "mushroom_ink",
++          "when": {
++            "flag": "navigator_ink_quest_started"
++          }
++        },
++        {
++          "dialogue": "mushroom_idle"
++        }
++      ]
++    },
++    "inkcap": {
++      "id": "inkcap",
++      "name_key": "actors.inkcap.name",
++      "actions": {
++        "look": "inkcap_look"
++      },
++      "entrypoints": [
++        {
++          "dialogue": "mushroom_collected",
++          "when": {
++            "flag": "forest_ink_collected"
++          }
++        },
++        {
++          "dialogue": "inkcap_choices",
++          "when": {
++            "flag": "navigator_ink_quest_started"
++          }
++        }
++      ]
+     }
+   },
+   "objects": {
+@@ -66,6 +160,48 @@
+     "ink_bottle_pickup": {
+       "actions": {
+         "look": "ink_bottle_look"
++      }
++    },
++    "empty_bottle_pickup": {
++      "actions": {
++        "look": "empty_bottle_look"
++      }
++    },
++    "sleeping_drunk": {
++      "actions": {
++        "look": "sleeping_drunk_look",
++        "talk": "sleeping_drunk_talk"
++      }
++    },
++    "metsavana": {
++      "actions": {
++        "look": "metsavana_look",
++        "talk": "metsavana_silent"
++      }
++    },
++    "gnome_worker": {
++      "actions": {
++        "look": "gnome_look"
++      }
++    },
++    "city_exit": {
++      "actions": {
++        "look": "exit_look"
++      }
++    },
++    "to_town": {
++      "actions": {
++        "look": "exit_look"
++      }
++    },
++    "to_forest": {
++      "actions": {
++        "look": "exit_look"
++      }
++    },
++    "to_river": {
++      "actions": {
++        "look": "exit_look"
+       }
+     }
+   },
+@@ -91,7 +227,19 @@
+     "generic_talk": {},
+     "generic_walk": {},
+     "generic_use": {},
+-    "ink_bottle_look": {}
++    "ink_bottle_look": {},
++    "city_exit_locked": {},
++    "city_guard_look": {},
++    "empty_bottle_look": {},
++    "sleeping_drunk_look": {},
++    "sleeping_drunk_talk": {},
++    "metsavana_silent": {},
++    "metsavana_look": {},
++    "mushroom_look": {},
++    "inkcap_look": {},
++    "gnome_look": {},
++    "mushroom_poisoned": {},
++    "exit_look": {}
+   },
+   "fallbacks": {
+     "look": "generic_look",
+@@ -278,6 +426,206 @@
+           "next": "end"
+         }
+       ]
++    },
++    "lady_hendrik": {
++      "responses": [
++        {
++          "id": "explain_ink",
++          "next": "lady_directions",
++          "effects": [
++            {
++              "set_flag": "lady_ink_directions"
++            }
++          ]
++        },
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "lady_directions": {
++      "responses": [
++        {
++          "id": "thank_lady",
++          "next": "end"
++        }
++      ]
++    },
++    "lady_after_ink": {
++      "responses": [
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "guard_idle": {
++      "responses": [
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "guard_forest": {
++      "responses": [
++        {
++          "id": "follow_directions",
++          "next": "end",
++          "effects": [
++            {
++              "set_flag": "city_exit_unlocked"
++            }
++          ]
++        },
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "mushroom_idle": {
++      "responses": [
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "mushroom_ink": {
++      "responses": [
++        {
++          "id": "collect_ink",
++          "next": "mushroom_collected",
++          "when": {
++            "all": [
++              {
++                "flag": "navigator_ink_quest_started"
++              },
++              {
++                "has_item": "empty_bottle"
++              },
++              {
++                "not": {
++                  "flag": "forest_ink_collected"
++                }
++              }
++            ]
++          },
++          "once": true,
++          "effects": [
++            {
++              "remove_item": "empty_bottle"
++            },
++            {
++              "add_item": "ink_bottle"
++            },
++            {
++              "set_flag": "forest_ink_collected"
++            },
++            {
++              "award_score": {
++                "id": "collect_forest_ink",
++                "points": 250
++              }
++            }
++          ]
++        },
++        {
++          "id": "need_bottle",
++          "next": "mushroom_need_bottle",
++          "when": {
++            "not": {
++              "has_item": "empty_bottle"
++            }
++          }
++        },
++        {
++          "id": "lick_goo",
++          "next": "end",
++          "event": "mushroom_poisoning"
++        },
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "mushroom_need_bottle": {
++      "responses": [
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "mushroom_collected": {
++      "responses": [
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
++    },
++    "inkcap_choices": {
++      "responses": [
++        {
++          "id": "collect_ink",
++          "next": "mushroom_collected",
++          "when": {
++            "all": [
++              {
++                "flag": "navigator_ink_quest_started"
++              },
++              {
++                "has_item": "empty_bottle"
++              },
++              {
++                "not": {
++                  "flag": "forest_ink_collected"
++                }
++              }
++            ]
++          },
++          "once": true,
++          "effects": [
++            {
++              "remove_item": "empty_bottle"
++            },
++            {
++              "add_item": "ink_bottle"
++            },
++            {
++              "set_flag": "forest_ink_collected"
++            },
++            {
++              "award_score": {
++                "id": "collect_forest_ink",
++                "points": 250
++              }
++            }
++          ]
++        },
++        {
++          "id": "need_bottle",
++          "next": "mushroom_need_bottle",
++          "when": {
++            "not": {
++              "has_item": "empty_bottle"
++            }
++          }
++        },
++        {
++          "id": "lick_goo",
++          "next": "end",
++          "event": "mushroom_poisoning"
++        },
++        {
++          "id": "leave",
++          "next": "end"
++        }
++      ]
+     }
+   },
+   "inventory_items": {
+@@ -287,6 +635,12 @@
+     },
+     "ink_bottle": {
+       "usable": true
++    },
++    "empty_bottle": {
++      "usable": true
++    },
++    "tartu_route_map": {
++      "usable": false
+     }
+   },
+   "quests": {
+@@ -294,10 +648,13 @@
+       "recipient": "old_sailor",
+       "required_items": {
+         "ink_bottle": 1
++      },
++      "rewards": {
++        "tartu_route_map": 1
+       }
+     }
+   },
+   "pickups": {
+-    "ink_bottle_pickup": "ink_bottle"
++    "empty_bottle_pickup": "empty_bottle"
+   }
+ }
+--- a/resources/scenarios/forest.json
++++ b/resources/scenarios/forest.json
+@@ -0,0 +1,127 @@
++{
++  "id": "forest",
++  "background": "resources/images/quest-forest-background.png",
++  "perspective": {
++    "horizon_y": 75,
++    "minimum_walkable_y": 110,
++    "minimum_scale": 0.35,
++    "maximum_scale": 0.8
++  },
++  "walking_area": {
++    "vertices": [
++      [
++        0,
++        130
++      ],
++      [
++        320,
++        130
++      ],
++      [
++        320,
++        180
++      ],
++      [
++        0,
++        180
++      ]
++    ]
++  },
++  "player": {
++    "feet_position": [
++      45,
++      169
++    ],
++    "size": [
++      50,
++      84
++    ]
++  },
++  "entities": [
++    {
++      "type": "quest_prop",
++      "asset_id": "resources/images/quest-metsavana.png",
++      "interaction_id": "metsavana",
++      "feet_position": [
++        177,
++        167
++      ],
++      "size": [
++        137,
++        120
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true
++    },
++    {
++      "type": "quest_prop",
++      "asset_id": "resources/images/quest-gnome-work.png",
++      "animation": {"frames": 24, "width": 32, "height": 30, "step_time": 0.18},
++      "interaction_id": "gnome_worker",
++      "feet_position": [
++        126,
++        170
++      ],
++      "size": [
++        32,
++        30
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true
++    },
++    {
++      "type": "quest_prop",
++      "asset_id": "placeholder:forest_mushroom",
++      "interaction_id": "forest_mushroom",
++      "feet_position": [
++        236,
++        171
++      ],
++      "size": [
++        46,
++        24
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "dialogue_actor_id": "forest_mushroom"
++    },
++    {
++      "type": "quest_prop",
++      "asset_id": "placeholder:inkcap",
++      "interaction_id": "inkcap",
++      "feet_position": [
++        287,
++        174
++      ],
++      "size": [
++        30,
++        20
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "dialogue_actor_id": "inkcap"
++    },
++    {
++      "type": "exit",
++      "asset_id": "placeholder:to_river",
++      "interaction_id": "to_river",
++      "feet_position": [
++        30,
++        172
++      ],
++      "size": [
++        48,
++        18
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "destination": "river_crossing"
++    }
++  ],
++  "arrivals": {
++    "river_crossing": [
++      60,
++      170
++    ]
++  }
++}
+--- a/resources/scenarios/river_crossing.json
++++ b/resources/scenarios/river_crossing.json
+@@ -0,0 +1,84 @@
++{
++  "id": "river_crossing",
++  "background": "resources/images/eestlandriver128x91.png",
++  "perspective": {
++    "horizon_y": 75,
++    "minimum_walkable_y": 110,
++    "minimum_scale": 0.35,
++    "maximum_scale": 0.8
++  },
++  "walking_area": {
++    "vertices": [
++      [
++        0,
++        150
++      ],
++      [
++        320,
++        150
++      ],
++      [
++        320,
++        178
++      ],
++      [
++        0,
++        178
++      ]
++    ]
++  },
++  "player": {
++    "feet_position": [
++      45,
++      169
++    ],
++    "size": [
++      50,
++      84
++    ]
++  },
++  "entities": [
++    {
++      "type": "exit",
++      "asset_id": "placeholder:to_town",
++      "interaction_id": "to_town",
++      "feet_position": [
++        30,
++        172
++      ],
++      "size": [
++        46,
++        18
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "destination": "town_square"
++    },
++    {
++      "type": "exit",
++      "asset_id": "placeholder:to_forest",
++      "interaction_id": "to_forest",
++      "feet_position": [
++        288,
++        172
++      ],
++      "size": [
++        50,
++        18
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "destination": "forest"
++    }
++  ],
++  "arrivals": {
++    "town_square": [
++      65,
++      169
++    ],
++    "forest": [
++      255,
++      169
++    ]
++  }
++}
+--- a/resources/scenarios/town_square.json
++++ b/resources/scenarios/town_square.json
+@@ -10,14 +10,29 @@
+   },
+   "walking_area": {
+     "vertices": [
+-      [160, 102],
+-      [320, 200],
+-      [0, 200]
++      [
++        160,
++        102
++      ],
++      [
++        320,
++        200
++      ],
++      [
++        0,
++        200
++      ]
+     ]
+   },
+   "player": {
+-    "feet_position": [160, 200],
+-    "size": [50, 84]
++    "feet_position": [
++      160,
++      200
++    ],
++    "size": [
++      50,
++      84
++    ]
+   },
+   "entities": [
+     {
+@@ -25,8 +40,14 @@
+       "asset_id": "old_sailor",
+       "interaction_id": "old_sailor",
+       "dialogue_actor_id": "old_sailor",
+-      "feet_position": [25, 192.5],
+-      "size": [50, 85],
++      "feet_position": [
++        25,
++        192.5
++      ],
++      "size": [
++        50,
++        85
++      ],
+       "walkable": false,
+       "perspective_scaling": true,
+       "depth_sorting": true
+@@ -35,8 +56,14 @@
+       "type": "npc",
+       "asset_id": "clothes_trader",
+       "interaction_id": "clothes_trader",
+-      "feet_position": [295, 192.5],
+-      "size": [50, 85],
++      "feet_position": [
++        295,
++        192.5
++      ],
++      "size": [
++        50,
++        85
++      ],
+       "walkable": false,
+       "perspective_scaling": true,
+       "depth_sorting": true
+@@ -45,18 +72,31 @@
+       "type": "npc",
+       "asset_id": "female_clothes_trader",
+       "interaction_id": "female_clothes_trader",
+-      "feet_position": [240, 192.5],
+-      "size": [50, 85],
++      "feet_position": [
++        240,
++        192.5
++      ],
++      "size": [
++        50,
++        85
++      ],
+       "walkable": false,
+       "perspective_scaling": true,
+-      "depth_sorting": true
++      "depth_sorting": true,
++      "dialogue_actor_id": "female_clothes_trader"
+     },
+     {
+       "type": "animated_prop",
+       "asset_id": "glowing_gem",
+       "interaction_id": "glowing_gem",
+-      "feet_position": [220, 170],
+-      "size": [32, 32],
++      "feet_position": [
++        220,
++        170
++      ],
++      "size": [
++        32,
++        32
++      ],
+       "walkable": true,
+       "perspective_scaling": true,
+       "depth_sorting": true
+@@ -65,11 +105,85 @@
+       "type": "animated_prop",
+       "asset_id": "glowing_gem",
+       "interaction_id": "glowing_gem",
+-      "feet_position": [200, 140],
+-      "size": [32, 32],
++      "feet_position": [
++        200,
++        140
++      ],
++      "size": [
++        32,
++        32
++      ],
+       "walkable": true,
+       "perspective_scaling": true,
+       "depth_sorting": true
++    },
++    {
++      "type": "quest_prop",
++      "asset_id": "placeholder:sleeping_drunk",
++      "interaction_id": "sleeping_drunk",
++      "feet_position": [
++        111,
++        165
++      ],
++      "size": [
++        52,
++        22
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true
++    },
++    {
++      "type": "quest_prop",
++      "asset_id": "placeholder:empty_bottle_pickup",
++      "interaction_id": "empty_bottle_pickup",
++      "feet_position": [
++        142,
++        168
++      ],
++      "size": [
++        25,
++        16
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true
++    },
++    {
++      "type": "npc",
++      "asset_id": "old_sailor",
++      "interaction_id": "city_guard",
++      "feet_position": [
++        180,
++        135
++      ],
++      "size": [
++        50,
++        85
++      ],
++      "perspective_scaling": true,
++      "depth_sorting": true,
++      "dialogue_actor_id": "city_guard"
++    },
++    {
++      "type": "exit",
++      "asset_id": "placeholder:city_exit",
++      "interaction_id": "city_exit",
++      "feet_position": [
++        160,
++        111
++      ],
++      "size": [
++        46,
++        16
++      ],
++      "perspective_scaling": false,
++      "depth_sorting": true,
++      "destination": "river_crossing"
+     }
+-  ]
++  ],
++  "arrivals": {
++    "river_crossing": [
++      160,
++      125
++    ]
++  }
+ }
+--- a/resources/translations/en.json
++++ b/resources/translations/en.json
+@@ -24,6 +24,18 @@
+   "actors": {
+     "old_sailor": {
+       "name": "Navigator"
++    },
++    "female_clothes_trader": {
++      "name": "Clothes trader"
++    },
++    "city_guard": {
++      "name": "City guard"
++    },
++    "forest_mushroom": {
++      "name": "Forest mushroom"
++    },
++    "inkcap": {
++      "name": "Inkcap"
+     }
+   },
+   "loading": {
+@@ -157,10 +169,124 @@
+     },
+     "npc_ink_thanks": {
+       "player_text": "About the ink for your charts...",
+-      "text": "Just what I needed. Thank you, Rebane.",
++      "text": "Just what I needed. Here is your reward: a map of the trading route from Tallinn to Tartu. Your first journey starts here.",
+       "responses": {
+         "leave": {
+           "text": "Safe travels, Hendrik."
++        }
++      }
++    },
++    "lady_hendrik": {
++      "player_text": "Excuse me.",
++      "text": "Oh, I see you got acquainted with Hendrik. What did he tell you?",
++      "responses": {
++        "explain_ink": {
++          "text": "He needs ink. I am new here; where should I look?"
++        },
++        "leave": {
++          "text": "Perhaps another time."
++        }
++      }
++    },
++    "lady_directions": {
++      "player_text": "Hendrik sent me to find ink.",
++      "text": "Ink is expensive here. Try asking the guard by the city gate. He might know where to look.",
++      "responses": {
++        "thank_lady": {
++          "text": "Thank you. I will ask him."
++        }
++      }
++    },
++    "lady_after_ink": {
++      "player_text": "I found ink for Hendrik.",
++      "text": "Then you are finding your way around already.",
++      "responses": {
++        "leave": {
++          "text": "Thanks for your help."
++        }
++      }
++    },
++    "guard_idle": {
++      "player_text": "Good day.",
++      "text": "Keep the gate clear, traveller.",
++      "responses": {
++        "leave": {
++          "text": "Of course."
++        }
++      }
++    },
++    "guard_forest": {
++      "player_text": "Where can I find ink around here?",
++      "text": "Could not say. You might try outside the gates, across the river and into the forest, if you know what to look for. That is all I can tell you.",
++      "responses": {
++        "follow_directions": {
++          "text": "I will try the forest."
++        },
++        "leave": {
++          "text": "I will think about it."
++        }
++      }
++    },
++    "mushroom_idle": {
++      "player_text": "Did you just move?",
++      "text": "Everything in this forest moves eventually.",
++      "responses": {
++        "leave": {
++          "text": "Right..."
++        }
++      }
++    },
++    "mushroom_ink": {
++      "player_text": "I need black ink. Does the big fellow know where to find it?",
++      "text": "Metsavana is busy. I do the talking. See that inkcap beside me? Its black goo is ready to write with. You could bottle it. Or perhaps you were thinking of licking it?",
++      "responses": {
++        "collect_ink": {
++          "text": "Collect the black goo in my bottle."
++        },
++        "need_bottle": {
++          "text": "I have nothing to carry it in."
++        },
++        "lick_goo": {
++          "text": "Lick it."
++        },
++        "leave": {
++          "text": "I will come back."
++        }
++      }
++    },
++    "mushroom_need_bottle": {
++      "player_text": "Could I put it in a cup?",
++      "text": "A bottle with a stopper would be wiser. Someone in town must have emptied one by now.",
++      "responses": {
++        "leave": {
++          "text": "I will look in town."
++        }
++      }
++    },
++    "mushroom_collected": {
++      "player_text": "That should do for ink.",
++      "text": "Keep the stopper in. Hendrik needs ink on his maps, not on your insides.",
++      "responses": {
++        "leave": {
++          "text": "Back to Hendrik, then."
++        }
++      }
++    },
++    "inkcap_choices": {
++      "player_text": "This mushroom is oozing black liquid.",
++      "text": "The talking mushroom calls it ink. It looks ready to bottle.",
++      "responses": {
++        "collect_ink": {
++          "text": "Collect the goo in my bottle."
++        },
++        "need_bottle": {
++          "text": "I need a container."
++        },
++        "lick_goo": {
++          "text": "Lick it."
++        },
++        "leave": {
++          "text": "Leave it alone."
+         }
+       }
+     }
+@@ -231,6 +357,42 @@
+     },
+     "ink_bottle_look": {
+       "text": "A bottle of dark ink. It might be useful for drawing charts."
++    },
++    "city_exit_locked": {
++      "text": "I should ask the city guard where to go first."
++    },
++    "city_guard_look": {
++      "text": "A guard keeps watch beside the city gate."
++    },
++    "empty_bottle_look": {
++      "text": "An empty bottle. The man beside it is completely passed out."
++    },
++    "sleeping_drunk_look": {
++      "text": "Fast asleep. His bottle is empty."
++    },
++    "sleeping_drunk_talk": {
++      "text": "Only snoring. He is not waking up."
++    },
++    "metsavana_silent": {
++      "text": "Metsavana does not reply. The gnomes keep scraping. A nearby mushroom seems to be watching me."
++    },
++    "metsavana_look": {
++      "text": "Gnomes are carefully scraping and cleaning the huge forest figure."
++    },
++    "mushroom_look": {
++      "text": "A mushroom that looks as though it has something to say."
++    },
++    "inkcap_look": {
++      "text": "A mushroom oozes a thick black liquid."
++    },
++    "gnome_look": {
++      "text": "A gnome scrapes away, pausing now and then to catch his breath."
++    },
++    "mushroom_poisoned": {
++      "text": "The goo is poisonous. You turn green and collapse. Click to retry before tasting it; your quest progress is safe."
++    },
++    "exit_look": {
++      "text": "The road continues. Walk here to travel."
+     }
+   },
+   "inventory": {
+@@ -266,13 +428,34 @@
+       "name": "Ink",
+       "look": "A bottle of dark ink. Hendrik needs this for his charts.",
+       "touch": "The stopper is firmly in place."
++    },
++    "empty_bottle": {
++      "name": "Empty bottle",
++      "look": "An empty bottle from beside the sleeping drunk. It could hold ink.",
++      "touch": "I could fill this with the black mushroom goo."
++    },
++    "tartu_route_map": {
++      "name": "Tallinn-Tartu route",
++      "look": "Hendrik's map of the trading route from Tallinn to Tartu. My first route!",
++      "touch": "I carefully unfold the map. The road leads to Tartu."
+     }
+   },
+   "quests": {
+     "navigator_ink": {
+       "title": "Ink for Hendrik",
+-      "description": "Find a bottle of ink and bring it to Hendrik, the old sailor.",
+-      "completed": "Hendrik takes the ink. Task completed: Ink for Hendrik."
+-    }
++      "description": "Find a container, find ink, and bring it to Hendrik.",
++      "completed": "Hendrik takes the ink and gives me the Tallinn-Tartu trading-route map. Demo complete!"
++    }
++  },
++  "scene": {
++    "empty_bottle_pickup": "Bottle",
++    "sleeping_drunk": "Sleeping drunk",
++    "forest_mushroom": "Mushroom",
++    "inkcap": "Inkcap",
++    "gnome_worker": "Gnome",
++    "city_exit": "City exit",
++    "to_town": "To town",
++    "to_forest": "To forest",
++    "to_river": "To river"
+   }
+ }
+--- a/test/adventure_state_test.dart
++++ b/test/adventure_state_test.dart
+@@ -42,9 +42,11 @@
+   test('collecting ink is one-time and readiness follows current inventory',
+       () {
+     state.startQuest('navigator_ink');
+-    expect(state.collectPickup('ink_bottle_pickup'), isTrue);
+-    expect(state.collectPickup('ink_bottle_pickup'), isFalse);
+-    expect(state.quantity('ink_bottle'), 1);
++    expect(state.collectPickup('empty_bottle_pickup'), isTrue);
++    expect(state.collectPickup('empty_bottle_pickup'), isFalse);
++    expect(state.quantity('empty_bottle'), 1);
++    state.removeItem('empty_bottle');
++    state.addItem('ink_bottle');
+     expect(state.status('navigator_ink'), QuestStatus.ready);
+     state.removeItem('ink_bottle');
+     expect(state.status('navigator_ink'), QuestStatus.active);
+@@ -86,13 +88,13 @@
+ 
+   test('reset clears inventory, pickups and quests, then restores scroll', () {
+     state.startQuest('navigator_ink');
+-    state.collectPickup('ink_bottle_pickup');
++    state.collectPickup('empty_bottle_pickup');
+     state.completeQuest('navigator_ink');
+     fsm.resetProgress();
+     expect(state.inventory, {'task_scroll': 1});
+     expect(state.journal, isEmpty);
+     expect(state.status('navigator_ink'), QuestStatus.available);
+-    expect(state.collectPickup('ink_bottle_pickup'), isTrue);
++    expect(state.collectPickup('empty_bottle_pickup'), isTrue);
+   });
+ 
+   test('invalid quantities and missing quest items are rejected', () {
+--- a/test/ink_quest_flow_test.dart
++++ b/test/ink_quest_flow_test.dart
+@@ -0,0 +1,174 @@
++import 'dart:convert';
++import 'dart:io';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:revalia/dialoguefsm/dialogue.dart';
++import 'package:revalia/dialoguefsm/dialogue_fsm.dart';
++import 'package:revalia/dialoguefsm/adventure_state.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
++import 'package:revalia/game/states/level_game/scenario/scenario_config.dart';
++
++void main() {
++  late DialogueFsm fsm;
++  late Map<String, dynamic> graph;
++  setUp(() {
++    graph = jsonDecode(File('resources/dialogues/revalia_dialogues.json')
++        .readAsStringSync()) as Map<String, dynamic>;
++    fsm = DialogueFsm()..configure(graph: graph, translations: {});
++  });
++  Dialogue choose(Dialogue node, String id) {
++    final selection =
++        fsm.chooseResponse(node, node.responses.indexWhere((r) => r.id == id));
++    if (selection.next == 'end') {
++      fsm.endConversation();
++      return node;
++    }
++    return fsm.showNode(selection.next);
++  }
++
++  void acceptQuest() {
++    var node = fsm.startConversation('old_sailor');
++    node = choose(node, 'ask_identity');
++    node = choose(node, 'ask_if_comedian');
++    node = choose(node, 'ask_need');
++    node = choose(node, 'answer_rebane');
++    choose(node, 'accept_ink_quest');
++  }
++
++  test('full route: quest, lady, bottle, guard, forest, ink and Tartu reward',
++      () {
++    expect(fsm.canStartConversation('female_clothes_trader'), isFalse);
++    acceptQuest();
++    var lady = fsm.startConversation('female_clothes_trader');
++    expect(lady.id, 'lady_hendrik');
++    lady = choose(lady, 'explain_ink');
++    expect(lady.id, 'lady_directions');
++    choose(lady, 'thank_lady');
++    final state = fsm.storyState.adventure;
++    expect(state.collectPickup('empty_bottle_pickup'), isTrue);
++    expect(state.collectPickup('empty_bottle_pickup'), isFalse);
++    expect(state.quantity('empty_bottle'), 1);
++    final guard = fsm.startConversation('city_guard');
++    choose(guard, 'follow_directions');
++    expect(fsm.storyState.flag('city_exit_unlocked'), isTrue);
++    var mushroom = fsm.startConversation('forest_mushroom');
++    expect(mushroom.responses.map((r) => r.id), contains('collect_ink'));
++    mushroom = choose(mushroom, 'collect_ink');
++    expect(mushroom.id, 'mushroom_collected');
++    expect(state.hasItem('empty_bottle'), isFalse);
++    expect(state.quantity('ink_bottle'), 1);
++    expect(state.status('navigator_ink'), QuestStatus.ready);
++    choose(mushroom, 'leave');
++    final waiting = fsm.startConversation('old_sailor');
++    choose(waiting, 'give_ink');
++    expect(state.status('navigator_ink'), QuestStatus.completed);
++    expect(state.hasItem('ink_bottle'), isFalse);
++    expect(state.quantity('tartu_route_map'), 1);
++    expect(state.completeQuest('navigator_ink'), isFalse);
++    expect(state.quantity('tartu_route_map'), 1);
++  });
++
++  test('missing bottle gives a useful return-to-town option, not free ink', () {
++    acceptQuest();
++    final mushroom = fsm.startConversation('forest_mushroom');
++    expect(mushroom.responses.map((r) => r.id), isNot(contains('collect_ink')));
++    expect(choose(mushroom, 'need_bottle').id, 'mushroom_need_bottle');
++    expect(fsm.storyState.adventure.hasItem('ink_bottle'), isFalse);
++  });
++
++  test('poisoning emits retry event and leaves all quest progress intact', () {
++    acceptQuest();
++    final state = fsm.storyState.adventure;
++    state.collectPickup('empty_bottle_pickup');
++    final before = Map.of(state.inventory);
++    final mushroom = fsm.startConversation('forest_mushroom');
++    final death = fsm.chooseResponse(
++        mushroom, mushroom.responses.indexWhere((r) => r.id == 'lick_goo'));
++    expect(death.response.event, 'mushroom_poisoning');
++    fsm.endConversation();
++    // The retry rebuilds a VIEW, not StoryState or the whole playthrough.
++    expect(state.inventory, before);
++    expect(state.status('navigator_ink'), QuestStatus.active);
++    final retry = fsm.startConversation('forest_mushroom');
++    expect(retry.responses.map((r) => r.id), contains('collect_ink'));
++    choose(retry, 'collect_ink');
++    expect(state.quantity('ink_bottle'), 1);
++  });
++
++  test('ink cannot be recollected via another actor or stale reply', () {
++    acceptQuest();
++    fsm.storyState.adventure.collectPickup('empty_bottle_pickup');
++    final node = fsm.startConversation('inkcap');
++    final index = node.responses.indexWhere((r) => r.id == 'collect_ink');
++    final selected = fsm.chooseResponse(node, index);
++    expect(selected.response.effects.last['award_score']['id'],
++        'collect_forest_ink');
++    expect(() => fsm.chooseResponse(node, index), throwsStateError);
++    fsm.endConversation();
++    expect(fsm.startConversation('forest_mushroom').id, 'mushroom_collected');
++    expect(fsm.storyState.adventure.quantity('ink_bottle'), 1);
++  });
++
++  test('inventory delivery also awards exactly one map', () {
++    acceptQuest();
++    final state = fsm.storyState.adventure;
++    state.addItem('ink_bottle');
++    expect(state.deliverItem('ink_bottle', 'old_sailor'), isNotNull);
++    expect(state.quantity('tartu_route_map'), 1);
++    expect(state.deliverItem('ink_bottle', 'old_sailor'), isNull);
++    expect(state.quantity('tartu_route_map'), 1);
++  });
++
++  test(
++      'guard unlocks only connected travel and scenarios reference existing assets',
++      () {
++    for (final from in QuestLocations.paths.keys) {
++      for (final to in QuestLocations.paths.keys) {
++        expect(
++            QuestLocations.canTravel(from, to, gateUnlocked: false), isFalse);
++      }
++      final raw =
++          jsonDecode(File(QuestLocations.paths[from]!).readAsStringSync())
++              as Map<String, dynamic>;
++      final scene = ScenarioConfig.fromJson(raw);
++      expect(scene.id, from);
++      for (final entity in scene.entities) {
++        if (entity.dialogueActorId != null)
++          expect(graph['actors'], contains(entity.dialogueActorId));
++        if (entity.destination != null) {
++          expect(
++              QuestLocations.canTravel(from, entity.destination!,
++                  gateUnlocked: true),
++              isTrue);
++        }
++        if (entity.assetId.startsWith('resources/'))
++          expect(File(entity.assetId).existsSync(), isTrue);
++      }
++    }
++    expect(
++        QuestLocations.canTravel(QuestLocations.town, QuestLocations.forest,
++            gateUnlocked: true),
++        isFalse);
++    expect(
++        QuestLocations.canTravel(QuestLocations.town, QuestLocations.river,
++            gateUnlocked: true),
++        isTrue);
++    expect(
++        QuestLocations.canTravel(QuestLocations.forest, QuestLocations.river,
++            gateUnlocked: true),
++        isTrue);
++  });
++
++  test('new game clears route access, pickups, ink and map', () {
++    acceptQuest();
++    choose(fsm.startConversation('city_guard'), 'follow_directions');
++    fsm.storyState.adventure.collectPickup('empty_bottle_pickup');
++    choose(fsm.startConversation('forest_mushroom'), 'collect_ink');
++    fsm.storyState.adventure.completeQuest('navigator_ink');
++    fsm.resetProgress();
++    expect(fsm.storyState.flag('city_exit_unlocked'), isFalse);
++    expect(fsm.storyState.adventure.inventory, {'task_scroll': 1});
++    expect(fsm.canStartConversation('female_clothes_trader'), isFalse);
++    expect(
++        fsm.storyState.adventure.collectPickup('empty_bottle_pickup'), isTrue);
++  });
++}
+--- a/test/quest_views_test.dart
++++ b/test/quest_views_test.dart
+@@ -0,0 +1,183 @@
++import 'dart:io';
++import 'dart:ui' as ui;
++import 'package:flame/camera.dart';
++import 'package:flame/components.dart';
++import 'package:flame/flame.dart';
++import 'package:flame/game.dart';
++import 'package:flutter/material.dart';
++import 'package:flutter/rendering.dart';
++import 'package:flutter/services.dart';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:revalia/revalia_obs.dart';
++import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
++import 'package:revalia/utils/sound/web_audio_player.dart';
++import 'package:revalia/game/states/level_game/scenario/quest_locations.dart';
++
++class _SilentAudio extends WebAudioPlayer {
++  @override
++  void playSoundFx(String path) {}
++  @override
++  Future<void> playMusic(String path,
++      {bool loop = false, int playCount = 1}) async {}
++}
++
++class _QuestGame extends RevaliaObs {
++  @override
++  Future<void> onLoad() async {
++    ap = _SilentAudio();
++    Flame.images.prefix = '';
++    await entitySpriteCache.preloadAnimations(this);
++    await entitySpriteCache.preloadSprites(this);
++    await uiSpriteCache.preloadAnimations(this);
++    await uiSpriteCache.preloadSprites(this);
++    await playerSpriteCache.preloadAnimations(this);
++    await appTranslations.loadTranslations();
++    await DialogueManager.loadDialogueGraph(
++        assetPath: 'resources/dialogues/revalia_dialogues.json',
++        translations: {});
++    DialogueManager.fsm.storyState.applyEffects([
++      {'set_flag': 'navigator_ink_quest_started'},
++      {'start_quest': 'navigator_ink'},
++      {'set_flag': 'city_exit_unlocked'},
++    ]);
++    viewport = FixedResolutionViewport(resolution: camDimension);
++    cam = camera;
++    cam.viewport = viewport;
++    cam.viewfinder.anchor = Anchor.topLeft;
++    switchToWorld(gboard);
++  }
++}
++
++Future<void> _settle(WidgetTester tester, _QuestGame game) async {
++  for (var i = 0; i < 25; i++) {
++    await tester.pump(const Duration(milliseconds: 100));
++    await tester
++        .runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
++  }
++  expect(tester.takeException(), isNull);
++}
++
++Future<void> _capture(WidgetTester tester, String name) async {
++  await tester.runAsync(() async {
++    final boundary = tester.renderObject<RenderRepaintBoundary>(
++        find.byKey(const Key('quest-preview')));
++    final image = await boundary.toImage(pixelRatio: 2);
++    final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
++    Directory('build/quest-previews').createSync(recursive: true);
++    File('build/quest-previews/$name.png')
++        .writeAsBytesSync(bytes!.buffer.asUint8List());
++    image.dispose();
++  });
++}
++
++void main() {
++  setUpAll(() async {
++    for (final entry in {
++      'scumm': 'SCUMM-Font.ttf',
++      'press2p': 'PressStart2P-Regular.ttf'
++    }.entries) {
++      final loader = FontLoader(entry.key)
++        ..addFont(rootBundle.load('resources/fonts/${entry.value}'));
++      await loader.load();
++    }
++  });
++  testWidgets(
++      'VIEW travel, poison retry and return preserve the bottle and score',
++      (tester) async {
++    final game = _QuestGame();
++    await tester.runAsync(() async {
++      game.onGameResize(Vector2(640, 400));
++      await game.load();
++    });
++    await tester.pumpWidget(MaterialApp(
++        home: Align(
++            alignment: Alignment.topLeft,
++            child: RepaintBoundary(
++                key: const Key('quest-preview'),
++                child: SizedBox(
++                    width: 640, height: 400, child: GameWidget(game: game))))));
++    await _settle(tester, game);
++    expect(game.gboard.scenario.id, QuestLocations.town);
++    await _capture(tester, 'town');
++    final state = DialogueManager.fsm.storyState.adventure;
++    state.collectPickup('empty_bottle_pickup');
++    game.gboard.gBoardModel.awardScoreMilestone('test_existing', 100);
++    game.gboard.travelTo(QuestLocations.river);
++    await tester.pump(const Duration(milliseconds: 16));
++    await _settle(tester, game);
++    expect(game.gboard.scenario.id, QuestLocations.river);
++    expect(state.hasItem('empty_bottle'), isTrue);
++    await _capture(tester, 'river');
++    game.gboard.travelTo(QuestLocations.forest);
++    await tester.pump(const Duration(milliseconds: 16));
++    await _settle(tester, game);
++    expect(game.gboard.scenario.id, QuestLocations.forest);
++    await _capture(tester, 'forest');
++    final mushroom = game.gboard.levelEntities
++        .firstWhere((e) => e.interactionId == 'forest_mushroom');
++    game.gboard.callRenderDialogue(mushroom);
++    await tester.pump();
++    final dialogue = DialogueManager.fsm.dialogues['mushroom_ink']!;
++    final next = DialogueManager.chooseResponse(
++        dialogue, dialogue.responses.indexWhere((r) => r.id == 'lick_goo'));
++    game.gboard.df!.loadDialogueTextToFrame(next);
++    for (var i = 0; i < 40; i++) {
++      await tester.pump(const Duration(milliseconds: 100));
++    }
++    expect(game.gboard.isGameFinished, isTrue);
++    expect(game.gboard.playerEntity.playerModel.isAlive, isFalse);
++    expect(state.hasItem('empty_bottle'), isTrue);
++    await _capture(tester, 'poison');
++    // Dismissing the death message retries this location without a new game.
++    await tester.tapAt(const Offset(320, 160));
++    await tester.pump(const Duration(milliseconds: 16));
++    await _settle(tester, game);
++    expect(game.gboard.scenario.id, QuestLocations.forest);
++    expect(game.gboard.playerEntity.playerModel.isAlive, isTrue);
++    expect(game.gboard.gBoardModel.totalScore, 100);
++    expect(state.hasItem('empty_bottle'), isTrue);
++    final retryMushroom = game.gboard.levelEntities
++        .firstWhere((e) => e.interactionId == 'forest_mushroom');
++    game.gboard.callRenderDialogue(retryMushroom);
++    await tester.pump();
++    final collectNode = DialogueManager.fsm.dialogues['mushroom_ink']!;
++    final collected = DialogueManager.chooseResponse(collectNode,
++        collectNode.responses.indexWhere((r) => r.id == 'collect_ink'));
++    game.gboard.df!.loadDialogueTextToFrame(collected);
++    final done = DialogueManager.fsm.dialogues['mushroom_collected']!;
++    game.gboard.df!
++        .loadDialogueTextToFrame(DialogueManager.chooseResponse(done, 0));
++    await tester.pump(const Duration(seconds: 2));
++    expect(game.gboard.gBoardModel.totalScore, 350);
++    expect(state.hasItem('ink_bottle'), isTrue);
++    expect(state.hasItem('empty_bottle'), isFalse);
++    game.gboard.travelTo(QuestLocations.river);
++    await tester.pump(const Duration(milliseconds: 16));
++    await _settle(tester, game);
++    game.gboard.travelTo(QuestLocations.town);
++    await tester.pump(const Duration(milliseconds: 16));
++    await _settle(tester, game);
++    expect(game.gboard.scenario.id, QuestLocations.town);
++    expect(
++        game.gboard.levelEntities
++            .where((e) => e.interactionId == 'empty_bottle_pickup'),
++        isEmpty);
++    final sailor = game.gboard.levelEntities
++        .firstWhere((e) => e.interactionId == 'old_sailor');
++    game.gboard.callRenderDialogue(sailor);
++    await tester.pump();
++    final waiting = DialogueManager.fsm.dialogues['npc_waiting_for_ink']!;
++    final thanks = DialogueManager.chooseResponse(
++        waiting, waiting.responses.indexWhere((r) => r.id == 'give_ink'));
++    game.gboard.df!.loadDialogueTextToFrame(thanks);
++    final thankNode = DialogueManager.fsm.dialogues[thanks]!;
++    game.gboard.df!
++        .loadDialogueTextToFrame(DialogueManager.chooseResponse(thankNode, 0));
++    await tester.pump(const Duration(milliseconds: 100));
++    expect(state.quantity('tartu_route_map'), 1);
++    expect(state.hasItem('ink_bottle'), isFalse);
++    expect(game.gboard.gBoardModel.totalScore, 850);
++    await tester.pumpWidget(const SizedBox.shrink());
++    expect(tester.takeException(), isNull);
++  });
++}

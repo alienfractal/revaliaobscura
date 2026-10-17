@@ -1,0 +1,132 @@
+[
+  {
+    "path": "lib/dialoguefsm/adventure_state.dart",
+    "before": "074c97af868f99db135976cd36e7e5c0964cd7b3a6728de60f7a5f42659bbdc5",
+    "after": "68b12f252b7e55b203edaf454bcd6818838b1b520453c7286b5016d2d3397339"
+  },
+  {
+    "path": "lib/dialoguefsm/dialogue_fsm.dart",
+    "before": "aeb24daa76b99a12557355e95238caf7438657a7c2594260f860f6b5ca8aa13b",
+    "after": "e2b189d2f35e94aad0f28f2bb448f28eb262102ce831e146e93830daa488572b"
+  },
+  {
+    "path": "lib/dialoguefsm/story_state.dart",
+    "before": "5947c8b8a93e6058599866becd6f9de0d756f1dd57e2a2295d1d5058c76318a6",
+    "after": "aa38a7f3bf9809be3064285ad18da5aa3ecd92136f683f1af7c225e306ca2443"
+  },
+  {
+    "path": "lib/game/states/level_game/scenario/quest_locations.dart",
+    "before": null,
+    "after": "8cadf2a3e174a53cfa518486b1178e33220ed0f824f64eaa3ce5954d650375ba"
+  },
+  {
+    "path": "lib/game/states/level_game/scenario/scenario_config.dart",
+    "before": "51b5af4423d64190bec8002d276fca95cce1c0c4fc3bccaecd90e700a066c630",
+    "after": "f71c1023cf19e8e3a120deaea17050fc3619cdfe1d78ccc59b4cc059726d1082"
+  },
+  {
+    "path": "lib/game/states/level_game/view/female_clothes_trader_npc_entity.dart",
+    "before": "340c1a024e685ac6829656263f119a713356f6aa639c485e0606aaba71d5f3b7",
+    "after": "2d2bcb84fbfc231a3745e567c79ff8be5737829994495b2345fddbf3ea978c34"
+  },
+  {
+    "path": "lib/game/states/level_game/view/forest_view.dart",
+    "before": null,
+    "after": "5a5043984ad732c6ee3687a4e770e0f422d584d32b96a3a04626892f3f918f79"
+  },
+  {
+    "path": "lib/game/states/level_game/view/gameboard_view.dart",
+    "before": "ad30849df6af4effa0428d636ffd5702262f5817f7cabb6d1ba3cb585fe5f973",
+    "after": "b0a977760572ea50ddaf18bc0e7b6dae3badab3bd094a1b02fe562e218980478"
+  },
+  {
+    "path": "lib/game/states/level_game/view/level_entity.dart",
+    "before": "48e11d82aab477f46d7bd00d09d7457711464cd02c198b2880a5f3d93b5c929e",
+    "after": "aa649da6ceb28c204a28a888c90012a176411672fbf7ce96d7c2763a87d54738"
+  },
+  {
+    "path": "lib/game/states/level_game/view/market_background_entity.dart",
+    "before": "e367acefa8e92400dbb501210644bb460bb227968999f58c3dd66fd14466be64",
+    "after": "0f5e6a024df448f23b8dacf7a939646909bb81dd99b037ea2d9f2e5a92da5c3f"
+  },
+  {
+    "path": "lib/game/states/level_game/view/quest_scene_entity.dart",
+    "before": null,
+    "after": "1744a8d62372be182b3d47d1662a0300f3e0ca4bc24dca0dadab0ac93515b594"
+  },
+  {
+    "path": "lib/game/states/level_game/view/river_crossing_view.dart",
+    "before": null,
+    "after": "17d070468d83640e7f995ddd40e2fd8af8dfe7bd39ff43938369fd6a313205b0"
+  },
+  {
+    "path": "lib/revalia_obs.dart",
+    "before": "397bd6a723590cdae5a483a58e892f91429ae12cee23b398cfbbb51c77eb2540",
+    "after": "16550725a72773faef33159c36ff1e0b9bd0a22a28085b9e536e16d8119fab87"
+  },
+  {
+    "path": "resources/dialogues/INK_DEMO.md",
+    "before": null,
+    "after": "e361d826affb7c4c5b2590b7510862655b6b196e630f9dfb7d49f3079f77ebaf"
+  },
+  {
+    "path": "resources/dialogues/INVENTORY_AND_QUESTS.md",
+    "before": "8aaf479cd408ef6419bd5e00e2e669ca8416ea88460accbc259db90e4a9a619b",
+    "after": "b3e0f1e9aa4d8ad84137d9b098c42a394c9f88a06fdf5822639b26f3e3a87db0"
+  },
+  {
+    "path": "resources/dialogues/revalia_dialogues.json",
+    "before": "2bb2233d881838887ca4f2067fce6d9c88e29c805cc1241243086d126eb5df8d",
+    "after": "e8950225eae5c7fb1c9da4eac915cfc27b08b9447c732320477941d7e457e145"
+  },
+  {
+    "path": "resources/images/quest-forest-background.png",
+    "before": null,
+    "after": "4ea120787f887e712721e1ffa9c5a740049678fe7f9809c2180c3a64a9deb22d"
+  },
+  {
+    "path": "resources/images/quest-gnome-work.png",
+    "before": null,
+    "after": "517bd8b8e9bd759a4cb86d173348d530a13516265bd75039787dfef261f124c4"
+  },
+  {
+    "path": "resources/images/quest-metsavana.png",
+    "before": null,
+    "after": "e9d056d0e9caf5a77bc8b8ae1dfc2f3128f2868a699cfd2daba410c5e9a9fcd6"
+  },
+  {
+    "path": "resources/scenarios/forest.json",
+    "before": null,
+    "after": "a466778e731a2375ba34d265df53ccf1593dc5b7e16a51537921e533ef6dc71a"
+  },
+  {
+    "path": "resources/scenarios/river_crossing.json",
+    "before": null,
+    "after": "806734f9a118e686eabb6d65049d7b5c1c44849b7070e7457fe370456297d235"
+  },
+  {
+    "path": "resources/scenarios/town_square.json",
+    "before": "0a4d50933b818d3375599f89f56ef8d639a15b4f7ce39ed89d936d20e1e625bd",
+    "after": "4bd6703c9ac37ea62b7c0fede25951b7e2dccd0b67abba89143159b2705a8df2"
+  },
+  {
+    "path": "resources/translations/en.json",
+    "before": "752714c91dc340d3e0d73f4d5171d1a48baefa72d7423ca2a52eb7ebea1c9a2e",
+    "after": "3708bc813e61bc166b83f43ccd56639cc15c80ce97bb64faa5bd49be4b87c3f1"
+  },
+  {
+    "path": "test/adventure_state_test.dart",
+    "before": "65bceedb8d1b3a84df24049c0fb85e5cc5c83f6bfa71b2eb72e52805cb99b1f7",
+    "after": "e0bed429b18a3e0e78f96d145b7813e53e2f4675e2f919ea8aea12fa782f8c89"
+  },
+  {
+    "path": "test/ink_quest_flow_test.dart",
+    "before": null,
+    "after": "592b08b5a723533ef9e6bc58db6af39b19c9d60bfa9ea05a169fbf2991e7bcbb"
+  },
+  {
+    "path": "test/quest_views_test.dart",
+    "before": null,
+    "after": "9ef939112b5d269746f97e31f95b48351ab5c30db519219d0eb4702422beca20"
+  }
+]

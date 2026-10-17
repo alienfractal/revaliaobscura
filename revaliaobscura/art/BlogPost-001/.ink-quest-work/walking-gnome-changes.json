@@ -1,0 +1,27 @@
+[
+  {
+    "after": "ea53c53f410330d72bc35ca545220ffd536f4e4f57966b3227d4e5bd2f4877bb",
+    "before": "555390f5ab2a266dd38614401b6008c68dcdf57d580a5d088b69da7bf1a7ae38",
+    "path": "lib/game/states/level_game/view/gameboard_view.dart"
+  },
+  {
+    "after": "775823e00a966e59d76ff7af88c25d159ae7e9dbbd60bc479e86499bc9cd4fee",
+    "before": "e5031d72f9d8a718f9d639f61c11d6612a8b85ca00c81ab0d14bcf0773099d12",
+    "path": "resources/scenarios/forest.json"
+  },
+  {
+    "after": "9c6ab20699fba5c0df84b2ab65fdc56e7961d66bdbfb749cd271443274f47fcb",
+    "before": "1e4434c05738654dc78a2af9974f3a06800cc346d3620d8084f8b109ff823b9d",
+    "path": "lib/game/states/level_game/scenario/scenario_config.dart"
+  },
+  {
+    "after": "cb52a73086287ad414aa387f9881e93af8da7c71ceba43509bed386d6f12b32c",
+    "before": "d398ee8561018d291efd9389770814f75fd631c3a62e81571fcac534de99d727",
+    "path": "test/quest_views_test.dart"
+  },
+  {
+    "after": "3bf7b2b970cbf7559405039faffacaa47515a42f3028afcee45ec8eae8e268b6",
+    "before": "3bec09824ca4c2c49e147bc763751b032f590d9638f76e0d53861d7b814e1175",
+    "path": "lib/game/states/level_game/view/quest_scene_entity.dart"
+  }
+]

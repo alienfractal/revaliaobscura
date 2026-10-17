@@ -11,6 +11,9 @@
 class FontFamily {
   FontFamily._();
 
+  /// Font family: Roboto
+  static const String roboto = 'Roboto';
+
   /// Font family: arcade
   static const String arcade = 'arcade';
 

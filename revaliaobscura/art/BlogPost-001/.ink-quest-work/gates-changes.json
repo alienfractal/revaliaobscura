@@ -1,0 +1,82 @@
+[
+  {
+    "path": "lib/game/states/level_game/scenario/quest_locations.dart",
+    "before": "8cadf2a3e174a53cfa518486b1178e33220ed0f824f64eaa3ce5954d650375ba",
+    "after": "f85eaacba424eab58ea8e7eacfbeb738199dd3865e0ace52831da7d328478115"
+  },
+  {
+    "path": "lib/game/states/level_game/scenario/scenario_animation_config.dart",
+    "before": null,
+    "after": "1074e6a7d0e652eedc55519c8ea54336b40e07324f91139785e18f6f0084b9e5"
+  },
+  {
+    "path": "lib/game/states/level_game/view/city_gates_view.dart",
+    "before": null,
+    "after": "b5ae97dfe84e78d72f874b1930aa5eb1de2fb5eb8b15a41a89deb73719ea1eec"
+  },
+  {
+    "path": "lib/game/states/level_game/view/gameboard_view.dart",
+    "before": "b0a977760572ea50ddaf18bc0e7b6dae3badab3bd094a1b02fe562e218980478",
+    "after": "87235e6a458356bd99dc9986decaeb9b2946568810610fc96be50293e0831202"
+  },
+  {
+    "path": "lib/game/states/level_game/view/quest_scene_entity.dart",
+    "before": "1744a8d62372be182b3d47d1662a0300f3e0ca4bc24dca0dadab0ac93515b594",
+    "after": "3bec09824ca4c2c49e147bc763751b032f590d9638f76e0d53861d7b814e1175"
+  },
+  {
+    "path": "lib/revalia_obs.dart",
+    "before": "16550725a72773faef33159c36ff1e0b9bd0a22a28085b9e536e16d8119fab87",
+    "after": "7629a33a032109e3250f59399806ada5ee89db159e04686e731ede45a1349f7a"
+  },
+  {
+    "path": "resources/dialogues/INK_DEMO.md",
+    "before": "e361d826affb7c4c5b2590b7510862655b6b196e630f9dfb7d49f3079f77ebaf",
+    "after": "34d3ae8efea9cc5b7b832a5d2319b708fa3b499d27fe11703273e35c6ab4ba37"
+  },
+  {
+    "path": "resources/dialogues/INVENTORY_AND_QUESTS.md",
+    "before": "b3e0f1e9aa4d8ad84137d9b098c42a394c9f88a06fdf5822639b26f3e3a87db0",
+    "after": "38f11a3c3b94c8e998fa50a920699cae9fb9710ce4401ba1053f6be183404256"
+  },
+  {
+    "path": "resources/dialogues/revalia_dialogues.json",
+    "before": "e8950225eae5c7fb1c9da4eac915cfc27b08b9447c732320477941d7e457e145",
+    "after": "6284c4358852c72cc3f3ae603f20a5b065a1bbb34e23a24069676f2198818943"
+  },
+  {
+    "path": "resources/scenarios/city_gates.json",
+    "before": null,
+    "after": "cdeb5828886c423fdb23d880ad9c4b9e3552f0bceaf9794c4c6fc3f5badcf070"
+  },
+  {
+    "path": "resources/scenarios/river_crossing.json",
+    "before": "806734f9a118e686eabb6d65049d7b5c1c44849b7070e7457fe370456297d235",
+    "after": "f580448ea7971fa4dcadf2280dcaa6ebf645adf7aef5618afae07087dda0e059"
+  },
+  {
+    "path": "resources/scenarios/town_square.json",
+    "before": "4bd6703c9ac37ea62b7c0fede25951b7e2dccd0b67abba89143159b2705a8df2",
+    "after": "41d50ba10ec9d18bb4749b6002ce4d7230559630c2769bf0e28a4aa95f47c308"
+  },
+  {
+    "path": "resources/translations/en.json",
+    "before": "3708bc813e61bc166b83f43ccd56639cc15c80ce97bb64faa5bd49be4b87c3f1",
+    "after": "75a05f873d9858779c4c71aec5b95cf692de571db7e31fc88312fdf56a38b358"
+  },
+  {
+    "path": "test/ink_quest_flow_test.dart",
+    "before": "592b08b5a723533ef9e6bc58db6af39b19c9d60bfa9ea05a169fbf2991e7bcbb",
+    "after": "44a59e455cebbcd863e4e5db568991ab8e8ffef19acf83c7e6a9595780d6ed35"
+  },
+  {
+    "path": "test/quest_views_test.dart",
+    "before": "9ef939112b5d269746f97e31f95b48351ab5c30db519219d0eb4702422beca20",
+    "after": "7b81860ace795ea761ac2e476be5dbd846b088b7a7181cc6c025654a181b4b9e"
+  },
+  {
+    "path": "test/scenario_animation_config_test.dart",
+    "before": null,
+    "after": "6aec2db0ab28198794f9fdfdb8978f7d5638c7bfd8204bd36ad6ceb3a5959edd"
+  }
+]

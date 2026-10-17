@@ -86,7 +86,9 @@ abstract class LevelEntity extends PositionedEntity
   @override
   Vector2 get interactionPoint => Vector2(position.x, position.y + size.y / 2);
 
-  bool get canTalk => dialogueActorId != null;
+  bool get canTalk =>
+      dialogueActorId != null &&
+      DialogueManager.canStartConversation(dialogueActorId!);
 
   @override
   bool shouldApproachFor(ActionableType actionType) {
@@ -110,6 +112,7 @@ abstract class LevelEntity extends PositionedEntity
         return;
       }
     }
+    if (game.gboard.handleQuestAction(this, actionType)) return;
     final behaviour = _actionBehaviourFor(actionType);
     if (behaviour != null) {
       behaviour.execute();

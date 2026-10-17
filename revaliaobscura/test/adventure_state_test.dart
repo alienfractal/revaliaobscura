@@ -42,9 +42,11 @@ void main() {
   test('collecting ink is one-time and readiness follows current inventory',
       () {
     state.startQuest('navigator_ink');
-    expect(state.collectPickup('ink_bottle_pickup'), isTrue);
-    expect(state.collectPickup('ink_bottle_pickup'), isFalse);
-    expect(state.quantity('ink_bottle'), 1);
+    expect(state.collectPickup('empty_bottle_pickup'), isTrue);
+    expect(state.collectPickup('empty_bottle_pickup'), isFalse);
+    expect(state.quantity('empty_bottle'), 1);
+    state.removeItem('empty_bottle');
+    state.addItem('ink_bottle');
     expect(state.status('navigator_ink'), QuestStatus.ready);
     state.removeItem('ink_bottle');
     expect(state.status('navigator_ink'), QuestStatus.active);
@@ -86,13 +88,13 @@ void main() {
 
   test('reset clears inventory, pickups and quests, then restores scroll', () {
     state.startQuest('navigator_ink');
-    state.collectPickup('ink_bottle_pickup');
+    state.collectPickup('empty_bottle_pickup');
     state.completeQuest('navigator_ink');
     fsm.resetProgress();
     expect(state.inventory, {'task_scroll': 1});
     expect(state.journal, isEmpty);
     expect(state.status('navigator_ink'), QuestStatus.available);
-    expect(state.collectPickup('ink_bottle_pickup'), isTrue);
+    expect(state.collectPickup('empty_bottle_pickup'), isTrue);
   });
 
   test('invalid quantities and missing quest items are rejected', () {
