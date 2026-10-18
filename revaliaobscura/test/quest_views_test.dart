@@ -10,6 +10,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:revalia/revalia_obs.dart';
+import 'package:revalia/gamefsm/fsm.dart';
+import 'package:revalia/gamefsm/game_fsm.dart';
+import 'package:revalia/game/states/level_game/model/gameboardmodel.dart';
 import 'package:revalia/utils/components/actionable_entitty_component.dart';
 import 'package:revalia/utils/dialogsystem/dialog_manager.dart';
 import 'package:revalia/utils/sound/web_audio_player.dart';
@@ -23,10 +26,21 @@ class _SilentAudio extends WebAudioPlayer {
       {bool loop = false, int playCount = 1}) async {}
 }
 
+class _DeathRecordingFsm extends GameFsm {
+  _DeathRecordingFsm(RevaliaObs game)
+      : super(currentState: Fsm.gstart, mainGame: game);
+  int scoreTransitions = 0;
+  @override
+  void gameScore() {
+    scoreTransitions++;
+  }
+}
+
 class _QuestGame extends RevaliaObs {
   @override
   Future<void> onLoad() async {
     ap = _SilentAudio();
+    gameFsm = _DeathRecordingFsm(this);
     Flame.images.prefix = '';
     await entitySpriteCache.preloadAnimations(this);
     await entitySpriteCache.preloadSprites(this);
@@ -50,11 +64,13 @@ class _QuestGame extends RevaliaObs {
 }
 
 Future<void> _settle(WidgetTester tester, _QuestGame game) async {
-  for (var i = 0; i < 25; i++) {
+  for (var i = 0; i < 200; i++) {
     await tester.pump(const Duration(milliseconds: 100));
     await tester
         .runAsync(() => Future<void>.delayed(const Duration(milliseconds: 10)));
+    if (i >= 24 && game.gboard.isBoardLoaded && game.gboard.isMounted) break;
   }
+  expect(game.gboard.isBoardLoaded, isTrue);
   expect(tester.takeException(), isNull);
 }
 
@@ -82,12 +98,12 @@ void main() {
       await loader.load();
     }
   });
-  testWidgets(
-      'VIEW travel, poison retry and return preserve the bottle and score',
+  testWidgets('VIEW travel, mushroom ink delivery and fatal knife encounter',
       (tester) async {
     final game = _QuestGame();
     await tester.runAsync(() async {
       game.onGameResize(Vector2(640, 400));
+      // ignore: invalid_use_of_internal_member
       await game.load();
     });
     await tester.pumpWidget(MaterialApp(
@@ -119,6 +135,17 @@ void main() {
     await _settle(tester, game);
     final guard = game.gboard.levelEntities
         .firstWhere((e) => e.interactionId == 'city_guard');
+    const guardSequence = '1111111111111111111111112222222221111111111122221211212121222222222222111111';
+    expect(
+        guard.animationHandler.idleAnimation.frames
+            .map((frame) => (frame.sprite.srcPosition.x / 50).round() + 1)
+            .join(),
+        guardSequence);
+    expect(guard.animationHandler.idleAnimation.frames
+        .every((frame) => frame.stepTime == 0.1), isTrue);
+    expect(guard.animationHandler.idleAnimation.loop, isTrue);
+    expect(guard.animationHandler.idleAnimation.frames.first.sprite.srcSize,
+        Vector2(50, 85));
     game.gboard.callRenderDialogue(guard);
     await tester.pump();
     node = DialogueManager.fsm.dialogues['guard_forest']!;
@@ -179,6 +206,10 @@ void main() {
     await tester.pump();
     expect(state.hasItem('empty_bottle'), isTrue);
     await tester.tapAt(const Offset(320, 160));
+    game.gboard.toggleInventory();
+    await _settle(tester, game);
+    await _capture(tester, 'inventory-empty-bottle');
+    game.gboard.closeInventory();
     await _settle(tester, game);
     game.gboard.gBoardModel.awardScoreMilestone('test_existing', 100);
     game.gboard.travelTo(QuestLocations.river);
@@ -207,7 +238,8 @@ void main() {
     expect(walkingGnome.y, walkingGnomeY);
     expect(walkingGnome.priority, lessThan(1000));
     walkingGnome.x = gnomeStartX + 12;
-    final foreground = game.gboard.children.whereType<SpriteComponent>()
+    final foreground = game.gboard.children
+        .whereType<SpriteComponent>()
         .singleWhere((component) => component.priority == 1000);
     expect(foreground.size.x, 320);
     expect(foreground.size, foreground.sprite!.srcSize);
@@ -219,42 +251,41 @@ void main() {
     await _capture(tester, 'forest');
     final mushroom = game.gboard.levelEntities
         .firstWhere((e) => e.interactionId == 'forest_mushroom');
+    final purple = game.gboard.levelEntities
+        .firstWhere((e) => e.interactionId == 'inkcap');
+    final knife = game.gboard.levelEntities
+        .firstWhere((e) => e.interactionId == 'knife_mushroom');
+    expect(mushroom.animationHandler.idleAnimation.frames.length, 19);
+    expect(mushroom.animationHandler.talkAnimation!.frames.length, 19);
+    expect(purple.animationHandler.idleAnimation.frames.length, 10);
+    expect(knife.size, Vector2(16, 25.5));
+    expect(knife.animationHandler.idleAnimation.frames.length, 9);
+    expect(knife.animationHandler.attackAnimation!.frames.length, 9);
+    expect(knife.animationHandler.attackAnimation!.loop, isFalse);
     game.gboard.callRenderDialogue(mushroom);
     await tester.pump();
-    final dialogue = DialogueManager.fsm.dialogues['mushroom_ink']!;
-    final next = DialogueManager.chooseResponse(
-        dialogue, dialogue.responses.indexWhere((r) => r.id == 'lick_goo'));
-    game.gboard.df!.loadDialogueTextToFrame(next);
-    for (var i = 0; i < 40; i++) {
-      await tester.pump(const Duration(milliseconds: 100));
-    }
-    expect(game.gboard.isGameFinished, isTrue);
-    expect(game.gboard.playerEntity.playerModel.isAlive, isFalse);
-    expect(state.hasItem('empty_bottle'), isTrue);
-    await _capture(tester, 'poison');
-    // Dismissing the death message retries this location without a new game.
-    await tester.tapAt(const Offset(320, 160));
-    await tester.pump(const Duration(milliseconds: 16));
+    final wise = DialogueManager.fsm.dialogues['wise_mushroom_intro']!;
+    expect(wise.responses.map((r) => r.id), contains('ask_ink'));
+    game.gboard.df!.loadDialogueTextToFrame('end');
     await _settle(tester, game);
-    expect(game.gboard.scenario.id, QuestLocations.forest);
-    expect(game.gboard.playerEntity.playerModel.isAlive, isTrue);
-    expect(game.gboard.gBoardModel.totalScore, 100);
-    expect(state.hasItem('empty_bottle'), isTrue);
-    final retryMushroom = game.gboard.levelEntities
-        .firstWhere((e) => e.interactionId == 'forest_mushroom');
-    game.gboard.callRenderDialogue(retryMushroom);
+    purple.performAction(ActionableType.touch);
     await tester.pump();
-    final collectNode = DialogueManager.fsm.dialogues['mushroom_ink']!;
-    final collected = DialogueManager.chooseResponse(collectNode,
-        collectNode.responses.indexWhere((r) => r.id == 'collect_ink'));
-    game.gboard.df!.loadDialogueTextToFrame(collected);
-    final done = DialogueManager.fsm.dialogues['mushroom_collected']!;
-    game.gboard.df!
-        .loadDialogueTextToFrame(DialogueManager.chooseResponse(done, 0));
-    await tester.pump(const Duration(seconds: 2));
+    expect(DialogueManager.fsm.activeSession, isNull);
     expect(game.gboard.gBoardModel.totalScore, 350);
-    expect(state.hasItem('ink_bottle'), isTrue);
+    expect(state.quantity('ink_bottle'), 1);
     expect(state.hasItem('empty_bottle'), isFalse);
+    expect(game.gboard.playerEntity.playerModel.isAlive, isTrue);
+    purple.performAction(ActionableType.touch);
+    await tester.pump();
+    expect(state.quantity('ink_bottle'), 1);
+    expect(game.gboard.gBoardModel.totalScore, 350);
+    await _capture(tester, 'forest-ink-collected');
+    await tester.tapAt(const Offset(320, 160));
+    game.gboard.toggleInventory();
+    await _settle(tester, game);
+    await _capture(tester, 'inventory-ink-bottle');
+    game.gboard.closeInventory();
+    await _settle(tester, game);
     game.gboard.travelTo(QuestLocations.river);
     await tester.pump(const Duration(milliseconds: 16));
     await _settle(tester, game);
@@ -289,6 +320,51 @@ void main() {
     expect(state.quantity('tartu_route_map'), 1);
     expect(state.hasItem('ink_bottle'), isFalse);
     expect(game.gboard.gBoardModel.totalScore, 850);
+    for (final location in [
+      QuestLocations.gates,
+      QuestLocations.river,
+      QuestLocations.forest
+    ]) {
+      game.gboard.travelTo(location);
+      await tester.pump(const Duration(milliseconds: 16));
+      await _settle(tester, game);
+    }
+    final fatalMushroom = game.gboard.levelEntities
+        .firstWhere((e) => e.interactionId == 'knife_mushroom');
+    game.gboard.callRenderDialogue(fatalMushroom);
+    await tester.pump();
+    var deathNode = DialogueManager.fsm.dialogues['knife_mushroom_intro']!;
+    game.gboard.df!.loadDialogueTextToFrame(DialogueManager.chooseResponse(
+        deathNode, deathNode.responses.indexWhere((r) => r.id == 'no')));
+    game.gboard.df!.loadDialogueTextToFrame('end');
+    await _settle(tester, game);
+    expect(game.gboard.isGameFinished, isFalse);
+    expect(game.gboard.playerEntity.playerModel.isAlive, isTrue);
+    game.gboard.callRenderDialogue(fatalMushroom);
+    await tester.pump();
+    deathNode = DialogueManager.fsm.dialogues['knife_mushroom_intro']!;
+    game.gboard.df!.loadDialogueTextToFrame(DialogueManager.chooseResponse(
+        deathNode, deathNode.responses.indexWhere((r) => r.id == 'yes')));
+    await tester.pump(const Duration(milliseconds: 16));
+    expect(fatalMushroom.animationHandler.isAnimating, isTrue);
+    expect(game.gboard.isGameFinished, isTrue);
+    for (var i = 0; i < 50; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(game.gboard.playerEntity.playerModel.isAlive, isFalse);
+    expect(
+        game.gboard.gBoardModel.flipResultOutcome, ActionOutcome.playerKilled);
+    expect(DialogueManager.fsm.storyState.adventure.hasItem('ink_bottle'),
+        isFalse);
+    expect(
+        game.gboard.df!.children.whereType<TextBoxComponent>().map((c) => c.text),
+        contains('The mushroom stabs you. That was the wrong answer.'));
+    await _capture(tester, 'knife-mushroom-death');
+    await tester.tapAt(const Offset(320, 160));
+    await tester.pump(const Duration(milliseconds: 100));
+    expect((game.gameFsm as _DeathRecordingFsm).scoreTransitions, 1);
+    expect(game.gboard.scenario.id, QuestLocations.forest);
+    expect(game.gboard.playerEntity.playerModel.isAlive, isFalse);
     await tester.pumpWidget(const SizedBox.shrink());
     expect(tester.takeException(), isNull);
   });

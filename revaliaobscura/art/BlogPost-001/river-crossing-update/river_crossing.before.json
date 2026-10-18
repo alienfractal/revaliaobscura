@@ -1,0 +1,84 @@
+{
+  "id": "river_crossing",
+  "background": "resources/images/eestlandriver320x200.png",
+  "perspective": {
+    "horizon_y": 75,
+    "minimum_walkable_y": 110,
+    "minimum_scale": 0.35,
+    "maximum_scale": 0.8
+  },
+  "walking_area": {
+    "vertices": [
+      [
+        0,
+        150
+      ],
+      [
+        320,
+        150
+      ],
+      [
+        320,
+        178
+      ],
+      [
+        0,
+        178
+      ]
+    ]
+  },
+  "player": {
+    "feet_position": [
+      45,
+      169
+    ],
+    "size": [
+      50,
+      84
+    ]
+  },
+  "entities": [
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_gates",
+      "interaction_id": "to_gates",
+      "feet_position": [
+        30,
+        172
+      ],
+      "size": [
+        46,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "city_gates"
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_forest",
+      "interaction_id": "to_forest",
+      "feet_position": [
+        288,
+        172
+      ],
+      "size": [
+        50,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "forest"
+    }
+  ],
+  "arrivals": {
+    "forest": [
+      255,
+      169
+    ],
+    "city_gates": [
+      65,
+      169
+    ]
+  }
+}

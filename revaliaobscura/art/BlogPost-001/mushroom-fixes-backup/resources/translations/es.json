@@ -1,0 +1,349 @@
+{
+  "game": {
+    "title": "Revalia Obscura",
+    "subtitles": {
+      "sub_title1": "Frío",
+      "sub_title2": "Quemado"
+    },
+    "start_message": "¡Bienvenido a Revalia Obscura!",
+    "pause_message": "Juego en pausa. Toca para continuar.",
+    "over_message": "¡Fin de la partida! ¿Quieres intentarlo de nuevo?"
+  },
+  "menu": {
+    "play_button": "Jugar",
+    "settings_button": "Ajustes",
+    "exit_button": "Salir",
+    "push_button": "Pulsa el botón"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "sound": "Sonido",
+    "music": "Música"
+  },
+  "actors": {
+    "old_sailor": {
+      "name": "Navegante"
+    },
+    "forest_mushroom": {
+      "name": "Seta sabia"
+    },
+    "inkcap": {
+      "name": "Seta morada"
+    },
+    "knife_mushroom": {
+      "name": "Seta nerviosa"
+    }
+  },
+  "loading": {
+    "title": "EESTLAND, año 1343",
+    "context_intro": [
+      "Rebane Molder llega a Reval.",
+      "EESTLAND, 1343"
+    ],
+    "exit_button": "Salir"
+  },
+  "dialogues": {
+    "npc_intro": {
+      "player_text": "Pareces un hombre que conoce bien este lugar.",
+      "text": "Conozco los caminos del Báltico.",
+      "responses": {
+        "ask_identity": {
+          "text": "¿Quién eres?"
+        },
+        "leave": {
+          "text": "Adiós."
+        }
+      }
+    },
+    "npc_identity": {
+      "player_text": "¿Quién eres?",
+      "text": "Soy navegante. Conozco las costas del Báltico y los antiguos caminos.",
+      "responses": {
+        "mock_outfit": {
+          "text": "Debes de tener mucha personalidad."
+        },
+        "ask_if_comedian": {
+          "text": "¿Eres comediante, por casualidad, Navegante?"
+        },
+        "leave": {
+          "text": "Te dejaré con tus asuntos."
+        }
+      }
+    },
+    "npc_silent_stare": {
+      "player_text": "Debes de tener mucha personalidad.",
+      "text": "¿Quién te crees que eres?",
+      "responses": {
+        "laugh": {
+          "text": "Jajajajajajajajajajajajajajajajajajajaja."
+        },
+        "ask_if_comedian": {
+          "text": "Te pido disculpas."
+        }
+      }
+    },
+    "npc_defend_honor": {
+      "player_text": "Jajaja.",
+      "text": "Exijo respeto.",
+      "responses": {
+        "apologize": {
+          "text": "Te pido disculpas."
+        },
+        "laugh_again": {
+          "text": "Jajaja."
+        },
+        "leave": {
+          "text": "Entonces te dejaré con tu honor."
+        }
+      }
+    },
+    "npc_final_insult": {
+      "player_text": "Jajaja.",
+      "text": "Me has insultado por última vez.",
+      "responses": {
+        "face_consequence": {
+          "text": "..."
+        }
+      }
+    },
+    "npc_hendrik_identity": {
+      "player_text": "¿Eres comediante, Navegante?",
+      "text": "No, no lo soy. Y me llamo Hendrik.",
+      "responses": {
+        "ask_need": {
+          "text": "¿Qué necesitas?"
+        },
+        "leave": {
+          "text": "Te dejaré con tus asuntos."
+        }
+      }
+    },
+    "npc_ask_name": {
+      "player_text": "¿Qué necesitas?",
+      "text": "Interesante que lo preguntes. Antes de hablar de negocios, ¿cómo te llamas?",
+      "responses": {
+        "answer_rebane": {
+          "text": "Rebane."
+        },
+        "leave": {
+          "text": "Quizá en otra ocasión."
+        }
+      }
+    },
+    "npc_ink_request": {
+      "player_text": "Rebane.",
+      "text": "Bien, Rebane. Se me ha acabado la tinta y, sin ella, mis mapas no sirven de nada. Tráeme un poco y quizá decida que mereces mi tiempo.",
+      "responses": {
+        "accept_ink_quest": {
+          "text": "Encontraré tinta para ti."
+        }
+      }
+    },
+    "npc_after_identity": {
+      "player_text": "Hola de nuevo.",
+      "text": "¿Otra vez aquí? Si quieres que un navegante te dedique su tiempo, demuestra que sabes ver lo que hace falta.",
+      "responses": {
+        "ask_need": {
+          "text": "¿Qué necesitas?"
+        },
+        "leave": {
+          "text": "Ahora no. Adiós."
+        }
+      }
+    },
+    "npc_waiting_for_ink": {
+      "player_text": "Sobre esa tinta...",
+      "text": "Tráeme tinta para mis mapas, Rebane. Entonces podremos hablar de oportunidades.",
+      "responses": {
+        "leave": {
+          "text": "Sigo buscando."
+        }
+      }
+    },
+    "knife_mushroom_intro": {
+      "player_text": "¿Por qué llevas un cuchillo?",
+      "text": "Los vecinos. Las cestas. Vecinos sonrientes con cestas. Dime... ¿te gusta comer setas?",
+      "responses": {
+        "yes": {
+          "text": "Sí. Sobre todo fritas con mantequilla."
+        },
+        "no": {
+          "text": "No. Prefiero que mi comida hable menos."
+        },
+        "leave": {
+          "text": "Será mejor que siga andando."
+        }
+      }
+    },
+    "knife_mushroom_relief": {
+      "player_text": "No he venido a recogerte.",
+      "text": "Bien. Yo tampoco. Nos entendemos.",
+      "responses": {
+        "leave": {
+          "text": "Perfectamente. Bonito cuchillo."
+        }
+      }
+    },
+    "wise_mushroom_intro": {
+      "player_text": "¿Una seta que habla?",
+      "text": "Solo cuando es necesario. Al parecer, esta es una de esas ocasiones.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "¿Qué le pasa a Metsavana?"
+        },
+        "ask_ink": {
+          "text": "¿Dónde consigo tinta?"
+        },
+        "ask_knife": {
+          "text": "¿Por qué esa seta lleva un cuchillo?"
+        },
+        "leave": {
+          "text": "Te dejaré en paz."
+        }
+      }
+    },
+    "wise_mushroom_metsavana": {
+      "player_text": "¿Metsavana está dormido?",
+      "text": "Está en trance. Los gnomos lo mantienen limpio y alimentado. Un acuerdo excelente, salvo si eres un gnomo.",
+      "responses": {
+        "ask_gnomes": {
+          "text": "¿Y qué ganan los gnomos?"
+        },
+        "back": {
+          "text": "Tenía otra pregunta."
+        }
+      }
+    },
+    "wise_mushroom_gnomes": {
+      "player_text": "¿Reciben algo a cambio?",
+      "text": "Sabiduría. Cobijo. Alguna raíz con la que tropezar. Él lo llama un paquete de beneficios.",
+      "responses": {
+        "back": {
+          "text": "Eso explica el silencio."
+        }
+      }
+    },
+    "wise_mushroom_ink": {
+      "player_text": "Necesito tinta para Hendrik.",
+      "text": "Toca la seta morada a mi lado. Un frasco de tinta, sin cita previa. Material de escritura, no el almuerzo. Una distinción importante.",
+      "responses": {
+        "leave": {
+          "text": "Seta morada. Tocar. Nada de lamer. Entendido."
+        }
+      }
+    },
+    "wise_mushroom_knife": {
+      "player_text": "Ese tipo parece nervioso.",
+      "text": "La gente viene con cestas. Ha desarrollado una objeción muy afilada. Evita hablar de la cena.",
+      "responses": {
+        "back": {
+          "text": "Elegiré mis palabras con cuidado."
+        }
+      }
+    },
+    "wise_mushroom_after_ink": {
+      "player_text": "Ya tengo la tinta.",
+      "text": "Entonces llévasela a Hendrik. Ponla sobre papel. Otros humanos han necesitado esa aclaración.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Una última pregunta sobre Metsavana..."
+        },
+        "leave": {
+          "text": "Tinta sobre papel. Eso puedo hacerlo."
+        }
+      }
+    },
+    "purple_mushroom_silent": {
+      "player_text": "¿Puedes ayudarme?",
+      "text": "La seta morada se balancea en silencio. La seta sabia te indica que la toques.",
+      "responses": {
+        "leave": {
+          "text": "Lo intentaré."
+        }
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {
+      "text": "Un viejo marinero está de pie ante mí."
+    },
+    "old_sailor_touch": {
+      "text": "Será mejor que mantenga las manos quietas."
+    },
+    "old_sailor_walk": {
+      "text": "No puedo atravesarlo."
+    },
+    "walking_area_look": {
+      "text": "El camino continúa por la plaza del pueblo."
+    },
+    "walking_area_touch": {
+      "text": "Polvo y piedra desgastada."
+    },
+    "glowing_gem_look": {
+      "text": "Una pequeña gema palpita con una luz sobrenatural."
+    },
+    "glowing_gem_touch": {
+      "text": "La gema está caliente bajo mis dedos."
+    },
+    "clothes_trader_look": {
+      "text": "Un comerciante de ropa observa la plaza tras una máscara elaborada."
+    },
+    "clothes_trader_touch": {
+      "text": "Será mejor que no toque la mercancía del comerciante."
+    },
+    "clothes_trader_talk": {
+      "text": "El comerciante de ropa me devuelve la mirada sin decir palabra."
+    },
+    "clothes_trader_walk": {
+      "text": "No puedo atravesar al comerciante de ropa."
+    },
+    "female_clothes_trader_look": {
+      "text": "Una mujer con vestimenta tradicional atiende el puesto de ropa."
+    },
+    "female_clothes_trader_touch": {
+      "text": "Será mejor que no toque la mercancía del puesto."
+    },
+    "female_clothes_trader_talk": {
+      "text": "La comerciante de ropa me observa en silencio sin decir palabra."
+    },
+    "female_clothes_trader_walk": {
+      "text": "No puedo atravesar a la comerciante de ropa."
+    },
+    "player_killed": {
+      "text": "El navegante te asesta un golpe mortal."
+    },
+    "generic_look": {
+      "text": "No veo nada interesante."
+    },
+    "generic_touch": {
+      "text": "No puedo interactuar con esto."
+    },
+    "generic_talk": {
+      "text": "No hay nadie con quien hablar."
+    },
+    "generic_walk": {
+      "text": "No puedo ir por ahí."
+    },
+    "generic_use": {
+      "text": "No puedo usar eso aquí."
+    },
+    "knife_mushroom_look": {
+      "text": "Una seta pequeña con un cuchillo y un enorme problema de confianza."
+    },
+    "knife_mushroom_touch": {
+      "text": "Aprieta el cuchillo. Tocarla no parece buena idea."
+    },
+    "inkcap_collected": {
+      "text": "Recoges un frasco de tinta de la seta morada. Le servirá a Hendrik."
+    },
+    "inkcap_already_collected": {
+      "text": "Ya recogiste la tinta. La seta no es una estación de recarga."
+    }
+  },
+  "scene": {
+    "forest_mushroom": "Seta sabia",
+    "inkcap": "Seta morada",
+    "knife_mushroom": "Seta nerviosa"
+  }
+}

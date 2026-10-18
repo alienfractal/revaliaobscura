@@ -131,8 +131,10 @@ this interaction ID to `empty_bottle`. Touching a pickup approaches it, adds one
 item, and removes the prop. Collected props stay absent after rebuilding the
 scene, including after delivering their item. Use unique interaction IDs for
 separate pickup sources. Existing animated props can also serve as pickups.
-The forest dialogue consumes this bottle and awards `ink_bottle` once. There
-is no loose ink pickup in town. Quest completion awards `tartu_route_map` through
+Touching the forest's purple mushroom awards `ink_bottle` once and sets
+`forest_ink_collected`. It reuses an empty bottle if carried but does not require
+one. The wise mushroom provides directions only; the knife mushroom's fatal
+dialogue is separate. There is no loose ink pickup in town. Quest completion awards `tartu_route_map` through
 the quest definition's `rewards`, both for dialogue and inventory delivery.
 
 To award an item from other game logic, call:

@@ -1,0 +1,106 @@
+{
+  "id": "river_crossing",
+  "background": "resources/images/forest-background-river-320x200-1.png",
+  "perspective": {
+    "horizon_y": 75,
+    "minimum_walkable_y": 110,
+    "minimum_scale": 0.35,
+    "maximum_scale": 0.8
+  },
+  "walking_area": {
+    "vertices": [
+      [
+        0,
+        150
+      ],
+      [
+        320,
+        150
+      ],
+      [
+        320,
+        178
+      ],
+      [
+        0,
+        178
+      ]
+    ]
+  },
+  "player": {
+    "feet_position": [
+      45,
+      169
+    ],
+    "size": [
+      50,
+      84
+    ]
+  },
+  "entities": [
+    {
+      "type": "decoration",
+      "asset_id": "resources/images/forest-background-river-flow-81x66-7.png",
+      "interaction_id": "river_flow",
+      "feet_position": [
+        164.5,
+        200
+      ],
+      "size": [
+        81,
+        66
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": false,
+      "animation": {
+        "frames": 7,
+        "width": 81,
+        "height": 66,
+        "step_time": 0.12
+      }
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_gates",
+      "interaction_id": "to_gates",
+      "feet_position": [
+        30,
+        172
+      ],
+      "size": [
+        46,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "city_gates"
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_forest",
+      "interaction_id": "to_forest",
+      "feet_position": [
+        288,
+        172
+      ],
+      "size": [
+        50,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "forest"
+    }
+  ],
+  "arrivals": {
+    "forest": [
+      255,
+      169
+    ],
+    "city_gates": [
+      65,
+      169
+    ]
+  },
+  "foreground": "resources/images/forest-background-river-frontplants-320x200-1.png"
+}

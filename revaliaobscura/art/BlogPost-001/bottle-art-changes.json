@@ -1,0 +1,25 @@
+{
+  "root": "C:\\Users\\lien\\Desktop\\Gamejams\\revaliaobscura\\revaliaobscura",
+  "changes": [
+    {
+      "path": "resources/dialogues/revalia_dialogues.json",
+      "before": "94216215b4250bcade45c2ff8eddad3889f4bb5f1bc5772c049a97805aff3881",
+      "after": "d2477cfc4f4ca75cd60233100ad3bf068e94f487893f59323985794979f0db61"
+    },
+    {
+      "path": "resources/scenarios/city_gates.json",
+      "before": "2e1e58ba1560171c7a07821fbaf2e908048d2eb2478110ab8cf564d776e75951",
+      "after": "8714d14ffed76f1858950507fd5fc8b7c29a0942f5da1d44aaf41301486a0b3a"
+    },
+    {
+      "path": "lib/game/states/level_game/view/inventory_popup.dart",
+      "before": "c8ea078e342b14bce63de665896dbd30cc03277e9e0e84e4c585b855b7d39d74",
+      "after": "2bc34a1efce6d21f963ae209800e81da4b0927414df3ff7b3ecc1be876f225ad"
+    },
+    {
+      "path": "test/quest_views_test.dart",
+      "before": "b894e8864c301774debde0d30863fd739e1040ff9ec3697f14b6c6036411658d",
+      "after": "c453599419a4935b83649e03a7184b26db1976fe9cefaf76d60ad5e5d5489a2e"
+    }
+  ]
+}

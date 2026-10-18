@@ -97,19 +97,13 @@
       },
       "entrypoints": [
         {
-          "dialogue": "mushroom_collected",
+          "dialogue": "wise_mushroom_after_ink",
           "when": {
             "flag": "forest_ink_collected"
           }
         },
         {
-          "dialogue": "mushroom_ink",
-          "when": {
-            "flag": "navigator_ink_quest_started"
-          }
-        },
-        {
-          "dialogue": "mushroom_idle"
+          "dialogue": "wise_mushroom_intro"
         }
       ]
     },
@@ -121,16 +115,20 @@
       },
       "entrypoints": [
         {
-          "dialogue": "mushroom_collected",
-          "when": {
-            "flag": "forest_ink_collected"
-          }
-        },
+          "dialogue": "purple_mushroom_silent"
+        }
+      ]
+    },
+    "knife_mushroom": {
+      "id": "knife_mushroom",
+      "name_key": "actors.knife_mushroom.name",
+      "actions": {
+        "look": "knife_mushroom_look",
+        "touch": "knife_mushroom_touch"
+      },
+      "entrypoints": [
         {
-          "dialogue": "inkcap_choices",
-          "when": {
-            "flag": "navigator_ink_quest_started"
-          }
+          "dialogue": "knife_mushroom_intro"
         }
       ]
     }
@@ -234,6 +232,7 @@
     "female_clothes_trader_talk": {},
     "female_clothes_trader_walk": {},
     "player_killed": {},
+    "knife_mushroom_killed": {},
     "generic_look": {},
     "generic_touch": {},
     "generic_talk": {},
@@ -251,7 +250,11 @@
     "inkcap_look": {},
     "gnome_look": {},
     "mushroom_poisoned": {},
-    "exit_look": {}
+    "exit_look": {},
+    "knife_mushroom_look": {},
+    "knife_mushroom_touch": {},
+    "inkcap_collected": {},
+    "inkcap_already_collected": {}
   },
   "fallbacks": {
     "look": "generic_look",
@@ -639,6 +642,107 @@
           "next": "end"
         }
       ]
+    },
+    "knife_mushroom_intro": {
+      "responses": [
+        {
+          "id": "yes",
+          "next": "end",
+          "event": "player_death"
+        },
+        {
+          "id": "no",
+          "next": "knife_mushroom_relief"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "knife_mushroom_relief": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_intro": {
+      "responses": [
+        {
+          "id": "ask_metsavana",
+          "next": "wise_mushroom_metsavana"
+        },
+        {
+          "id": "ask_ink",
+          "next": "wise_mushroom_ink"
+        },
+        {
+          "id": "ask_knife",
+          "next": "wise_mushroom_knife"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_metsavana": {
+      "responses": [
+        {
+          "id": "ask_gnomes",
+          "next": "wise_mushroom_gnomes"
+        },
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_gnomes": {
+      "responses": [
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_ink": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_knife": {
+      "responses": [
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_after_ink": {
+      "responses": [
+        {
+          "id": "ask_metsavana",
+          "next": "wise_mushroom_metsavana"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "purple_mushroom_silent": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
     }
   },
   "inventory_items": {
@@ -647,9 +751,11 @@
       "usable": false
     },
     "ink_bottle": {
+      "icon": "resources/images/ink-bottle-16x16-1.png",
       "usable": true
     },
     "empty_bottle": {
+      "icon": "resources/images/empty-bottle-16x16-1.png",
       "usable": true
     },
     "tartu_route_map": {

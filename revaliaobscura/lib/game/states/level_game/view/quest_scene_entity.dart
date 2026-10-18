@@ -20,12 +20,14 @@ class QuestSceneEntity extends LevelEntity {
             size: config.size.clone(),
             interactionId: config.interactionId,
             dialogueActorId: config.dialogueActorId,
-            behaviors: config.type == 'decoration' ? [] : [
-              LookActionBehaviour(),
-              GrabActionBehaviour(),
-              TalkActionBehaviour(),
-              EntityTapBehaviour()
-            ]);
+            behaviors: config.type == 'decoration'
+                ? []
+                : [
+                    LookActionBehaviour(),
+                    GrabActionBehaviour(),
+                    TalkActionBehaviour(),
+                    EntityTapBehaviour()
+                  ]);
 
   @override
   bool get usesPerspectiveScaling =>
@@ -75,15 +77,24 @@ class QuestSceneEntity extends LevelEntity {
     final talk = config.talkAsset == null
         ? null
         : await _animation(config.talkAsset!, config.talkAnimation);
+    final attack = config.attackAnimation == null && config.attackAsset == null
+        ? null
+        : await _animation(
+            config.attackAsset ?? config.assetId, config.attackAnimation,
+            loop: false);
     animationHandler.init(
-        idleAnimation: idle, talkAnimation: talk, size: size, parent: this);
+        idleAnimation: idle,
+        talkAnimation: talk,
+        attackAnimation: attack,
+        size: size,
+        parent: this);
   }
 
-  Future<SpriteAnimation> _animation(
-      String asset, Map<String, dynamic>? spec) async {
+  Future<SpriteAnimation> _animation(String asset, Map<String, dynamic>? spec,
+      {bool loop = true}) async {
     if (spec == null) {
       return SpriteAnimation.spriteList([await game.loadSprite(asset)],
-          stepTime: 1);
+          stepTime: 1, loop: loop);
     }
     final config = ScenarioAnimationConfig.fromJson(spec);
     return game.loadSpriteAnimation(
@@ -95,7 +106,7 @@ class QuestSceneEntity extends LevelEntity {
               srcSize: Vector2(config.width, config.height),
               stepTime: config.stepTime,
             ),
-        ], loop: true));
+        ], loop: loop));
   }
 
   @override

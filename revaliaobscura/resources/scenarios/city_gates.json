@@ -103,14 +103,14 @@
     },
     {
       "type": "quest_prop",
-      "asset_id": "placeholder:empty_bottle_pickup",
+      "asset_id": "resources/images/empty-bottle-16x16-1.png",
       "interaction_id": "empty_bottle_pickup",
       "feet_position": [
         135,
         181
       ],
       "size": [
-        25,
+        16,
         16
       ],
       "perspective_scaling": false,

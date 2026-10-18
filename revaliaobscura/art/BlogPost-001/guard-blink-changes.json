@@ -1,0 +1,15 @@
+{
+  "root": "C:\\Users\\lien\\Desktop\\Gamejams\\revaliaobscura\\revaliaobscura",
+  "changes": [
+    {
+      "path": "resources/scenarios/town_square.json",
+      "before": "17c60c599688476255baa7162ffa589788c86117aae7b9e8527a98ef68d3abab",
+      "after": "bd3a5a71aa5754f2cc09bd36f90353f2182a6293eb6f856f05d627b0a296a89e"
+    },
+    {
+      "path": "test/quest_views_test.dart",
+      "before": "aafca5287ff02ca895bac3490f6d6ae843b0a89725d21472b4c962ddaf189daf",
+      "after": "b894e8864c301774debde0d30863fd739e1040ff9ec3697f14b6c6036411658d"
+    }
+  ]
+}

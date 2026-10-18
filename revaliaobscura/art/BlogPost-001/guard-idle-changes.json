@@ -1,0 +1,17 @@
+{
+  "root": "C:\\Users\\lien\\Desktop\\Gamejams\\revaliaobscura\\revaliaobscura",
+  "asset": "resources/images/guard-idle-50x85-1.png",
+  "asset_hash": "2bec77ac67c2a5767ee662ab46540bf2ed707790a53a13620b5ad5dd29b62d70",
+  "changes": [
+    {
+      "path": "resources/scenarios/town_square.json",
+      "before": "41d50ba10ec9d18bb4749b6002ce4d7230559630c2769bf0e28a4aa95f47c308",
+      "after": "17c60c599688476255baa7162ffa589788c86117aae7b9e8527a98ef68d3abab"
+    },
+    {
+      "path": "test/quest_views_test.dart",
+      "before": "cd549b8385feb94815d96782aaa10e96f2c531ebd5551727a02b009c11ee1cbe",
+      "after": "aafca5287ff02ca895bac3490f6d6ae843b0a89725d21472b4c962ddaf189daf"
+    }
+  ]
+}

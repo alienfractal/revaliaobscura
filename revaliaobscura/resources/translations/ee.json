@@ -24,6 +24,15 @@
   "actors": {
     "old_sailor": {
       "name": "Navigaator"
+    },
+    "forest_mushroom": {
+      "name": "Tark seen"
+    },
+    "inkcap": {
+      "name": "Lilla seen"
+    },
+    "knife_mushroom": {
+      "name": "Närviline seen"
     }
   },
   "loading": {
@@ -151,6 +160,108 @@
           "text": "Ma alles otsin."
         }
       }
+    },
+    "knife_mushroom_intro": {
+      "player_text": "Milleks sulle nuga?",
+      "text": "Kohalikud. Korvid. Naeratavad kohalikud korvidega. Ütle... kas sulle meeldib seeni süüa?",
+      "responses": {
+        "yes": {
+          "text": "Jah. Eriti võis praetult."
+        },
+        "no": {
+          "text": "Ei. Eelistan vähem jutukat toitu."
+        },
+        "leave": {
+          "text": "Ma lähen parem edasi."
+        }
+      }
+    },
+    "knife_mushroom_relief": {
+      "player_text": "Ma ei tulnud sind korjama.",
+      "text": "Hea. Mina ka mitte. Me mõistame teineteist.",
+      "responses": {
+        "leave": {
+          "text": "Täielikult. Ilus nuga."
+        }
+      }
+    },
+    "wise_mushroom_intro": {
+      "player_text": "Rääkiv seen?",
+      "text": "Ainult siis, kui vaja. Ilmselt on praegu üks neist kordadest.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Mis Metsavanal viga on?"
+        },
+        "ask_ink": {
+          "text": "Kust ma tinti saan?"
+        },
+        "ask_knife": {
+          "text": "Miks sellel seenel nuga on?"
+        },
+        "leave": {
+          "text": "Jätan su rahule."
+        }
+      }
+    },
+    "wise_mushroom_metsavana": {
+      "player_text": "Kas Metsavana magab?",
+      "text": "Ta on transis. Päkapikud hoiavad ta puhta ja söönuna. Suurepärane korraldus, kui sa just päkapikk pole.",
+      "responses": {
+        "ask_gnomes": {
+          "text": "Mida päkapikud sellest saavad?"
+        },
+        "back": {
+          "text": "Mul oli veel üks küsimus."
+        }
+      }
+    },
+    "wise_mushroom_gnomes": {
+      "player_text": "Kas nad saavad midagi vastu?",
+      "text": "Tarkust. Peavarju. Mõne juure, mille otsa komistada. Tema nimetab seda hüvede paketiks.",
+      "responses": {
+        "back": {
+          "text": "See selgitab vaikimist."
+        }
+      }
+    },
+    "wise_mushroom_ink": {
+      "player_text": "Mul on Hendrikule tinti vaja.",
+      "text": "Puuduta lillat seent mu kõrval. Pudel tinti, aega pole vaja kinni panna. Kirjutamiseks, mitte lõunaks. Oluline vahe.",
+      "responses": {
+        "leave": {
+          "text": "Lilla seen. Puudutada. Mitte lakkuda. Selge."
+        }
+      }
+    },
+    "wise_mushroom_knife": {
+      "player_text": "See tegelane paistab närviline.",
+      "text": "Inimesed tulevad korvidega. Tema vastuväide on muutunud teravaks. Ära õhtusöögist räägi.",
+      "responses": {
+        "back": {
+          "text": "Valin oma sõnu hoolikalt."
+        }
+      }
+    },
+    "wise_mushroom_after_ink": {
+      "player_text": "Tint on käes.",
+      "text": "Siis vii see Hendrikule. Pane see paberile. Inimestele on tulnud seda varemgi selgitada.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Üks viimane küsimus Metsavana kohta..."
+        },
+        "leave": {
+          "text": "Tint paberile. Sellega saan hakkama."
+        }
+      }
+    },
+    "purple_mushroom_silent": {
+      "player_text": "Kas sa saad mind aidata?",
+      "text": "Lilla seen kõigub vaikselt. Tark seen viipab, et sa seda puudutaksid.",
+      "responses": {
+        "leave": {
+          "text": "Proovin järele."
+        }
+      }
     }
   },
   "messages": {
@@ -199,6 +310,9 @@
     "female_clothes_trader_walk": {
       "text": "Ma ei saa rõivakaupmehest läbi kõndida."
     },
+    "knife_mushroom_killed": {
+      "text": "Seen pussitab sind. See oli vale vastus."
+    },
     "player_killed": {
       "text": "Navigaator lööb su maha."
     },
@@ -216,6 +330,23 @@
     },
     "generic_use": {
       "text": "Ma ei saa seda siin kasutada."
+    },
+    "knife_mushroom_look": {
+      "text": "Väike seen noa ja väga suure usaldusprobleemiga."
+    },
+    "knife_mushroom_touch": {
+      "text": "Ta haarab noast kõvemini. Puudutamine ei tundu tark tegu."
+    },
+    "inkcap_collected": {
+      "text": "Saad lillalt seenelt pudeli tinti. Hendrikul on sellest kasu."
+    },
+    "inkcap_already_collected": {
+      "text": "Tint on sul juba käes. Seen ei ole täitejaam."
     }
+  },
+  "scene": {
+    "forest_mushroom": "Tark seen",
+    "inkcap": "Lilla seen",
+    "knife_mushroom": "Närviline seen"
   }
 }

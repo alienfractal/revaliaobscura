@@ -1,0 +1,152 @@
+{
+  "id": "city_gates",
+  "background": "resources/images/RevalGates320x200-1.png",
+  "perspective": {
+    "horizon_y": 90,
+    "minimum_walkable_y": 153,
+    "minimum_scale": 0.55,
+    "maximum_scale": 1.0
+  },
+  "walking_area": {
+    "vertices": [
+      [
+        0,
+        158
+      ],
+      [
+        320,
+        164
+      ],
+      [
+        320,
+        184
+      ],
+      [
+        0,
+        181
+      ]
+    ]
+  },
+  "player": {
+    "feet_position": [
+      207,
+      180
+    ],
+    "size": [
+      50,
+      84
+    ]
+  },
+  "arrivals": {
+    "town_square": [
+      207,
+      180
+    ],
+    "river_crossing": [
+      280,
+      179
+    ]
+  },
+  "entities": [
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/drunk-count-reduced-57x84-7.png",
+      "interaction_id": "sleeping_drunk",
+      "feet_position": [
+        108,
+        181
+      ],
+      "size": [
+        32,
+        82
+      ],
+      "perspective_scaling": true,
+      "depth_sorting": true,
+      "animation": {
+        "frames": 7,
+        "width": 32,
+        "height": 82,
+        "step_time": 0.2,
+        "sequence": [
+          1,
+          1,
+          1,
+          2,
+          3,
+          5,
+          6,
+          7,
+          5,
+          6,
+          7,
+          5,
+          6,
+          7,
+          1,
+          2,
+          3,
+          4,
+          5,
+          2,
+          2,
+          2,
+          2,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      }
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/empty-bottle-16x16-1.png",
+      "interaction_id": "empty_bottle_pickup",
+      "feet_position": [
+        135,
+        181
+      ],
+      "size": [
+        16,
+        16
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_town",
+      "interaction_id": "to_town",
+      "feet_position": [
+        42,
+        166
+      ],
+      "size": [
+        46,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "town_square"
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_river",
+      "interaction_id": "to_river",
+      "feet_position": [
+        285,
+        168
+      ],
+      "size": [
+        48,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "river_crossing"
+    }
+  ]
+}

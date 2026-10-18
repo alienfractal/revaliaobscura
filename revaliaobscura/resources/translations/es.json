@@ -24,6 +24,15 @@
   "actors": {
     "old_sailor": {
       "name": "Navegante"
+    },
+    "forest_mushroom": {
+      "name": "Seta sabia"
+    },
+    "inkcap": {
+      "name": "Seta morada"
+    },
+    "knife_mushroom": {
+      "name": "Seta nerviosa"
     }
   },
   "loading": {
@@ -151,6 +160,108 @@
           "text": "Sigo buscando."
         }
       }
+    },
+    "knife_mushroom_intro": {
+      "player_text": "¿Por qué llevas un cuchillo?",
+      "text": "Los vecinos. Las cestas. Vecinos sonrientes con cestas. Dime... ¿te gusta comer setas?",
+      "responses": {
+        "yes": {
+          "text": "Sí. Sobre todo fritas con mantequilla."
+        },
+        "no": {
+          "text": "No. Prefiero que mi comida hable menos."
+        },
+        "leave": {
+          "text": "Será mejor que siga andando."
+        }
+      }
+    },
+    "knife_mushroom_relief": {
+      "player_text": "No he venido a recogerte.",
+      "text": "Bien. Yo tampoco. Nos entendemos.",
+      "responses": {
+        "leave": {
+          "text": "Perfectamente. Bonito cuchillo."
+        }
+      }
+    },
+    "wise_mushroom_intro": {
+      "player_text": "¿Una seta que habla?",
+      "text": "Solo cuando es necesario. Al parecer, esta es una de esas ocasiones.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "¿Qué le pasa a Metsavana?"
+        },
+        "ask_ink": {
+          "text": "¿Dónde consigo tinta?"
+        },
+        "ask_knife": {
+          "text": "¿Por qué esa seta lleva un cuchillo?"
+        },
+        "leave": {
+          "text": "Te dejaré en paz."
+        }
+      }
+    },
+    "wise_mushroom_metsavana": {
+      "player_text": "¿Metsavana está dormido?",
+      "text": "Está en trance. Los gnomos lo mantienen limpio y alimentado. Un acuerdo excelente, salvo si eres un gnomo.",
+      "responses": {
+        "ask_gnomes": {
+          "text": "¿Y qué ganan los gnomos?"
+        },
+        "back": {
+          "text": "Tenía otra pregunta."
+        }
+      }
+    },
+    "wise_mushroom_gnomes": {
+      "player_text": "¿Reciben algo a cambio?",
+      "text": "Sabiduría. Cobijo. Alguna raíz con la que tropezar. Él lo llama un paquete de beneficios.",
+      "responses": {
+        "back": {
+          "text": "Eso explica el silencio."
+        }
+      }
+    },
+    "wise_mushroom_ink": {
+      "player_text": "Necesito tinta para Hendrik.",
+      "text": "Toca la seta morada a mi lado. Un frasco de tinta, sin cita previa. Material de escritura, no el almuerzo. Una distinción importante.",
+      "responses": {
+        "leave": {
+          "text": "Seta morada. Tocar. Nada de lamer. Entendido."
+        }
+      }
+    },
+    "wise_mushroom_knife": {
+      "player_text": "Ese tipo parece nervioso.",
+      "text": "La gente viene con cestas. Ha desarrollado una objeción muy afilada. Evita hablar de la cena.",
+      "responses": {
+        "back": {
+          "text": "Elegiré mis palabras con cuidado."
+        }
+      }
+    },
+    "wise_mushroom_after_ink": {
+      "player_text": "Ya tengo la tinta.",
+      "text": "Entonces llévasela a Hendrik. Ponla sobre papel. Otros humanos han necesitado esa aclaración.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Una última pregunta sobre Metsavana..."
+        },
+        "leave": {
+          "text": "Tinta sobre papel. Eso puedo hacerlo."
+        }
+      }
+    },
+    "purple_mushroom_silent": {
+      "player_text": "¿Puedes ayudarme?",
+      "text": "La seta morada se balancea en silencio. La seta sabia te indica que la toques.",
+      "responses": {
+        "leave": {
+          "text": "Lo intentaré."
+        }
+      }
     }
   },
   "messages": {
@@ -199,6 +310,9 @@
     "female_clothes_trader_walk": {
       "text": "No puedo atravesar a la comerciante de ropa."
     },
+    "knife_mushroom_killed": {
+      "text": "El hongo te apuñala. Esa fue la respuesta equivocada."
+    },
     "player_killed": {
       "text": "El navegante te asesta un golpe mortal."
     },
@@ -216,6 +330,23 @@
     },
     "generic_use": {
       "text": "No puedo usar eso aquí."
+    },
+    "knife_mushroom_look": {
+      "text": "Una seta pequeña con un cuchillo y un enorme problema de confianza."
+    },
+    "knife_mushroom_touch": {
+      "text": "Aprieta el cuchillo. Tocarla no parece buena idea."
+    },
+    "inkcap_collected": {
+      "text": "Recoges un frasco de tinta de la seta morada. Le servirá a Hendrik."
+    },
+    "inkcap_already_collected": {
+      "text": "Ya recogiste la tinta. La seta no es una estación de recarga."
     }
+  },
+  "scene": {
+    "forest_mushroom": "Seta sabia",
+    "inkcap": "Seta morada",
+    "knife_mushroom": "Seta nerviosa"
   }
 }

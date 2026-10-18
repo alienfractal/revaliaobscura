@@ -118,8 +118,8 @@
       "depth_sorting": true
     },
     {
-      "type": "npc",
-      "asset_id": "old_sailor",
+      "type": "quest_prop",
+      "asset_id": "resources/images/guard-idle-50x85-1.png",
       "interaction_id": "city_guard",
       "feet_position": [
         180,
@@ -131,7 +131,14 @@
       ],
       "perspective_scaling": true,
       "depth_sorting": true,
-      "dialogue_actor_id": "city_guard"
+      "dialogue_actor_id": "city_guard",
+      "animation": {
+        "frames": 2,
+        "width": 50,
+        "height": 85,
+        "step_time": 0.1,
+        "sequence": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 1, 2, 1, 2, 1, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1]
+      }
     },
     {
       "type": "exit",

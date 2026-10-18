@@ -1,0 +1,583 @@
+{
+  "game": {
+    "title": "Revalia Obscura",
+    "subtitles": {
+      "sub_title1": "Cool",
+      "sub_title2": "Burn"
+    },
+    "start_message": "Welcome to Revalia Obscura!",
+    "pause_message": "Game paused. Tap to continue.",
+    "over_message": "Game over! Try again?"
+  },
+  "menu": {
+    "play_button": "Play",
+    "settings_button": "Settings",
+    "exit_button": "Exit",
+    "push_button": "Push button"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "sound": "Sound",
+    "music": "Music"
+  },
+  "actors": {
+    "old_sailor": {
+      "name": "Navigator"
+    },
+    "female_clothes_trader": {
+      "name": "Clothes trader"
+    },
+    "city_guard": {
+      "name": "City guard"
+    },
+    "forest_mushroom": {
+      "name": "Wise mushroom"
+    },
+    "inkcap": {
+      "name": "Purple mushroom"
+    },
+    "knife_mushroom": {
+      "name": "Nervous mushroom"
+    }
+  },
+  "loading": {
+    "title": "EESTLAND Anno Domini 1343",
+    "context_intro": [
+      "Rebane Molder arrives in Reval.",
+      "EESTLAND, 1343"
+    ],
+    "exit_button": "Exit"
+  },
+  "dialogues": {
+    "npc_intro": {
+      "player_text": "You look like a man who knows this place.",
+      "text": "I know the Baltic roads.",
+      "responses": {
+        "ask_identity": {
+          "text": "Who are you?"
+        },
+        "leave": {
+          "text": "Goodbye."
+        }
+      }
+    },
+    "npc_identity": {
+      "player_text": "Who are you?",
+      "text": "A navigator. I know the Baltic coasts and the old roads.",
+      "responses": {
+        "mock_outfit": {
+          "text": "You must have a lot of personality."
+        },
+        "ask_if_comedian": {
+          "text": "Are you a comedian by any chance, Navigator?"
+        },
+        "leave": {
+          "text": "I will leave you to it."
+        }
+      }
+    },
+    "npc_silent_stare": {
+      "player_text": "You must have a lot of personality.",
+      "text": "Who do you think you are?",
+      "responses": {
+        "laugh": {
+          "text": "HahahaHahahaHahahaHahahaHahahaHahahaHahaha."
+        },
+        "ask_if_comedian": {
+          "text": "I apologize."
+        }
+      }
+    },
+    "npc_defend_honor": {
+      "player_text": "Hahaha.",
+      "text": "I demand respect.",
+      "responses": {
+        "apologize": {
+          "text": "I apologize."
+        },
+        "laugh_again": {
+          "text": "Hahaha."
+        },
+        "leave": {
+          "text": "Then I shall leave you to your honor."
+        }
+      }
+    },
+    "npc_final_insult": {
+      "player_text": "Hahaha.",
+      "text": "You insulted me for the last time.",
+      "responses": {
+        "face_consequence": {
+          "text": "..."
+        }
+      }
+    },
+    "npc_hendrik_identity": {
+      "player_text": "Are you a comedian, Navigator?",
+      "text": "No, I am not. And the name is Hendrik.",
+      "responses": {
+        "ask_need": {
+          "text": "What do you need?"
+        },
+        "leave": {
+          "text": "I will leave you to it."
+        }
+      }
+    },
+    "npc_ask_name": {
+      "player_text": "What do you need?",
+      "text": "Interesting that you ask. Before we discuss business, what is your name?",
+      "responses": {
+        "answer_rebane": {
+          "text": "Rebane."
+        },
+        "leave": {
+          "text": "Perhaps another time."
+        }
+      }
+    },
+    "npc_ink_request": {
+      "player_text": "Rebane.",
+      "text": "Good, Rebane. I have run out of ink, and without ink my maps are useless. Bring me some, and perhaps I will decide you are worth my time.",
+      "responses": {
+        "accept_ink_quest": {
+          "text": "I will find ink for you."
+        }
+      }
+    },
+    "npc_after_identity": {
+      "player_text": "Hello again.",
+      "text": "Back again? If you want a navigator's time, show me that you can notice what is needed.",
+      "responses": {
+        "ask_need": {
+          "text": "What do you need?"
+        },
+        "leave": {
+          "text": "Not now. Goodbye."
+        }
+      }
+    },
+    "npc_waiting_for_ink": {
+      "player_text": "About that ink...",
+      "text": "Bring me ink for my maps, Rebane. Then we can discuss opportunities.",
+      "responses": {
+        "leave": {
+          "text": "I am still looking."
+        },
+        "give_ink": {
+          "text": "Here is the ink you asked for."
+        }
+      }
+    },
+    "npc_ink_thanks": {
+      "player_text": "About the ink for your charts...",
+      "text": "Just what I needed. Here is your reward: a map of the trading route from Tallinn to Tartu. Your first journey starts here.",
+      "responses": {
+        "leave": {
+          "text": "Safe travels, Hendrik."
+        }
+      }
+    },
+    "lady_hendrik": {
+      "player_text": "Excuse me.",
+      "text": "Oh, I see you got acquainted with Hendrik. What did he tell you?",
+      "responses": {
+        "explain_ink": {
+          "text": "He needs ink. I am new here; where should I look?"
+        },
+        "leave": {
+          "text": "Perhaps another time."
+        }
+      }
+    },
+    "lady_directions": {
+      "player_text": "Hendrik sent me to find ink.",
+      "text": "Ink is expensive here. Try asking the guard by the city gate. He might know where to look.",
+      "responses": {
+        "thank_lady": {
+          "text": "Thank you. I will ask him."
+        }
+      }
+    },
+    "lady_after_ink": {
+      "player_text": "I found ink for Hendrik.",
+      "text": "Then you are finding your way around already.",
+      "responses": {
+        "leave": {
+          "text": "Thanks for your help."
+        }
+      }
+    },
+    "guard_idle": {
+      "player_text": "Good day.",
+      "text": "Keep the gate clear, traveller. If you need directions, ask someone in the square first.",
+      "responses": {
+        "leave": {
+          "text": "Of course."
+        }
+      }
+    },
+    "guard_forest": {
+      "player_text": "Where can I find ink around here?",
+      "text": "Ink? Could not say. Try outside the walls, across the river and into the forest, if you know what to look for. You may pass.",
+      "responses": {
+        "follow_directions": {
+          "text": "Thank you. I will go through the gate."
+        },
+        "leave": {
+          "text": "I will think about it."
+        }
+      }
+    },
+    "mushroom_idle": {
+      "player_text": "Did you just move?",
+      "text": "Everything in this forest moves eventually.",
+      "responses": {
+        "leave": {
+          "text": "Right..."
+        }
+      }
+    },
+    "mushroom_ink": {
+      "player_text": "I need black ink. Does the big fellow know where to find it?",
+      "text": "Metsavana is busy. I do the talking. See that inkcap beside me? Its black goo is ready to write with. You could bottle it. Or perhaps you were thinking of licking it?",
+      "responses": {
+        "collect_ink": {
+          "text": "Collect the black goo in my bottle."
+        },
+        "need_bottle": {
+          "text": "I have nothing to carry it in."
+        },
+        "lick_goo": {
+          "text": "Lick it."
+        },
+        "leave": {
+          "text": "I will come back."
+        }
+      }
+    },
+    "mushroom_need_bottle": {
+      "player_text": "Could I put it in a cup?",
+      "text": "A bottle with a stopper would be wiser. Someone in town must have emptied one by now.",
+      "responses": {
+        "leave": {
+          "text": "I will look in town."
+        }
+      }
+    },
+    "mushroom_collected": {
+      "player_text": "That should do for ink.",
+      "text": "Keep the stopper in. Hendrik needs ink on his maps, not on your insides.",
+      "responses": {
+        "leave": {
+          "text": "Back to Hendrik, then."
+        }
+      }
+    },
+    "inkcap_choices": {
+      "player_text": "This mushroom is oozing black liquid.",
+      "text": "The talking mushroom calls it ink. It looks ready to bottle.",
+      "responses": {
+        "collect_ink": {
+          "text": "Collect the goo in my bottle."
+        },
+        "need_bottle": {
+          "text": "I need a container."
+        },
+        "lick_goo": {
+          "text": "Lick it."
+        },
+        "leave": {
+          "text": "Leave it alone."
+        }
+      }
+    },
+    "knife_mushroom_intro": {
+      "player_text": "Why the knife?",
+      "text": "Locals. Baskets. Smiling locals with baskets. Tell me... do you like eating mushrooms?",
+      "responses": {
+        "yes": {
+          "text": "Yes. Especially fried with butter."
+        },
+        "no": {
+          "text": "No. I prefer my food less conversational."
+        },
+        "leave": {
+          "text": "I should keep moving."
+        }
+      }
+    },
+    "knife_mushroom_relief": {
+      "player_text": "I am not here to pick you.",
+      "text": "Good. Neither am I. We understand each other.",
+      "responses": {
+        "leave": {
+          "text": "Perfectly. Nice knife."
+        }
+      }
+    },
+    "wise_mushroom_intro": {
+      "player_text": "A talking mushroom?",
+      "text": "Only when necessary. Apparently this is one of those occasions.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "What is wrong with Metsavana?"
+        },
+        "ask_ink": {
+          "text": "Where can I get ink?"
+        },
+        "ask_knife": {
+          "text": "Why does that mushroom have a knife?"
+        },
+        "leave": {
+          "text": "I will leave you in peace."
+        }
+      }
+    },
+    "wise_mushroom_metsavana": {
+      "player_text": "Is Metsavana asleep?",
+      "text": "In a trance. The gnomes keep him clean and fed. An excellent arrangement, unless you are a gnome.",
+      "responses": {
+        "ask_gnomes": {
+          "text": "What do the gnomes get out of it?"
+        },
+        "back": {
+          "text": "I had another question."
+        }
+      }
+    },
+    "wise_mushroom_gnomes": {
+      "player_text": "Do they get anything in return?",
+      "text": "Wisdom. Shelter. The occasional root to trip over. He calls it a benefits package.",
+      "responses": {
+        "back": {
+          "text": "That explains the silence."
+        }
+      }
+    },
+    "wise_mushroom_ink": {
+      "player_text": "I need ink for Hendrik.",
+      "text": "Touch the purple mushroom beside me. One bottle of ink, no appointment. Writing material, not lunch. An important distinction.",
+      "responses": {
+        "leave": {
+          "text": "Purple mushroom. Touch. No licking. Understood."
+        }
+      }
+    },
+    "wise_mushroom_knife": {
+      "player_text": "That fellow looks nervous.",
+      "text": "People arrive with baskets. He has developed a pointed objection. Avoid discussing dinner.",
+      "responses": {
+        "back": {
+          "text": "I will choose my words carefully."
+        }
+      }
+    },
+    "wise_mushroom_after_ink": {
+      "player_text": "I have the ink.",
+      "text": "Then take it to Hendrik. Put it on paper. Humans have needed that clarified before.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "One last question about Metsavana..."
+        },
+        "leave": {
+          "text": "Ink on paper. I can manage that."
+        }
+      }
+    },
+    "purple_mushroom_silent": {
+      "player_text": "Can you help me?",
+      "text": "The purple mushroom quietly wobbles. The wise mushroom gestures for you to touch it.",
+      "responses": {
+        "leave": {
+          "text": "I will try that."
+        }
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {
+      "text": "An old sailor stands before me."
+    },
+    "old_sailor_touch": {
+      "text": "I should keep my hands to myself."
+    },
+    "old_sailor_walk": {
+      "text": "I can't walk through him."
+    },
+    "walking_area_look": {
+      "text": "The road continues through the town square."
+    },
+    "walking_area_touch": {
+      "text": "Dust and worn stone."
+    },
+    "glowing_gem_look": {
+      "text": "A small gem pulses with an unnatural light."
+    },
+    "glowing_gem_touch": {
+      "text": "The gem feels warm beneath my fingers."
+    },
+    "clothes_trader_look": {
+      "text": "A clothes trader watches the square from behind an elaborate mask."
+    },
+    "clothes_trader_touch": {
+      "text": "I should keep my hands off the trader's wares."
+    },
+    "clothes_trader_talk": {
+      "text": "The clothes trader stares back at me without saying a word."
+    },
+    "clothes_trader_walk": {
+      "text": "I can't walk through the clothes trader."
+    },
+    "female_clothes_trader_look": {
+      "text": "A woman in traditional dress tends the clothes stall."
+    },
+    "female_clothes_trader_touch": {
+      "text": "I should keep my hands off the trader's wares."
+    },
+    "female_clothes_trader_talk": {
+      "text": "The clothes trader watches me quietly without saying a word."
+    },
+    "female_clothes_trader_walk": {
+      "text": "I can't walk through the clothes trader."
+    },
+    "knife_mushroom_killed": {
+      "text": "The mushroom stabs you. That was the wrong answer."
+    },
+    "player_killed": {
+      "text": "The navigator strikes you down."
+    },
+    "generic_look": {
+      "text": "I see nothing interesting."
+    },
+    "generic_touch": {
+      "text": "I can't interact with this."
+    },
+    "generic_talk": {
+      "text": "There is no one to talk to."
+    },
+    "generic_walk": {
+      "text": "I can't walk there."
+    },
+    "generic_use": {
+      "text": "I can't use that here."
+    },
+    "ink_bottle_look": {
+      "text": "A bottle of dark ink. It might be useful for drawing charts."
+    },
+    "city_exit_locked": {
+      "text": "I should speak to Hendrik, ask the lady for directions, and get the guard's permission first."
+    },
+    "city_guard_look": {
+      "text": "A guard keeps watch beside the city gate."
+    },
+    "empty_bottle_look": {
+      "text": "An empty bottle beside the drunken count. It could hold ink."
+    },
+    "sleeping_drunk_look": {
+      "text": "A count, thoroughly drunk in the street beside the city gates. His bottle is empty."
+    },
+    "sleeping_drunk_talk": {
+      "text": "“...õh... hrr... ...” The count slurs something in Livonian, then loses his train of thought."
+    },
+    "metsavana_silent": {
+      "text": "Metsavana does not reply. The gnomes keep scraping. A nearby mushroom seems to be watching me."
+    },
+    "metsavana_look": {
+      "text": "Gnomes are carefully scraping and cleaning the huge forest figure."
+    },
+    "mushroom_look": {
+      "text": "A mushroom that looks as though it has something to say."
+    },
+    "inkcap_look": {
+      "text": "A mushroom oozes a thick black liquid."
+    },
+    "gnome_look": {
+      "text": "A gnome scrapes away, pausing now and then to catch his breath."
+    },
+    "mushroom_poisoned": {
+      "text": "The goo is poisonous. You turn green and collapse. Click to retry before tasting it; your quest progress is safe."
+    },
+    "exit_look": {
+      "text": "The road continues. Walk here to travel."
+    },
+    "knife_mushroom_look": {
+      "text": "A small mushroom with a knife and a very large trust issue."
+    },
+    "knife_mushroom_touch": {
+      "text": "He tightens his grip on the knife. Touching him seems unwise."
+    },
+    "inkcap_collected": {
+      "text": "You collect a bottle of ink from the purple mushroom. Hendrik can use this."
+    },
+    "inkcap_already_collected": {
+      "text": "You already collected the ink. The mushroom is not a refill station."
+    }
+  },
+  "inventory": {
+    "title": "Inventory",
+    "using": "Using:",
+    "look": "Look",
+    "touch": "Touch / Use",
+    "no_tasks": "Current tasks\n\nNo tasks yet. Talk to people to discover how you can help.",
+    "active": "In progress",
+    "ready": "Ready to deliver",
+    "completed": "Completed",
+    "use_hint": "Touch the person or object you want to use this item on. Choose another HUD action to cancel.",
+    "cannot_use": "That does not help here.",
+    "picked_up": "Added to my inventory.",
+    "cannot_talk": "It does not have much to say.",
+    "cannot_walk": "I cannot walk on this.",
+    "click_hint": "Choose an action in the HUD, then click an item.",
+    "actions": {
+      "look": "Look at",
+      "touch": "Touch / Use",
+      "talk": "Talk to",
+      "move": "Walk to",
+      "use": "Use"
+    }
+  },
+  "items": {
+    "task_scroll": {
+      "name": "Tasks",
+      "look": "A yellow scroll containing my current tasks.",
+      "touch": "I unroll the scroll and read my tasks."
+    },
+    "ink_bottle": {
+      "name": "Ink",
+      "look": "A bottle of dark ink. Hendrik needs this for his charts.",
+      "touch": "The stopper is firmly in place."
+    },
+    "empty_bottle": {
+      "name": "Empty bottle",
+      "look": "An empty bottle from beside the drunken count at the city gates. It could hold ink.",
+      "touch": "I could fill this with the black mushroom goo."
+    },
+    "tartu_route_map": {
+      "name": "Tallinn-Tartu route",
+      "look": "Hendrik's map of the trading route from Tallinn to Tartu. My first route!",
+      "touch": "I carefully unfold the map. The road leads to Tartu."
+    }
+  },
+  "quests": {
+    "navigator_ink": {
+      "title": "Ink for Hendrik",
+      "description": "Find a container, find ink, and bring it to Hendrik.",
+      "completed": "Hendrik takes the ink and gives me the Tallinn-Tartu trading-route map. Demo complete!"
+    }
+  },
+  "scene": {
+    "empty_bottle_pickup": "Bottle",
+    "sleeping_drunk": "Drunk count",
+    "forest_mushroom": "Wise mushroom",
+    "inkcap": "Purple mushroom",
+    "gnome_worker": "Gnome",
+    "city_exit": "City exit",
+    "to_town": "To town",
+    "to_forest": "To forest",
+    "to_river": "To river",
+    "to_gates": "To gates",
+    "knife_mushroom": "Nervous mushroom"
+  }
+}

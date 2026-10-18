@@ -1,0 +1,256 @@
+{
+  "id": "forest",
+  "background": "resources/images/forest-background-320x200-1.png",
+  "foreground": "resources/images/forest-background-plants-front-320x200-1.png",
+  "perspective": {
+    "horizon_y": 75,
+    "minimum_walkable_y": 110,
+    "minimum_scale": 0.35,
+    "maximum_scale": 0.8
+  },
+  "walking_area": {
+    "vertices": [
+      [
+        0,
+        130
+      ],
+      [
+        320,
+        130
+      ],
+      [
+        320,
+        180
+      ],
+      [
+        0,
+        180
+      ]
+    ]
+  },
+  "player": {
+    "feet_position": [
+      45,
+      169
+    ],
+    "size": [
+      50,
+      84
+    ]
+  },
+  "entities": [
+    {
+      "type": "decoration",
+      "asset_id": "resources/images/gnome-walk-52x52-5.png",
+      "interaction_id": "walking_gnome",
+      "feet_position": [
+        40,
+        174
+      ],
+      "size": [
+        14,
+        25
+      ],
+      "perspective_scaling": true,
+      "depth_sorting": true,
+      "animation": {
+        "frames": 5,
+        "width": 14,
+        "height": 25,
+        "step_time": 0.14
+      },
+      "motion": {
+        "from_x": -16,
+        "to_x": 336,
+        "speed": 12
+      }
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/metsavanaidle-171x150-9.png",
+      "animation": {
+        "frames": 9,
+        "width": 171,
+        "height": 150,
+        "step_time": 0.2,
+        "sequence": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          5,
+          6,
+          7,
+          8,
+          9,
+          5,
+          6,
+          7,
+          8,
+          9,
+          5,
+          6,
+          7,
+          8,
+          9,
+          1,
+          2,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          3,
+          4,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "interaction_id": "metsavana",
+      "feet_position": [
+        177,
+        167
+      ],
+      "size": [
+        137,
+        120
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/quest-gnome-work.png",
+      "animation": {
+        "frames": 24,
+        "width": 32,
+        "height": 30,
+        "step_time": 0.18
+      },
+      "interaction_id": "gnome_worker",
+      "feet_position": [
+        126,
+        170
+      ],
+      "size": [
+        32,
+        30
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/forest-mushroom-2-sheet_88x128-19.png",
+      "interaction_id": "forest_mushroom",
+      "feet_position": [
+        267,
+        173
+      ],
+      "size": [
+        44,
+        64
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "dialogue_actor_id": "forest_mushroom",
+      "animation": {
+        "frames": 19,
+        "width": 88,
+        "height": 128,
+        "step_time": 0.14
+      },
+      "talk_asset": "resources/images/forest-mushroom-2-sheet_88x128-19.png",
+      "talk_animation": {
+        "frames": 19,
+        "width": 88,
+        "height": 128,
+        "step_time": 0.1
+      }
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/forest-mushroom-talk-purple-sheet_50x52-10.png",
+      "interaction_id": "inkcap",
+      "feet_position": [
+        300,
+        175
+      ],
+      "size": [
+        25,
+        26
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "dialogue_actor_id": "inkcap",
+      "animation": {
+        "frames": 10,
+        "width": 50,
+        "height": 52,
+        "step_time": 0.14
+      }
+    },
+    {
+      "type": "quest_prop",
+      "asset_id": "resources/images/00054-mush3-sheet_32x51-9.png",
+      "interaction_id": "knife_mushroom",
+      "dialogue_actor_id": "knife_mushroom",
+      "feet_position": [
+        88,
+        175
+      ],
+      "size": [
+        16,
+        25.5
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "animation": {
+        "frames": 9,
+        "width": 32,
+        "height": 51,
+        "step_time": 0.16
+      },
+      "attack_animation": {
+        "frames": 9,
+        "width": 32,
+        "height": 51,
+        "step_time": 0.08
+      }
+    },
+    {
+      "type": "exit",
+      "asset_id": "placeholder:to_river",
+      "interaction_id": "to_river",
+      "feet_position": [
+        30,
+        172
+      ],
+      "size": [
+        48,
+        18
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": true,
+      "destination": "river_crossing"
+    }
+  ],
+  "arrivals": {
+    "river_crossing": [
+      60,
+      170
+    ]
+  }
+}

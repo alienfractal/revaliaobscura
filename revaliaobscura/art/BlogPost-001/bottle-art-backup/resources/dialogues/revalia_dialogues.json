@@ -1,0 +1,777 @@
+{
+  "actors": {
+    "old_sailor": {
+      "id": "old_sailor",
+      "name_key": "actors.old_sailor.name",
+      "actions": {
+        "look": "old_sailor_look",
+        "touch": "old_sailor_touch",
+        "walk": "old_sailor_walk"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "npc_ink_thanks",
+          "when": {
+            "quest": "navigator_ink",
+            "status": "completed"
+          }
+        },
+        {
+          "dialogue": "npc_waiting_for_ink",
+          "when": {
+            "flag": "navigator_ink_quest_started"
+          }
+        },
+        {
+          "dialogue": "npc_after_identity",
+          "when": {
+            "flag": "sailor_identity_known"
+          }
+        },
+        {
+          "dialogue": "npc_intro"
+        }
+      ]
+    },
+    "female_clothes_trader": {
+      "id": "female_clothes_trader",
+      "name_key": "actors.female_clothes_trader.name",
+      "actions": {
+        "look": "female_clothes_trader_look",
+        "touch": "female_clothes_trader_touch",
+        "talk": "female_clothes_trader_talk",
+        "walk": "female_clothes_trader_walk"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "lady_after_ink",
+          "when": {
+            "quest": "navigator_ink",
+            "status": "completed"
+          }
+        },
+        {
+          "dialogue": "lady_directions",
+          "when": {
+            "flag": "lady_ink_directions"
+          }
+        },
+        {
+          "dialogue": "lady_hendrik",
+          "when": {
+            "flag": "navigator_ink_quest_started"
+          }
+        }
+      ]
+    },
+    "city_guard": {
+      "id": "city_guard",
+      "name_key": "actors.city_guard.name",
+      "actions": {
+        "look": "city_guard_look"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "guard_forest",
+          "when": {
+            "all": [
+              {
+                "flag": "navigator_ink_quest_started"
+              },
+              {
+                "flag": "lady_ink_directions"
+              }
+            ]
+          }
+        },
+        {
+          "dialogue": "guard_idle"
+        }
+      ]
+    },
+    "forest_mushroom": {
+      "id": "forest_mushroom",
+      "name_key": "actors.forest_mushroom.name",
+      "actions": {
+        "look": "mushroom_look"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "wise_mushroom_after_ink",
+          "when": {
+            "flag": "forest_ink_collected"
+          }
+        },
+        {
+          "dialogue": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "inkcap": {
+      "id": "inkcap",
+      "name_key": "actors.inkcap.name",
+      "actions": {
+        "look": "inkcap_look"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "purple_mushroom_silent"
+        }
+      ]
+    },
+    "knife_mushroom": {
+      "id": "knife_mushroom",
+      "name_key": "actors.knife_mushroom.name",
+      "actions": {
+        "look": "knife_mushroom_look",
+        "touch": "knife_mushroom_touch"
+      },
+      "entrypoints": [
+        {
+          "dialogue": "knife_mushroom_intro"
+        }
+      ]
+    }
+  },
+  "objects": {
+    "walking_area": {
+      "actions": {
+        "look": "walking_area_look",
+        "touch": "walking_area_touch"
+      }
+    },
+    "glowing_gem": {
+      "actions": {
+        "look": "glowing_gem_look",
+        "touch": "glowing_gem_touch"
+      }
+    },
+    "clothes_trader": {
+      "actions": {
+        "look": "clothes_trader_look",
+        "touch": "clothes_trader_touch",
+        "talk": "clothes_trader_talk",
+        "walk": "clothes_trader_walk"
+      }
+    },
+    "female_clothes_trader": {
+      "actions": {
+        "look": "female_clothes_trader_look",
+        "touch": "female_clothes_trader_touch",
+        "talk": "female_clothes_trader_talk",
+        "walk": "female_clothes_trader_walk"
+      }
+    },
+    "ink_bottle_pickup": {
+      "actions": {
+        "look": "ink_bottle_look"
+      }
+    },
+    "empty_bottle_pickup": {
+      "actions": {
+        "look": "empty_bottle_look"
+      }
+    },
+    "sleeping_drunk": {
+      "actions": {
+        "look": "sleeping_drunk_look",
+        "talk": "sleeping_drunk_talk"
+      }
+    },
+    "metsavana": {
+      "actions": {
+        "look": "metsavana_look",
+        "talk": "metsavana_silent"
+      }
+    },
+    "gnome_worker": {
+      "actions": {
+        "look": "gnome_look"
+      }
+    },
+    "city_exit": {
+      "actions": {
+        "look": "exit_look"
+      }
+    },
+    "to_town": {
+      "actions": {
+        "look": "exit_look"
+      }
+    },
+    "to_forest": {
+      "actions": {
+        "look": "exit_look"
+      }
+    },
+    "to_river": {
+      "actions": {
+        "look": "exit_look"
+      }
+    },
+    "to_gates": {
+      "actions": {
+        "look": "exit_look"
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {},
+    "old_sailor_touch": {},
+    "old_sailor_walk": {},
+    "walking_area_look": {},
+    "walking_area_touch": {},
+    "glowing_gem_look": {},
+    "glowing_gem_touch": {},
+    "clothes_trader_look": {},
+    "clothes_trader_touch": {},
+    "clothes_trader_talk": {},
+    "clothes_trader_walk": {},
+    "female_clothes_trader_look": {},
+    "female_clothes_trader_touch": {},
+    "female_clothes_trader_talk": {},
+    "female_clothes_trader_walk": {},
+    "player_killed": {},
+    "knife_mushroom_killed": {},
+    "generic_look": {},
+    "generic_touch": {},
+    "generic_talk": {},
+    "generic_walk": {},
+    "generic_use": {},
+    "ink_bottle_look": {},
+    "city_exit_locked": {},
+    "city_guard_look": {},
+    "empty_bottle_look": {},
+    "sleeping_drunk_look": {},
+    "sleeping_drunk_talk": {},
+    "metsavana_silent": {},
+    "metsavana_look": {},
+    "mushroom_look": {},
+    "inkcap_look": {},
+    "gnome_look": {},
+    "mushroom_poisoned": {},
+    "exit_look": {},
+    "knife_mushroom_look": {},
+    "knife_mushroom_touch": {},
+    "inkcap_collected": {},
+    "inkcap_already_collected": {}
+  },
+  "fallbacks": {
+    "look": "generic_look",
+    "touch": "generic_touch",
+    "talk": "generic_talk",
+    "walk": "generic_walk",
+    "use": "generic_use"
+  },
+  "nodes": {
+    "npc_intro": {
+      "event": "npc_intro_event",
+      "responses": [
+        {
+          "id": "ask_identity",
+          "next": "npc_identity"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_identity": {
+      "responses": [
+        {
+          "id": "mock_outfit",
+          "next": "npc_silent_stare"
+        },
+        {
+          "id": "ask_if_comedian",
+          "effects": [
+            {
+              "set_flag": "sailor_identity_known"
+            },
+            {
+              "award_score": {
+                "id": "learn_navigator_identity",
+                "points": 100
+              }
+            }
+          ],
+          "next": "npc_hendrik_identity"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_defend_honor": {
+      "responses": [
+        {
+          "id": "apologize",
+          "next": "npc_silent_stare"
+        },
+        {
+          "id": "laugh_again",
+          "next": "npc_final_insult"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_final_insult": {
+      "responses": [
+        {
+          "id": "face_consequence",
+          "event": "player_death",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_silent_stare": {
+      "responses": [
+        {
+          "id": "laugh",
+          "next": "npc_defend_honor"
+        },
+        {
+          "id": "ask_if_comedian",
+          "effects": [
+            {
+              "set_flag": "sailor_identity_known"
+            },
+            {
+              "award_score": {
+                "id": "learn_navigator_identity",
+                "points": 100
+              }
+            }
+          ],
+          "next": "npc_hendrik_identity"
+        }
+      ]
+    },
+    "npc_hendrik_identity": {
+      "responses": [
+        {
+          "id": "ask_need",
+          "next": "npc_ask_name"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ask_name": {
+      "responses": [
+        {
+          "id": "answer_rebane",
+          "effects": [
+            {
+              "award_score": {
+                "id": "introduce_rebane",
+                "points": 100
+              }
+            }
+          ],
+          "next": "npc_ink_request"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ink_request": {
+      "event": "score_milestone:discover_ink_quest:250",
+      "responses": [
+        {
+          "id": "accept_ink_quest",
+          "effects": [
+            {
+              "set_flag": "navigator_ink_quest_started"
+            },
+            {
+              "start_quest": "navigator_ink"
+            }
+          ],
+          "next": "end"
+        }
+      ]
+    },
+    "npc_after_identity": {
+      "responses": [
+        {
+          "id": "ask_need",
+          "next": "npc_ask_name"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_waiting_for_ink": {
+      "responses": [
+        {
+          "id": "give_ink",
+          "when": {
+            "quest": "navigator_ink",
+            "status": "ready"
+          },
+          "effects": [
+            {
+              "complete_quest": "navigator_ink"
+            }
+          ],
+          "next": "npc_ink_thanks"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "npc_ink_thanks": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "lady_hendrik": {
+      "responses": [
+        {
+          "id": "explain_ink",
+          "next": "lady_directions",
+          "effects": [
+            {
+              "set_flag": "lady_ink_directions"
+            }
+          ]
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "lady_directions": {
+      "responses": [
+        {
+          "id": "thank_lady",
+          "next": "end"
+        }
+      ]
+    },
+    "lady_after_ink": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "guard_idle": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "guard_forest": {
+      "responses": [
+        {
+          "id": "follow_directions",
+          "next": "end",
+          "effects": [
+            {
+              "set_flag": "city_exit_unlocked"
+            }
+          ],
+          "event": "guard_passage"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "mushroom_idle": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "mushroom_ink": {
+      "responses": [
+        {
+          "id": "collect_ink",
+          "next": "mushroom_collected",
+          "when": {
+            "all": [
+              {
+                "flag": "navigator_ink_quest_started"
+              },
+              {
+                "has_item": "empty_bottle"
+              },
+              {
+                "not": {
+                  "flag": "forest_ink_collected"
+                }
+              }
+            ]
+          },
+          "once": true,
+          "effects": [
+            {
+              "remove_item": "empty_bottle"
+            },
+            {
+              "add_item": "ink_bottle"
+            },
+            {
+              "set_flag": "forest_ink_collected"
+            },
+            {
+              "award_score": {
+                "id": "collect_forest_ink",
+                "points": 250
+              }
+            }
+          ]
+        },
+        {
+          "id": "need_bottle",
+          "next": "mushroom_need_bottle",
+          "when": {
+            "not": {
+              "has_item": "empty_bottle"
+            }
+          }
+        },
+        {
+          "id": "lick_goo",
+          "next": "end",
+          "event": "mushroom_poisoning"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "mushroom_need_bottle": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "mushroom_collected": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "inkcap_choices": {
+      "responses": [
+        {
+          "id": "collect_ink",
+          "next": "mushroom_collected",
+          "when": {
+            "all": [
+              {
+                "flag": "navigator_ink_quest_started"
+              },
+              {
+                "has_item": "empty_bottle"
+              },
+              {
+                "not": {
+                  "flag": "forest_ink_collected"
+                }
+              }
+            ]
+          },
+          "once": true,
+          "effects": [
+            {
+              "remove_item": "empty_bottle"
+            },
+            {
+              "add_item": "ink_bottle"
+            },
+            {
+              "set_flag": "forest_ink_collected"
+            },
+            {
+              "award_score": {
+                "id": "collect_forest_ink",
+                "points": 250
+              }
+            }
+          ]
+        },
+        {
+          "id": "need_bottle",
+          "next": "mushroom_need_bottle",
+          "when": {
+            "not": {
+              "has_item": "empty_bottle"
+            }
+          }
+        },
+        {
+          "id": "lick_goo",
+          "next": "end",
+          "event": "mushroom_poisoning"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "knife_mushroom_intro": {
+      "responses": [
+        {
+          "id": "yes",
+          "next": "end",
+          "event": "player_death"
+        },
+        {
+          "id": "no",
+          "next": "knife_mushroom_relief"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "knife_mushroom_relief": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_intro": {
+      "responses": [
+        {
+          "id": "ask_metsavana",
+          "next": "wise_mushroom_metsavana"
+        },
+        {
+          "id": "ask_ink",
+          "next": "wise_mushroom_ink"
+        },
+        {
+          "id": "ask_knife",
+          "next": "wise_mushroom_knife"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_metsavana": {
+      "responses": [
+        {
+          "id": "ask_gnomes",
+          "next": "wise_mushroom_gnomes"
+        },
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_gnomes": {
+      "responses": [
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_ink": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "wise_mushroom_knife": {
+      "responses": [
+        {
+          "id": "back",
+          "next": "wise_mushroom_intro"
+        }
+      ]
+    },
+    "wise_mushroom_after_ink": {
+      "responses": [
+        {
+          "id": "ask_metsavana",
+          "next": "wise_mushroom_metsavana"
+        },
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    },
+    "purple_mushroom_silent": {
+      "responses": [
+        {
+          "id": "leave",
+          "next": "end"
+        }
+      ]
+    }
+  },
+  "inventory_items": {
+    "task_scroll": {
+      "permanent": true,
+      "usable": false
+    },
+    "ink_bottle": {
+      "usable": true
+    },
+    "empty_bottle": {
+      "usable": true
+    },
+    "tartu_route_map": {
+      "usable": false
+    }
+  },
+  "quests": {
+    "navigator_ink": {
+      "recipient": "old_sailor",
+      "required_items": {
+        "ink_bottle": 1
+      },
+      "rewards": {
+        "tartu_route_map": 1
+      }
+    }
+  },
+  "pickups": {
+    "empty_bottle_pickup": "empty_bottle"
+  }
+}

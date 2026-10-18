@@ -16,12 +16,15 @@ A new game still starts in town and clears progress through the existing menu.
    brief slurred reply, described as incoherent Livonian rather than a translation.
 5. Take To river, then To forest. The unlocked town exit also leads to the gates.
 6. Talking to Metsavana gives silence and a hint toward the talking mushroom.
-7. Talk to the mushroom or touch/talk to the inkcap. Choose to collect the goo.
-   This consumes the empty bottle, adds usable ink, and awards 250 points once.
-   Without a bottle, the dialogue instead suggests looking in town. Return travel
-   is always possible once the guard has unlocked the route.
-8. Choosing Lick it turns Remy green, plays the existing collapse animation, and
-   shows a death message. Click to retry in the forest with progress preserved.
+7. The tall green-capped wise mushroom explains that Metsavana is in a trance,
+   tended by the gnomes, and points out the purple mushroom. Its dialogue never
+   awards ink. Touch the purple mushroom to receive one bottle of usable ink and
+   250 points immediately, without a dialogue choice. An empty bottle is optional;
+   if already carried it is reused. Further touches never duplicate ink or score.
+8. The small knife-carrying mushroom fears basket-carrying locals and asks whether
+   you eat mushrooms. Answering no is safe. Answering yes plays its attack once,
+   followed by the player's existing death animation and game-over flow. This
+   does not use the old poisoning/retry branch.
 9. Return via To river, To gates, To town. Give Hendrik the ink through dialogue or by
    using it from inventory. Both paths consume ink and award one Tallinn-Tartu
    map. Completion awards 500 points once. The map remains in inventory; its
@@ -110,3 +113,18 @@ The VIEW test writes rendered checks to `build/quest-previews/`.
 
 The final bottle, mushroom, blink and map artwork still need an artist's
 pass before this is a finished visual demo. Existing sound assets are reused.
+
+## Forest mushroom artwork and interaction
+
+- Knife mushroom: `00054-mush3-sheet_32x51-9.png`, 9 horizontal frames,
+  each 32 pixels wide and 51 pixels tall. Idle loops; the attack plays once.
+- Wise mushroom: `forest-mushroom-2-sheet_88x128-19.png`, 19 horizontal
+  frames, each 88 pixels wide and 128 pixels tall. Displayed at 44 × 64;
+  its animation speeds up while speaking.
+- Purple ink mushroom: `forest-mushroom-talk-purple-sheet_50x52-10.png`,
+  10 horizontal frames, each 50 pixels wide and 52 pixels tall. Displayed at
+  25 × 26; touching it awards ink once and leaves the mushroom in the scene.
+
+All three use depth sorting without perspective scaling. The forest background,
+Metsavana, gnomes, exits and river-crossing scene are retained. New dialogue and
+interaction messages are supplied in English, Spanish and Estonian.

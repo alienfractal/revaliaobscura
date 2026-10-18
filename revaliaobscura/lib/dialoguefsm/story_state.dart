@@ -7,6 +7,17 @@ class StoryState {
 
   bool flag(String id) => _flags[id] ?? false;
 
+  /// The purple mushroom supplies one filled bottle, even without a container.
+  bool collectForestInk() {
+    if (flag('forest_ink_collected')) return false;
+    if (adventure.hasItem('empty_bottle')) {
+      adventure.removeItem('empty_bottle');
+    }
+    adventure.addItem('ink_bottle');
+    _flags['forest_ink_collected'] = true;
+    return true;
+  }
+
   bool isResponseConsumed(String id) => _consumedResponses.contains(id);
 
   bool matches(Map<String, dynamic>? condition) {

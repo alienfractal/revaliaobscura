@@ -1,0 +1,70 @@
+{
+  "root": "C:\\Users\\lien\\Desktop\\Gamejams\\revaliaobscura\\revaliaobscura",
+  "changes": [
+    {
+      "path": "lib/dialoguefsm/story_state.dart",
+      "before": "aa38a7f3bf9809be3064285ad18da5aa3ecd92136f683f1af7c225e306ca2443",
+      "after": "6aa008ecb48768c080989228d02d72f3f5ec3cfd323871f466c2072aeb766b92"
+    },
+    {
+      "path": "lib/game/states/level_game/scenario/scenario_config.dart",
+      "before": "9c6ab20699fba5c0df84b2ab65fdc56e7961d66bdbfb749cd271443274f47fcb",
+      "after": "e6dc3acb6cb929ec14c0e07a66643603a5c11797b35b4478dcf58493ea074748"
+    },
+    {
+      "path": "lib/game/states/level_game/view/gameboard_view.dart",
+      "before": "ea53c53f410330d72bc35ca545220ffd536f4e4f57966b3227d4e5bd2f4877bb",
+      "after": "7351271cd0ac6f7a2bb8c3c7851ae42c0ed6b5ef152bb304f9db8b8f26d0ebe4"
+    },
+    {
+      "path": "lib/game/states/level_game/view/quest_scene_entity.dart",
+      "before": "3bf7b2b970cbf7559405039faffacaa47515a42f3028afcee45ec8eae8e268b6",
+      "after": "5fdb5ef91f8a4eb48f8c16cea4ec36610241a320cd5d714544ba9e684c008725"
+    },
+    {
+      "path": "test/ink_quest_flow_test.dart",
+      "before": "44a59e455cebbcd863e4e5db568991ab8e8ffef19acf83c7e6a9595780d6ed35",
+      "after": "322abe21ecb98d36085a3265dc37a095e9f30f4f957681b7fbf1be2aab4da16a"
+    },
+    {
+      "path": "test/quest_views_test.dart",
+      "before": "cb52a73086287ad414aa387f9881e93af8da7c71ceba43509bed386d6f12b32c",
+      "after": "3d07352affb0ece09b796fa7ae0bce86d23733e92d2ed01a9ad099bf96c33f41"
+    },
+    {
+      "path": "resources/dialogues/revalia_dialogues.json",
+      "before": "6284c4358852c72cc3f3ae603f20a5b065a1bbb34e23a24069676f2198818943",
+      "after": "98f571745947250e548fa8a738e6e1c239d9769885781c4b509f3caadefbc43a"
+    },
+    {
+      "path": "resources/scenarios/forest.json",
+      "before": "61f644ed581ec90f07bbcef41cbb1e0c1aa4a3edbae51c5a7a393c5072479e59",
+      "after": "1ee5ba9ddf90511720a57aefad0544dd7484594150d35656a16f3fa9734cad58"
+    },
+    {
+      "path": "resources/translations/ee.json",
+      "before": "6934d141ba74652a0a056b2c7b79a743cce73b87d011c196cca48740e03d2fa0",
+      "after": "f872e89400d9ccca92a8242dba03e33e87e7848f589709181387d36058579bbd"
+    },
+    {
+      "path": "resources/translations/en.json",
+      "before": "75a05f873d9858779c4c71aec5b95cf692de571db7e31fc88312fdf56a38b358",
+      "after": "5be24f61999b20a4113aa6e4c831f9dfc947e2b152562e1546b844916ae51341"
+    },
+    {
+      "path": "resources/translations/es.json",
+      "before": "e192523a80192a5310776d8bed911eb71af6a23c9d6c0bed10b5c41fe510fd49",
+      "after": "d5082a83eea727c161c9f96305df26e10d7207df842d2f0951716dc4b0c25e8e"
+    },
+    {
+      "path": "resources/dialogues/INK_DEMO.md",
+      "before": "fa8c6c38dddebfbeba06e0ecaffd8762eef5e96f0d502f4897a78e7e49899baf",
+      "after": "475461d9fd250ee7e6c2ad750474823f4746d4e31fb0acbe7bb6e82510323cd9"
+    },
+    {
+      "path": "resources/dialogues/INVENTORY_AND_QUESTS.md",
+      "before": "38f11a3c3b94c8e998fa50a920699cae9fb9710ce4401ba1053f6be183404256",
+      "after": "affa18f7c9432fe3e0090e8bd3e3da1e0302aa3951c7c7836344571464872021"
+    }
+  ]
+}

@@ -102,12 +102,8 @@ class GameboardView extends World
     final item = selectedInventoryItem;
     if (item == null) return false;
     selectedInventoryItem = null;
-    if (item == 'empty_bottle' &&
-        (target.interactionId == 'inkcap' ||
-            target.interactionId == 'forest_mushroom') &&
-        target.canTalk) {
-      callRenderDialogue(target);
-      return true;
+    if (item == 'empty_bottle' && target.interactionId == 'inkcap') {
+      return handleQuestAction(target, ActionableType.touch);
     }
     final quest = DialogueManager.fsm.storyState.adventure
         .deliverItem(item, target.interactionId);
@@ -252,19 +248,22 @@ class GameboardView extends World
     if (event != 'player_death') {
       return;
     }
+    final deathMessageKey = activeActor.interactionId == 'knife_mushroom'
+        ? 'knife_mushroom_killed'
+        : 'player_killed';
     isGameFinished = true;
     playerEntity.disableActions();
     activeActor.requestAttack(
       onComplete: () {
         game.ap.playSoundFx(Assets.resources.audio.blockHit2);
         playerEntity.playerAnimationHandler.triggerDie(
-          onComplete: _finishPlayerDeath,
+          onComplete: () => _finishPlayerDeath(deathMessageKey),
         );
       },
     );
   }
 
-  void _finishPlayerDeath() {
+  void _finishPlayerDeath(String messageKey) {
     if (!isMounted) {
       return;
     }
@@ -273,7 +272,7 @@ class GameboardView extends World
       AppTranslations.translationsFor(game.currentLocale),
     );
     showScreenMessage(
-      DialogueManager.message('player_killed'),
+      DialogueManager.message(messageKey),
       durationSeconds: null,
       onDismissed: () {
         if (isMounted) {
@@ -646,10 +645,14 @@ class GameboardView extends World
   }
 
   bool handleQuestAction(LevelEntity target, ActionableType action) {
-    if (target.interactionId == 'inkcap' &&
-        action == ActionableType.touch &&
-        target.canTalk) {
-      callRenderDialogue(target);
+    if (target.interactionId == 'inkcap' && action == ActionableType.touch) {
+      final collected = DialogueManager.fsm.storyState.collectForestInk();
+      if (collected) {
+        _handleDialogueEvent('score_milestone:collect_forest_ink:250');
+      }
+      showScreenMessage(adventureText(collected
+          ? 'messages.inkcap_collected.text'
+          : 'messages.inkcap_already_collected.text'));
       return true;
     }
     if (target.interactionId == 'metsavana' && action == ActionableType.talk) {

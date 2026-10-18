@@ -1,0 +1,352 @@
+{
+  "game": {
+    "title": "Revalia Obscura",
+    "subtitles": {
+      "sub_title1": "Külm",
+      "sub_title2": "Põlenud"
+    },
+    "start_message": "Tere tulemast Revalia Obscurasse!",
+    "pause_message": "Mäng on peatatud. Jätkamiseks puuduta ekraani.",
+    "over_message": "Mäng läbi! Kas proovid uuesti?"
+  },
+  "menu": {
+    "play_button": "Mängi",
+    "settings_button": "Seaded",
+    "exit_button": "Välju",
+    "push_button": "Vajuta nuppu"
+  },
+  "settings": {
+    "title": "Seaded",
+    "language": "Keel",
+    "sound": "Heli",
+    "music": "Muusika"
+  },
+  "actors": {
+    "old_sailor": {
+      "name": "Navigaator"
+    },
+    "forest_mushroom": {
+      "name": "Tark seen"
+    },
+    "inkcap": {
+      "name": "Lilla seen"
+    },
+    "knife_mushroom": {
+      "name": "Närviline seen"
+    }
+  },
+  "loading": {
+    "title": "EESTIMAA, Issanda aastal 1343",
+    "context_intro": [
+      "Rebane Molder saabub Revalisse.",
+      "EESTIMAA, 1343"
+    ],
+    "exit_button": "Välju"
+  },
+  "dialogues": {
+    "npc_intro": {
+      "player_text": "Sa näed välja nagu mees, kes tunneb seda paika.",
+      "text": "Tunnen Läänemere-äärseid teid.",
+      "responses": {
+        "ask_identity": {
+          "text": "Kes sa oled?"
+        },
+        "leave": {
+          "text": "Hüvasti."
+        }
+      }
+    },
+    "npc_identity": {
+      "player_text": "Kes sa oled?",
+      "text": "Olen navigaator. Tunnen Läänemere rannikut ja vanu teid.",
+      "responses": {
+        "mock_outfit": {
+          "text": "Sul peab küll palju isikupära olema."
+        },
+        "ask_if_comedian": {
+          "text": "Kas sa oled juhuslikult koomik, navigaator?"
+        },
+        "leave": {
+          "text": "Jätan su oma tegemiste juurde."
+        }
+      }
+    },
+    "npc_silent_stare": {
+      "player_text": "Sul peab küll palju isikupära olema.",
+      "text": "Kelleks sa ennast pead?",
+      "responses": {
+        "laugh": {
+          "text": "Hahahahahahahahahahahahahahahahahahaha."
+        },
+        "ask_if_comedian": {
+          "text": "Palun vabandust."
+        }
+      }
+    },
+    "npc_defend_honor": {
+      "player_text": "Hahahaa.",
+      "text": "Nõuan austust.",
+      "responses": {
+        "apologize": {
+          "text": "Palun vabandust."
+        },
+        "laugh_again": {
+          "text": "Hahahaa."
+        },
+        "leave": {
+          "text": "Siis jätan su oma au kaitsma."
+        }
+      }
+    },
+    "npc_final_insult": {
+      "player_text": "Hahahaa.",
+      "text": "Sa solvasid mind viimast korda.",
+      "responses": {
+        "face_consequence": {
+          "text": "..."
+        }
+      }
+    },
+    "npc_hendrik_identity": {
+      "player_text": "Kas sa oled koomik, navigaator?",
+      "text": "Ei ole. Ja minu nimi on Hendrik.",
+      "responses": {
+        "ask_need": {
+          "text": "Mida sul vaja on?"
+        },
+        "leave": {
+          "text": "Jätan su oma tegemiste juurde."
+        }
+      }
+    },
+    "npc_ask_name": {
+      "player_text": "Mida sul vaja on?",
+      "text": "Huvitav, et küsid. Enne kui asume äriasju arutama, mis su nimi on?",
+      "responses": {
+        "answer_rebane": {
+          "text": "Rebane."
+        },
+        "leave": {
+          "text": "Ehk mõni teine kord."
+        }
+      }
+    },
+    "npc_ink_request": {
+      "player_text": "Rebane.",
+      "text": "Hästi, Rebane. Mu tint on otsa saanud ja ilma tindita on mu kaardid kasutud. Too mulle tinti ning ehk otsustan, et oled mu aega väärt.",
+      "responses": {
+        "accept_ink_quest": {
+          "text": "Ma leian sulle tinti."
+        }
+      }
+    },
+    "npc_after_identity": {
+      "player_text": "Tere jälle.",
+      "text": "Jälle tagasi? Kui tahad navigaatori aega, näita, et märkad, mida vaja on.",
+      "responses": {
+        "ask_need": {
+          "text": "Mida sul vaja on?"
+        },
+        "leave": {
+          "text": "Praegu mitte. Hüvasti."
+        }
+      }
+    },
+    "npc_waiting_for_ink": {
+      "player_text": "Sellest tindist...",
+      "text": "Too mulle kaartide jaoks tinti, Rebane. Siis võime võimalustest rääkida.",
+      "responses": {
+        "leave": {
+          "text": "Ma alles otsin."
+        }
+      }
+    },
+    "knife_mushroom_intro": {
+      "player_text": "Milleks sulle nuga?",
+      "text": "Kohalikud. Korvid. Naeratavad kohalikud korvidega. Ütle... kas sulle meeldib seeni süüa?",
+      "responses": {
+        "yes": {
+          "text": "Jah. Eriti võis praetult."
+        },
+        "no": {
+          "text": "Ei. Eelistan vähem jutukat toitu."
+        },
+        "leave": {
+          "text": "Ma lähen parem edasi."
+        }
+      }
+    },
+    "knife_mushroom_relief": {
+      "player_text": "Ma ei tulnud sind korjama.",
+      "text": "Hea. Mina ka mitte. Me mõistame teineteist.",
+      "responses": {
+        "leave": {
+          "text": "Täielikult. Ilus nuga."
+        }
+      }
+    },
+    "wise_mushroom_intro": {
+      "player_text": "Rääkiv seen?",
+      "text": "Ainult siis, kui vaja. Ilmselt on praegu üks neist kordadest.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Mis Metsavanal viga on?"
+        },
+        "ask_ink": {
+          "text": "Kust ma tinti saan?"
+        },
+        "ask_knife": {
+          "text": "Miks sellel seenel nuga on?"
+        },
+        "leave": {
+          "text": "Jätan su rahule."
+        }
+      }
+    },
+    "wise_mushroom_metsavana": {
+      "player_text": "Kas Metsavana magab?",
+      "text": "Ta on transis. Päkapikud hoiavad ta puhta ja söönuna. Suurepärane korraldus, kui sa just päkapikk pole.",
+      "responses": {
+        "ask_gnomes": {
+          "text": "Mida päkapikud sellest saavad?"
+        },
+        "back": {
+          "text": "Mul oli veel üks küsimus."
+        }
+      }
+    },
+    "wise_mushroom_gnomes": {
+      "player_text": "Kas nad saavad midagi vastu?",
+      "text": "Tarkust. Peavarju. Mõne juure, mille otsa komistada. Tema nimetab seda hüvede paketiks.",
+      "responses": {
+        "back": {
+          "text": "See selgitab vaikimist."
+        }
+      }
+    },
+    "wise_mushroom_ink": {
+      "player_text": "Mul on Hendrikule tinti vaja.",
+      "text": "Puuduta lillat seent mu kõrval. Pudel tinti, aega pole vaja kinni panna. Kirjutamiseks, mitte lõunaks. Oluline vahe.",
+      "responses": {
+        "leave": {
+          "text": "Lilla seen. Puudutada. Mitte lakkuda. Selge."
+        }
+      }
+    },
+    "wise_mushroom_knife": {
+      "player_text": "See tegelane paistab närviline.",
+      "text": "Inimesed tulevad korvidega. Tema vastuväide on muutunud teravaks. Ära õhtusöögist räägi.",
+      "responses": {
+        "back": {
+          "text": "Valin oma sõnu hoolikalt."
+        }
+      }
+    },
+    "wise_mushroom_after_ink": {
+      "player_text": "Tint on käes.",
+      "text": "Siis vii see Hendrikule. Pane see paberile. Inimestele on tulnud seda varemgi selgitada.",
+      "responses": {
+        "ask_metsavana": {
+          "text": "Üks viimane küsimus Metsavana kohta..."
+        },
+        "leave": {
+          "text": "Tint paberile. Sellega saan hakkama."
+        }
+      }
+    },
+    "purple_mushroom_silent": {
+      "player_text": "Kas sa saad mind aidata?",
+      "text": "Lilla seen kõigub vaikselt. Tark seen viipab, et sa seda puudutaksid.",
+      "responses": {
+        "leave": {
+          "text": "Proovin järele."
+        }
+      }
+    }
+  },
+  "messages": {
+    "old_sailor_look": {
+      "text": "Minu ees seisab vana meremees."
+    },
+    "old_sailor_touch": {
+      "text": "Parem hoian käed enda juures."
+    },
+    "old_sailor_walk": {
+      "text": "Ma ei saa temast läbi kõndida."
+    },
+    "walking_area_look": {
+      "text": "Tee jätkub läbi linnaväljaku."
+    },
+    "walking_area_touch": {
+      "text": "Tolm ja kulunud kivi."
+    },
+    "glowing_gem_look": {
+      "text": "Väike kalliskivi kiirgab pulseerivat ebaloomulikku valgust."
+    },
+    "glowing_gem_touch": {
+      "text": "Kalliskivi tundub mu sõrmede all soe."
+    },
+    "clothes_trader_look": {
+      "text": "Keeruka maski tagant jälgib väljakut rõivakaupmees."
+    },
+    "clothes_trader_touch": {
+      "text": "Parem hoian käed kaupmehe kaubast eemal."
+    },
+    "clothes_trader_talk": {
+      "text": "Rõivakaupmees vaatab mulle sõnagi lausumata vastu."
+    },
+    "clothes_trader_walk": {
+      "text": "Ma ei saa rõivakaupmehest läbi kõndida."
+    },
+    "female_clothes_trader_look": {
+      "text": "Rahvarõivais naine hoolitseb rõivaleti eest."
+    },
+    "female_clothes_trader_touch": {
+      "text": "Parem hoian käed kaupmehe kaubast eemal."
+    },
+    "female_clothes_trader_talk": {
+      "text": "Rõivakaupmees jälgib mind vaikides ega lausu sõnagi."
+    },
+    "female_clothes_trader_walk": {
+      "text": "Ma ei saa rõivakaupmehest läbi kõndida."
+    },
+    "knife_mushroom_killed": {
+      "text": "Seen pussitab sind. See oli vale vastus."
+    },
+    "player_killed": {
+      "text": "Navigaator lööb su maha."
+    },
+    "generic_look": {
+      "text": "Ma ei näe midagi huvitavat."
+    },
+    "generic_touch": {
+      "text": "Ma ei saa sellega midagi teha."
+    },
+    "generic_talk": {
+      "text": "Siin pole kedagi, kellega rääkida."
+    },
+    "generic_walk": {
+      "text": "Ma ei saa sinna kõndida."
+    },
+    "generic_use": {
+      "text": "Ma ei saa seda siin kasutada."
+    },
+    "knife_mushroom_look": {
+      "text": "Väike seen noa ja väga suure usaldusprobleemiga."
+    },
+    "knife_mushroom_touch": {
+      "text": "Ta haarab noast kõvemini. Puudutamine ei tundu tark tegu."
+    },
+    "inkcap_collected": {
+      "text": "Saad lillalt seenelt pudeli tinti. Hendrikul on sellest kasu."
+    },
+    "inkcap_already_collected": {
+      "text": "Tint on sul juba käes. Seen ei ole täitejaam."
+    }
+  },
+  "scene": {
+    "forest_mushroom": "Tark seen",
+    "inkcap": "Lilla seen",
+    "knife_mushroom": "Närviline seen"
+  }
+}

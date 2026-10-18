@@ -1,0 +1,40 @@
+{
+  "root": "C:\\Users\\lien\\Desktop\\Gamejams\\revaliaobscura\\revaliaobscura",
+  "changes": [
+    {
+      "path": "resources/scenarios/forest.json",
+      "before": "1ee5ba9ddf90511720a57aefad0544dd7484594150d35656a16f3fa9734cad58",
+      "after": "44ff16d6cbe3b9f3bf2218a46a5e796afa5c93c4fda7788ccf342d0b043ce77c"
+    },
+    {
+      "path": "lib/game/states/level_game/view/gameboard_view.dart",
+      "before": "7351271cd0ac6f7a2bb8c3c7851ae42c0ed6b5ef152bb304f9db8b8f26d0ebe4",
+      "after": "4803ef28c2d5a14d6518cdd0d40607c38335a4572cc9cc28ad3a4e942cd9403a"
+    },
+    {
+      "path": "resources/dialogues/revalia_dialogues.json",
+      "before": "98f571745947250e548fa8a738e6e1c239d9769885781c4b509f3caadefbc43a",
+      "after": "94216215b4250bcade45c2ff8eddad3889f4bb5f1bc5772c049a97805aff3881"
+    },
+    {
+      "path": "resources/translations/en.json",
+      "before": "5be24f61999b20a4113aa6e4c831f9dfc947e2b152562e1546b844916ae51341",
+      "after": "d0b846029bc487458c3dba4f3bcec726807161646ce921755c12e64a57171aed"
+    },
+    {
+      "path": "resources/translations/es.json",
+      "before": "d5082a83eea727c161c9f96305df26e10d7207df842d2f0951716dc4b0c25e8e",
+      "after": "67bdb10e4293702b8f30fb69dc4136d05ece963f5b88b12465b5e8f53a70c31d"
+    },
+    {
+      "path": "resources/translations/ee.json",
+      "before": "f872e89400d9ccca92a8242dba03e33e87e7848f589709181387d36058579bbd",
+      "after": "657ab65572d3460e6b6bf2d3f45867b233ac79e25a186ed8ebf5861fb4c46760"
+    },
+    {
+      "path": "test/quest_views_test.dart",
+      "before": "3d07352affb0ece09b796fa7ae0bce86d23733e92d2ed01a9ad099bf96c33f41",
+      "after": "cd549b8385feb94815d96782aaa10e96f2c531ebd5551727a02b009c11ee1cbe"
+    }
+  ]
+}

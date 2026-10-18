@@ -165,9 +165,15 @@ class InventoryPopup extends PositionComponent with TapCallbacks {
       final iconRect =
           Rect.fromCenter(center: rect.center, width: 24, height: 24);
       if (_icons.containsKey(id)) {
-        _icons[id]!.render(canvas,
-            position: Vector2(iconRect.left, iconRect.top),
-            size: Vector2(iconRect.width, iconRect.height));
+        final icon = _icons[id]!;
+        final fit = math.min(1.0,
+            iconRect.width / math.max(icon.srcSize.x, icon.srcSize.y));
+        final iconSize = icon.srcSize * fit;
+        icon.render(canvas,
+            position: Vector2(
+                (iconRect.center.dx - iconSize.x / 2).roundToDouble(),
+                (iconRect.center.dy - iconSize.y / 2).roundToDouble()),
+            size: iconSize);
       } else if (id == 'task_scroll') {
         final scrollScale = iconRect.height / 17;
         canvas.save();

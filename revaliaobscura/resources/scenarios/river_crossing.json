@@ -1,6 +1,6 @@
 {
   "id": "river_crossing",
-  "background": "resources/images/eestlandriver320x200.png",
+  "background": "resources/images/forest-background-river-320x200-1.png",
   "perspective": {
     "horizon_y": 75,
     "minimum_walkable_y": 110,
@@ -38,6 +38,27 @@
     ]
   },
   "entities": [
+    {
+      "type": "decoration",
+      "asset_id": "resources/images/forest-background-river-flow-81x66-7.png",
+      "interaction_id": "river_flow",
+      "feet_position": [
+        164.5,
+        200
+      ],
+      "size": [
+        81,
+        66
+      ],
+      "perspective_scaling": false,
+      "depth_sorting": false,
+      "animation": {
+        "frames": 7,
+        "width": 81,
+        "height": 66,
+        "step_time": 0.12
+      }
+    },
     {
       "type": "exit",
       "asset_id": "placeholder:to_gates",
@@ -80,5 +101,6 @@
       65,
       169
     ]
-  }
+  },
+  "foreground": "resources/images/forest-background-river-frontplants-320x200-1.png"
 }

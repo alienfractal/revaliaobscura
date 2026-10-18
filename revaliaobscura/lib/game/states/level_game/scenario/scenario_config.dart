@@ -114,6 +114,8 @@ class ScenarioEntityConfig {
     this.animation,
     this.talkAsset,
     this.talkAnimation,
+    this.attackAsset,
+    this.attackAnimation,
     this.motion,
   });
 
@@ -123,8 +125,11 @@ class ScenarioEntityConfig {
       final from = _number(motion, 'from_x');
       final to = _number(motion, 'to_x');
       final speed = _number(motion, 'speed');
-      if (!from.isFinite || !to.isFinite || !speed.isFinite ||
-          to <= from || speed <= 0) {
+      if (!from.isFinite ||
+          !to.isFinite ||
+          !speed.isFinite ||
+          to <= from ||
+          speed <= 0) {
         throw const FormatException('Invalid left-to-right decoration motion.');
       }
     }
@@ -134,6 +139,8 @@ class ScenarioEntityConfig {
       animation: json['animation'] as Map<String, dynamic>?,
       talkAsset: json['talk_asset'] as String?,
       talkAnimation: json['talk_animation'] as Map<String, dynamic>?,
+      attackAsset: json['attack_asset'] as String?,
+      attackAnimation: json['attack_animation'] as Map<String, dynamic>?,
       type: _string(json, 'type'),
       assetId: _string(json, 'asset_id'),
       interactionId: _string(json, 'interaction_id'),
@@ -151,6 +158,8 @@ class ScenarioEntityConfig {
   final Map<String, dynamic>? animation;
   final String? talkAsset;
   final Map<String, dynamic>? talkAnimation;
+  final String? attackAsset;
+  final Map<String, dynamic>? attackAnimation;
   final String type;
   final String assetId;
   final String interactionId;

@@ -51,9 +51,10 @@ void main() {
     choose(guard, 'follow_directions');
     expect(fsm.storyState.flag('city_exit_unlocked'), isTrue);
     var mushroom = fsm.startConversation('forest_mushroom');
-    expect(mushroom.responses.map((r) => r.id), contains('collect_ink'));
-    mushroom = choose(mushroom, 'collect_ink');
-    expect(mushroom.id, 'mushroom_collected');
+    expect(mushroom.responses.map((r) => r.id), contains('ask_ink'));
+    mushroom = choose(mushroom, 'ask_ink');
+    expect(mushroom.id, 'wise_mushroom_ink');
+    expect(fsm.storyState.collectForestInk(), isTrue);
     expect(state.hasItem('empty_bottle'), isFalse);
     expect(state.quantity('ink_bottle'), 1);
     expect(state.status('navigator_ink'), QuestStatus.ready);
@@ -67,45 +68,54 @@ void main() {
     expect(state.quantity('tartu_route_map'), 1);
   });
 
-  test('missing bottle gives a useful return-to-town option, not free ink', () {
+  test('touching purple mushroom supplies ink without a bottle or dialogue',
+      () {
+    expect(fsm.storyState.adventure.hasItem('empty_bottle'), isFalse);
+    expect(fsm.storyState.collectForestInk(), isTrue);
+    expect(fsm.storyState.adventure.quantity('ink_bottle'), 1);
+    expect(fsm.activeSession, isNull);
     acceptQuest();
-    final mushroom = fsm.startConversation('forest_mushroom');
-    expect(mushroom.responses.map((r) => r.id), isNot(contains('collect_ink')));
-    expect(choose(mushroom, 'need_bottle').id, 'mushroom_need_bottle');
+    expect(fsm.storyState.adventure.status('navigator_ink'), QuestStatus.ready);
+  });
+
+  test('knife mushroom yes emits fatal death; no is safe', () {
+    var knife = fsm.startConversation('knife_mushroom');
+    final yes = fsm.chooseResponse(
+        knife, knife.responses.indexWhere((r) => r.id == 'yes'));
+    expect(yes.response.event, 'player_death');
+    expect(yes.next, 'end');
+    fsm.endConversation();
+    knife = fsm.startConversation('knife_mushroom');
+    final no = fsm.chooseResponse(
+        knife, knife.responses.indexWhere((r) => r.id == 'no'));
+    expect(no.response.event, isNull);
+    expect(no.next, 'knife_mushroom_relief');
+  });
+
+  test('wise mushroom explains the forest but cannot award ink', () {
+    acceptQuest();
+    var wise = fsm.startConversation('forest_mushroom');
+    expect(wise.responses.map((r) => r.id), isNot(contains('collect_ink')));
+    wise = choose(wise, 'ask_metsavana');
+    expect(wise.id, 'wise_mushroom_metsavana');
+    wise = choose(wise, 'ask_gnomes');
+    expect(wise.id, 'wise_mushroom_gnomes');
     expect(fsm.storyState.adventure.hasItem('ink_bottle'), isFalse);
   });
 
-  test('poisoning emits retry event and leaves all quest progress intact', () {
+  test('ink cannot be recollected after delivery or through conversation', () {
     acceptQuest();
     final state = fsm.storyState.adventure;
     state.collectPickup('empty_bottle_pickup');
-    final before = Map.of(state.inventory);
-    final mushroom = fsm.startConversation('forest_mushroom');
-    final death = fsm.chooseResponse(
-        mushroom, mushroom.responses.indexWhere((r) => r.id == 'lick_goo'));
-    expect(death.response.event, 'mushroom_poisoning');
-    fsm.endConversation();
-    // The retry rebuilds a VIEW, not StoryState or the whole playthrough.
-    expect(state.inventory, before);
-    expect(state.status('navigator_ink'), QuestStatus.active);
-    final retry = fsm.startConversation('forest_mushroom');
-    expect(retry.responses.map((r) => r.id), contains('collect_ink'));
-    choose(retry, 'collect_ink');
+    expect(fsm.storyState.collectForestInk(), isTrue);
+    expect(state.hasItem('empty_bottle'), isFalse);
+    expect(fsm.storyState.collectForestInk(), isFalse);
     expect(state.quantity('ink_bottle'), 1);
-  });
-
-  test('ink cannot be recollected via another actor or stale reply', () {
-    acceptQuest();
-    fsm.storyState.adventure.collectPickup('empty_bottle_pickup');
-    final node = fsm.startConversation('inkcap');
-    final index = node.responses.indexWhere((r) => r.id == 'collect_ink');
-    final selected = fsm.chooseResponse(node, index);
-    expect(selected.response.effects.last['award_score']['id'],
-        'collect_forest_ink');
-    expect(() => fsm.chooseResponse(node, index), throwsStateError);
-    fsm.endConversation();
-    expect(fsm.startConversation('forest_mushroom').id, 'mushroom_collected');
-    expect(fsm.storyState.adventure.quantity('ink_bottle'), 1);
+    expect(
+        fsm.startConversation('forest_mushroom').id, 'wise_mushroom_after_ink');
+    expect(state.deliverItem('ink_bottle', 'old_sailor'), isNotNull);
+    expect(fsm.storyState.collectForestInk(), isFalse);
+    expect(state.hasItem('ink_bottle'), isFalse);
   });
 
   test('inventory delivery also awards exactly one map', () {
@@ -132,16 +142,18 @@ void main() {
       final scene = ScenarioConfig.fromJson(raw);
       expect(scene.id, from);
       for (final entity in scene.entities) {
-        if (entity.dialogueActorId != null)
+        if (entity.dialogueActorId != null) {
           expect(graph['actors'], contains(entity.dialogueActorId));
+        }
         if (entity.destination != null) {
           expect(
               QuestLocations.canTravel(from, entity.destination!,
                   gateUnlocked: true),
               isTrue);
         }
-        if (entity.assetId.startsWith('resources/'))
+        if (entity.assetId.startsWith('resources/')) {
           expect(File(entity.assetId).existsSync(), isTrue);
+        }
       }
     }
     expect(
@@ -190,7 +202,7 @@ void main() {
         'thank_lady');
     choose(fsm.startConversation('city_guard'), 'follow_directions');
     fsm.storyState.adventure.collectPickup('empty_bottle_pickup');
-    choose(fsm.startConversation('forest_mushroom'), 'collect_ink');
+    fsm.storyState.collectForestInk();
     fsm.storyState.adventure.completeQuest('navigator_ink');
     fsm.resetProgress();
     expect(fsm.storyState.flag('city_exit_unlocked'), isFalse);
